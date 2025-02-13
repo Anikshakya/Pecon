@@ -52,7 +52,15 @@ class CustomButton extends StatelessWidget {
       width: width ?? 320,
       child: ElevatedButton(
         key: buttonKey,
-        onPressed: isLoading == true ? (){} : isDisabled == true ? (){} : onPressed,
+        onPressed: isLoading == true 
+          ? (){} 
+          : isDisabled == true 
+            ? (){} 
+            : (){
+              // Remove Keyboard Focus
+              FocusManager.instance.primaryFocus?.unfocus();
+              onPressed();
+            },
         style: ElevatedButton.styleFrom(
           backgroundColor: isDisabled == true ? grey4 : bgColor ?? black,
           padding: padding,
