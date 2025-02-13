@@ -35,10 +35,13 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 onTap: (){
                   Get.to(()=> FullScreenImagePage(imageUrl: url));
                 },
-                child: Image.network(
-                  url,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
+                child: Container(
+                  color: const Color.fromARGB(255, 236, 236, 236),
+                  child: Image.network(
+                    url,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                  ),
                 ),
               );
             }).toList(),
