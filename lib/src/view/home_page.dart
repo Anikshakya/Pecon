@@ -144,6 +144,7 @@ class _HomePageState extends State<HomePage> {
               return Container(
                 margin: const EdgeInsets.fromLTRB(20, 14, 20, 10),
                 decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 236, 236, 236),
                   borderRadius: BorderRadius.circular(8),
                   image: DecorationImage(
                     image: NetworkImage(imageUrl),
