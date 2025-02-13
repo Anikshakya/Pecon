@@ -1,6 +1,7 @@
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/auth_controller.dart';
 import 'package:pecon/src/controllers/user_controller.dart';
+import 'package:pecon/src/view/profile_form_page.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
 import 'package:pecon/src/widgets/custom_network_image.dart';
 import 'package:flutter/material.dart';
@@ -77,9 +78,9 @@ class _AccountPageState extends State<AccountPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildActionButton(Icons.favorite, 'My Benefits', Colors.red),
-                    _buildActionButton(Icons.notifications, 'Notifications', Colors.orange),
-                    _buildActionButton(Icons.arrow_forward, 'Profile', Colors.green),
+                    _buildActionButton(Icons.favorite, 'My Benefits', maroon, (){}),
+                    _buildActionButton(Icons.notifications, 'Notifications', Colors.orange, (){}),
+                    _buildActionButton(Icons.arrow_forward, 'Profile', green, (){Get.to(() => const ProfileFormPage());}),
                   ],
                 ),
               ),
@@ -118,13 +119,16 @@ class _AccountPageState extends State<AccountPage> {
     );
   }
 
-  Widget _buildActionButton(IconData icon, String label, Color color) {
+  Widget _buildActionButton(IconData icon, String label, Color color, onTap) {
     return Column(
       children: [
-        CircleAvatar(
-          backgroundColor: color.withOpacity(0.2),
-          radius: 24,
-          child: Icon(icon, color: color, size: 24),
+        InkWell(
+          onTap: onTap,
+          child: CircleAvatar(
+            backgroundColor: color.withOpacity(0.2),
+            radius: 24,
+            child: Icon(icon, color: color, size: 24),
+          ),
         ),
         SizedBox(height: 8.h),
         Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
