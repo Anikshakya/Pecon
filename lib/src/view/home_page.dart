@@ -20,7 +20,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Get Controllers
+  // Get Controller
   final UserController userCon = Get.put(UserController());
   final AppController appCon = Get.put(AppController());
   
