@@ -247,7 +247,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
     final TextEditingController codeCon = TextEditingController();
 
     Get.defaultDialog(
-      backgroundColor: gray,
+      backgroundColor: boxCol,
       title: '',
       barrierDismissible: false,
       titlePadding: EdgeInsets.symmetric(horizontal: 20.0.w),
@@ -280,7 +280,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
                     infoText ?? "",
                     style: TextStyle(
                       fontSize: 13.sp,
-                      color: white,
+                      color: black,
                     ),
                   ),
                   SizedBox(height: 10.h),
@@ -314,7 +314,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
                     },
                     text: "Cancel",
                     bgColor: Colors.transparent,
-                    fontColor: white,
+                    fontColor: black,
                   ),
                 ],
               ),
