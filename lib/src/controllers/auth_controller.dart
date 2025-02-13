@@ -73,7 +73,7 @@ class AuthController extends GetxController {
     }
   }
 
-  // Register API
+  // Logout API
   logout() async {
     try{
       isLogOutLoading(true); // Start Loading
