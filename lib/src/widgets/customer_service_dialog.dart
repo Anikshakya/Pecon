@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:pecon/src/app_config/launch_url.dart';
+import 'package:pecon/src/utils/app_utils.dart';
 import 'package:pecon/src/app_config/styles.dart';
 
 customerServiceDialog() {
