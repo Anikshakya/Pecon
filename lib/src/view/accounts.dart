@@ -52,16 +52,16 @@ class _AccountPageState extends State<AccountPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Anik Shakya',
+                          userCon.userName.toString(),
                           style: poppinsMedium(size: 18.sp, color: black)
                         ),
                         SizedBox(height: 4.h,),
                         Text(
-                          'Member ID: Tranz-20230519-4821',
+                          'Member ID: ${userCon.userId}',
                           style: poppinsMedium(size: 11.sp, color: black.withOpacity(0.6))
                         ),
                         Text(
-                          '+91 9939210361',
+                          userCon.userNumber.toString(),
                           style: poppinsMedium(size: 11.sp, color: black.withOpacity(0.6))
                         ),
                       ],
