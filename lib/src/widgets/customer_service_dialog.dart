@@ -1,4 +1,5 @@
 
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -84,9 +85,27 @@ makePhoneCall() async {
 openWhatsApp() async {
   final Uri whatsappUri = Uri.parse("https://wa.me/1234567890");
   debugPrint("Attempting to launch: $whatsappUri");
+
   if (await canLaunchUrl(whatsappUri)) {
     await launchUrl(whatsappUri);
   } else {
-    debugPrint("Could not launch $whatsappUri");
+    // WhatsApp is not installed, redirect to download page
+    debugPrint("WhatsApp is not installed. Redirecting to download page.");
+
+    final Uri storeUri = Platform.isAndroid
+        ? Uri.parse("https://play.google.com/store/apps/details?id=com.whatsapp") // Android
+        : Uri.parse("https://apps.apple.com/app/whatsapp-messenger/id310633997"); // iOS
+
+    if (await canLaunchUrl(storeUri)) {
+      await launchUrl(storeUri);
+    } else {
+      // If the store cannot be opened, show a message
+      Get.snackbar(
+        "WhatsApp Not Installed",
+        "Please install WhatsApp to use this feature.",
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 3),
+      );
+    }
   }
 }
