@@ -1,6 +1,6 @@
 import 'package:pecon/src/app_config/styles.dart';
+import 'package:pecon/src/controllers/auth_controller.dart';
 import 'package:pecon/src/controllers/user_controller.dart';
-import 'package:pecon/src/view/login.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
 import 'package:pecon/src/widgets/custom_network_image.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +17,7 @@ class AccountPage extends StatefulWidget {
 class _AccountPageState extends State<AccountPage> {
   // Get Controllers
   final UserController userCon = Get.put(UserController());
+  final AuthController authCon = Get.put(AuthController());
   
   @override
   Widget build(BuildContext context) {
@@ -98,8 +99,8 @@ class _AccountPageState extends State<AccountPage> {
                     _buildListTile('FAQ', Icons.help_outline),
                     _buildListTile('Terms And Conditions', Icons.description),
                     _buildListTile(
-                      onTap: (){
-                        Get.offAll(()=> const LoginPage());
+                      onTap: () async{
+                        await authCon.logout();
                       },
                       'Log Out', Icons.exit_to_app, 
                       isDestructive: true
