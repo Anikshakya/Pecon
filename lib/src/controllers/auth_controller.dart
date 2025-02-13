@@ -19,7 +19,7 @@ class AuthController extends GetxController {
   // Check User Authentication Status
   checkUserAuthStatus() async{
     var token = await read("token");
-    if(token != null || token != ""){
+    if(token != null && token != ""){
       Get.offAll(()=> const Dashboard());
     } else {
       Get.offAll(()=> const LoginPage());
