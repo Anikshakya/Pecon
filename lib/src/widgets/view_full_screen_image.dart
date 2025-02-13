@@ -1,9 +1,50 @@
 import 'package:flutter/material.dart';
 
-class FullScreenImagePage extends StatelessWidget {
+class FullScreenImagePage extends StatefulWidget {
   final String imageUrl;
 
   const FullScreenImagePage({Key? key, required this.imageUrl}) : super(key: key);
+
+  @override
+  State<FullScreenImagePage> createState() => _FullScreenImagePageState();
+}
+
+class _FullScreenImagePageState extends State<FullScreenImagePage> {
+  final TransformationController _controller = TransformationController();
+  final double _maxScale = 8.0;
+  final double _doubleTapScale = 3;
+  double _currentScale = 1.0;
+  Offset _doubleTapPosition = Offset.zero;
+
+  void _onDoubleTap(TapDownDetails details) {
+    final RenderBox renderBox = context.findRenderObject() as RenderBox;
+    final Offset localPosition = renderBox.globalToLocal(details.globalPosition);
+
+    setState(() {
+      if (_currentScale == 1.0) {
+        _doubleTapPosition = localPosition;
+        _currentScale = _doubleTapScale;
+
+        // Calculate new transformation matrix to zoom at the tapped point
+        final Matrix4 newMatrix = Matrix4.identity()
+          ..translate(-_doubleTapPosition.dx * (_doubleTapScale - 1), 
+                      -_doubleTapPosition.dy * (_doubleTapScale - 1))
+          ..scale(_doubleTapScale);
+
+        _controller.value = newMatrix;
+      } else {
+        // Reset to normal scale
+        _currentScale = 1.0;
+        _controller.value = Matrix4.identity();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,13 +52,16 @@ class FullScreenImagePage extends StatelessWidget {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // Fullscreen Image with Zooming
           SizedBox(
             height: MediaQuery.of(context).size.height,
-            child: InteractiveViewer(
-              child: Center(
+            child: GestureDetector(
+              onDoubleTapDown: _onDoubleTap,
+              child: InteractiveViewer(
+                minScale: 1.0,
+                maxScale: _maxScale,
+                transformationController: _controller,
                 child: Image.network(
-                  imageUrl,
+                  widget.imageUrl,
                   fit: BoxFit.contain,
                   loadingBuilder: (context, child, loadingProgress) {
                     if (loadingProgress == null) return child;
@@ -41,7 +85,7 @@ class FullScreenImagePage extends StatelessWidget {
             ),
           ),
 
-          // Back Button (Top Right)
+          // Close Button (Top Right)
           Positioned(
             top: 40,
             right: 20,
