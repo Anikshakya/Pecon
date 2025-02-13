@@ -29,7 +29,7 @@ customAppbar(){
                   onTap: (){
                     customerServiceDialog();
                   },
-                  child: Image.asset("assets/images/customer_service.png", width:28.w, height:28.w, fit: BoxFit.cover,),
+                  child: Image.asset("assets/images/customer_service.png", width:22.w, height:26.w, fit: BoxFit.cover,),
                 ),
               ],
             ),
@@ -68,7 +68,7 @@ productAppbar(context){
                   onTap: (){
                     customerServiceDialog();
                   },
-                  child: Image.asset("assets/images/customer_service.png", width:28.w, height:28.w, fit: BoxFit.cover,),
+                  child: Image.asset("assets/images/customer_service.png", width:22.w, height:26.w, fit: BoxFit.cover,),
                 ),
               ],
             ),
