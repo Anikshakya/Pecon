@@ -77,7 +77,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           // Product Details
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.sp),
-            child: Column(
+            child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -121,20 +121,20 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             ),
           ),
 
-          Spacer(),
+          const Spacer(),
 
           // Add to Cart Button
           Container(
             width: double.infinity,
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: primary,
-                padding: EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
               onPressed: () {},
-              child: Text(
+              child: const Text(
                 "Add To Cart",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: black),
               ),
