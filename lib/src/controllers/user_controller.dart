@@ -7,7 +7,7 @@ class UserController extends GetxController {
   String userImage = "https://images.squarespace-cdn.com/content/v1/56c346b607eaa09d9189a870/1551408857522-4ZFG11B2M7UPFYBFBRO0/FLAUNT-MAGAZINE-JOJI-2.jpg";
   String userName = read("user") != "" ? read("user")["name"] : "No Data Found";
   String userId = read("user")["id"].toString();
-  String userNumber = "+91 9576543457";
+  String userNumber = "+977 9576543457";
 
   void startLoginLoading() {
     isLoginLoading.value = true;

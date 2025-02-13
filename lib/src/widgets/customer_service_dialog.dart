@@ -30,7 +30,7 @@ customerServiceDialog() {
                 ),
                 SizedBox(height: 15.h,),
                 InkWell(
-                  onTap: ()=> AppUtils().openLinkWithUrl("tel:1234567890"),
+                  onTap: ()=> AppUtils().openLinkWithUrl("tel:9863021878"),
                   borderRadius: BorderRadius.circular(30.r),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
@@ -45,7 +45,7 @@ customerServiceDialog() {
                 ),
                 SizedBox(height: 5.h,),
                 InkWell(
-                  onTap: ()=> AppUtils().openLinkWithUrl("https://wa.me/1234567890"),
+                  onTap: ()=> AppUtils().openLinkWithUrl("https://wa.me/9863021878"),
                   borderRadius: BorderRadius.circular(30.r),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),

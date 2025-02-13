@@ -3,6 +3,7 @@ import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/app_controller.dart';
 import 'package:pecon/src/controllers/user_controller.dart';
 import 'package:pecon/src/model/redeeme_item_model.dart';
+import 'package:pecon/src/view/product_details.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
 import 'package:pecon/src/widgets/custom_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -208,70 +209,75 @@ class _HomePageState extends State<HomePage> {
                       // Info
                       Align(
                         alignment: Alignment.bottomCenter,
-                        child: Column(
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              padding: EdgeInsets.all(10.sp),
-                              margin: EdgeInsets.only(top: 36.sp),
-                              decoration: BoxDecoration(
-                                color: white,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(20.r),
-                                  topRight: Radius.circular(20.r),
-                                  bottomLeft: Radius.circular(8.r),
-                                  bottomRight: Radius.circular(8.r),
-                                ),
-                                border: Border.all(
-                                  width: 0.8,
-                                  color: yellow
-                                ),
-                                // boxShadow: [
-                                //   BoxShadow(
-                                //     color: Colors.grey.withOpacity(0.3),
-                                //     blurRadius: 4,
-                                //     spreadRadius: 2,
-                                //   ),
-                                // ],
-                              ),
-                              child: Column(
-                                children: [
-                                  SizedBox(height: 25.h),
-                                  Text(
-                                    item.name,
-                                    style: poppinsBold(size: 10.sp, color: black),
-                                    textAlign: TextAlign.center,
+                        child: GestureDetector(
+                          onTap: (){
+                            Get.to(()=> const ProductDetailsPage());
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.all(10.sp),
+                                margin: EdgeInsets.only(top: 36.sp),
+                                decoration: BoxDecoration(
+                                  color: white,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20.r),
+                                    topRight: Radius.circular(20.r),
+                                    bottomLeft: Radius.circular(8.r),
+                                    bottomRight: Radius.circular(8.r),
                                   ),
-                                  SizedBox(height: 5.h),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                                    decoration: BoxDecoration(
-                                      color: userCon.userPoints < item.points ? gray.withOpacity(0.5) : maroon.withOpacity(.95),
-                                      borderRadius: BorderRadius.circular(6.sp),
+                                  border: Border.all(
+                                    width: 0.8,
+                                    color: yellow
+                                  ),
+                                  // boxShadow: [
+                                  //   BoxShadow(
+                                  //     color: Colors.grey.withOpacity(0.3),
+                                  //     blurRadius: 4,
+                                  //     spreadRadius: 2,
+                                  //   ),
+                                  // ],
+                                ),
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: 25.h),
+                                    Text(
+                                      item.name,
+                                      style: poppinsBold(size: 10.sp, color: black),
+                                      textAlign: TextAlign.center,
                                     ),
-                                    child: RichText(
-                                      text: TextSpan(
-                                        style: poppinsSemiBold(size: 10.sp, color: userCon.userPoints < item.points ? white : black),
-                                        children: [
-                                          WidgetSpan(
-                                            child: Padding(
-                                              padding: EdgeInsets.only(right: 4.sp),
-                                              child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp,)
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: formatter.format(int.parse("${item.points}")),
-                                            style: poppinsSemiBold(color:  white, size: 10.sp ),
-                                          ),
-                                        ],
+                                    SizedBox(height: 5.h),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                                      decoration: BoxDecoration(
+                                        color: userCon.userPoints < item.points ? gray.withOpacity(0.5) : maroon.withOpacity(.95),
+                                        borderRadius: BorderRadius.circular(6.sp),
                                       ),
+                                      child: RichText(
+                                        text: TextSpan(
+                                          style: poppinsSemiBold(size: 10.sp, color: userCon.userPoints < item.points ? white : black),
+                                          children: [
+                                            WidgetSpan(
+                                              child: Padding(
+                                                padding: EdgeInsets.only(right: 4.sp),
+                                                child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp,)
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: formatter.format(int.parse("${item.points}")),
+                                              style: poppinsSemiBold(color:  white, size: 10.sp ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
                                     )
-                                  )
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                            
-                          ],
+                              
+                            ],
+                          ),
                         ),
                       ),
                       // Image

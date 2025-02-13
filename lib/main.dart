@@ -8,7 +8,7 @@ import 'package:get/get_navigation/src/routes/transitions_type.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
-  runApp(const MyApp());
+  runApp( const MyApp());
 }
 
 class MyApp extends StatelessWidget {

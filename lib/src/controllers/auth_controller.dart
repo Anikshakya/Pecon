@@ -62,7 +62,7 @@ class AuthController extends GetxController {
     try{
       isRegisterLoading(true); // Start Loading
       var response = await ApiRepo.apiPost('api/register', data, 'Register');
-      if(response != null && response['code'] == 200) {
+      if(response != null && response['code'] == 201) {
         isRegisterLoading(false); // Stop Loading
         Get.offAll(()=>const LoginPage());
       }
