@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 customAppbar(){
   return PreferredSize(
-    preferredSize: Size(double.infinity, 79.0.h),
+    preferredSize: Size(double.infinity, 62.0.h),
     child: Container(
       color: primary,
       padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 12.0.sp),
@@ -26,11 +26,6 @@ customAppbar(){
                 Icon(Icons.headphones, color: black, size: 20.sp),
               ],
             ),
-            SizedBox(
-              height: 5.0.h,
-            ),
-            // Powered by
-            Text("Powered by Bharati Electra", style: poppinsBold(size: 12.sp, color: black),)
           ],
         ),
       ),
@@ -41,7 +36,7 @@ customAppbar(){
 
 productAppbar(context){
   return PreferredSize(
-    preferredSize: Size(double.infinity, 141.0.h),
+    preferredSize: Size(double.infinity, 131.0.h),
     child: Container(
       padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 12.0.sp),
       decoration: const BoxDecoration(
@@ -66,11 +61,6 @@ productAppbar(context){
                 Icon(Icons.headphones, color: black, size: 20.sp),
               ],
             ),
-            SizedBox(
-              height: 5.0.h,
-            ),
-            // Powered by
-            Text("Powered by Bharati Electra", style: poppinsBold(size: 12.sp, color: black),),
             SizedBox(height: 14.h),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,

@@ -3,6 +3,7 @@ import 'package:pecon/src/view/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:pecon/src/widgets/partner_logo.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -37,14 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
               alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: EdgeInsets.only(bottom: 43.0.sp),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("A PRODUCT OF", style: poppinsRegular(size: 12.sp, color: black)),
-                    Image.asset("assets/images/logo.png", height: 40.h),
-                  ],
-                ),
+                child: partnerLogo()
               ),
             )
           ],

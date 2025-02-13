@@ -124,7 +124,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                               WidgetSpan(
                                                 child: Padding(
                                                   padding: EdgeInsets.only(right: 4.sp),
-                                                  child: const Icon(Icons.monetization_on, color: primary, size: 14)
+                                                  child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp)
                                                 ),
                                               ),
                                               TextSpan(

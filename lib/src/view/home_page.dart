@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:pecon/src/widgets/partner_logo.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -111,7 +112,9 @@ class _HomePageState extends State<HomePage> {
               rewardsSection(),
               SizedBox(height: 20.h),
               topFivePerformersSection(),
-              SizedBox(height: 60.h)
+              SizedBox(height: 30.h),
+              partnerLogo(),
+              SizedBox(height: 30.h)
             ],
           ),
         ),
@@ -253,7 +256,7 @@ class _HomePageState extends State<HomePage> {
                                           WidgetSpan(
                                             child: Padding(
                                               padding: EdgeInsets.only(right: 4.sp),
-                                              child: const Icon(Icons.monetization_on, color: primary, size: 14)
+                                              child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp,)
                                             ),
                                           ),
                                           TextSpan(
@@ -379,7 +382,7 @@ class _HomePageState extends State<HomePage> {
                                       WidgetSpan(
                                         child: Padding(
                                           padding: EdgeInsets.only(right: 4.sp),
-                                          child: const Icon(Icons.monetization_on, color: primary, size: 14)
+                                          child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp)
                                         ),
                                       ),
                                       TextSpan(
@@ -492,7 +495,7 @@ class _HomePageState extends State<HomePage> {
                                         WidgetSpan(
                                           child: Padding(
                                             padding: EdgeInsets.only(right: 4.sp),
-                                            child: const Icon(Icons.monetization_on, color: primary, size: 14)
+                                            child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp)
                                           ),
                                         ),
                                         TextSpan(

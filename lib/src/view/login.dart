@@ -6,6 +6,7 @@ import 'package:pecon/src/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:pecon/src/widgets/partner_logo.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -49,16 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(height: 24.h),
                   _registerButton(),
                   SizedBox(height: 134.h),
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("A PRODUCT OF", style: poppinsRegular(size: 12.sp, color: black)),
-                        Image.asset("assets/images/logo.png", height: 40.h),
-                      ],
-                    ),
-                  ),
+                  partnerLogo(),
                 ],
               ),
             ),
