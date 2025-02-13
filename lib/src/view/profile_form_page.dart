@@ -50,17 +50,20 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
     return Scaffold(
       backgroundColor: white,
       appBar: appbar(title: "My Profile"),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: EdgeInsets.all(30.w),
-          child: Column(
-            children: [
-              changeProfilePic(),
-              SizedBox(height: 30.h,),
-              profileInfoForms(),
-            ],
-          )
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.all(30.w),
+            child: Column(
+              children: [
+                changeProfilePic(),
+                SizedBox(height: 30.h,),
+                profileInfoForms(),
+              ],
+            )
+          ),
         ),
       ),
     );
@@ -246,6 +249,9 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             keyboardType: TextInputType.number,
             headingText: "Esewa Number",
             filledColor: gray.withOpacity(0.2),
+            validator: (value) => value != null && value.length == 10
+                ? null
+                : "Enter a valid 10-digit mobile number",
           ),
           SizedBox(height: 20.h),
           //khalti number
@@ -255,15 +261,20 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             keyboardType: TextInputType.number,
             headingText: "Khalti Number",
             filledColor: gray.withOpacity(0.2),
+            validator: (value) => value != null && value.length == 10
+                ? null
+                : "Enter a valid 10-digit mobile number",
           ),
           SizedBox(height: 40.h),
-          // Login Button
+          // Submit Button
           // Obx(()=>
             Center(
               child: CustomButton(
                 width: double.infinity,
                 // isLoading: authCon.isLoginLoading.value,
                 onPressed: () async {
+                  final isValid = formKey.currentState!.validate();
+                    if (!isValid) return;
                 },
                 text: "Submit",
               ),
