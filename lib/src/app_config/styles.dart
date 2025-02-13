@@ -11,10 +11,11 @@ const black1   =  Color(0xff242425);
 const purple1  =  Color(0xffF7F5FF);
 const purple2  =  Color(0xffA395E8);
 const yellow   =  Color(0xffF4BE37);
-const yellowL  = Color(0xfffff9d4);
+const yellowL  =  Color(0xfffff9d4);
 const green    =  Color.fromARGB(255, 79, 192, 122);
 const red      =  Color.fromARGB(255, 247, 106, 106);
 const maroon   =  Color.fromARGB(255, 202, 81, 81);
+const boxCol   =  Color.fromARGB(255, 235, 235, 235);
 
 
 const grey1  =  Color(0xFF707070);

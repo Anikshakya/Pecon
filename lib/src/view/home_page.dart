@@ -114,7 +114,7 @@ class _HomePageState extends State<HomePage> {
               topFivePerformersSection(),
               SizedBox(height: 30.h),
               partnerLogo(),
-              SizedBox(height: 30.h)
+              SizedBox(height: 50.h)
             ],
           ),
         ),
