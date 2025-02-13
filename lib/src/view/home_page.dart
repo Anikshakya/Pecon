@@ -110,9 +110,9 @@ class _HomePageState extends State<HomePage> {
               topBanner(),
               // SizedBox(height: 10),
               rewardsSection(),
-              SizedBox(height: 20.h),
-              topFivePerformersSection(),
               SizedBox(height: 30.h),
+              topFivePerformersSection(),
+              SizedBox(height: 40.h),
               partnerLogo(),
               SizedBox(height: 50.h)
             ],
@@ -408,125 +408,111 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-
   topFivePerformersSection() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.sp),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Replacing SingleChildScrollView with ListView.builder
-          Container(
-            height: 260.h, // Set a fixed height or adjust based on content
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: gray.withOpacity(0.1),
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    SizedBox(width: 15.w),
-                    const Icon(Icons.star, color: primary, size: 24),
-                    SizedBox(width: 5.w),
-                    Text(
-                      "Top Five Performers",
-                      style: poppinsSemiBold(size: 14.sp, color : black)
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16,),
-                Expanded(
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) => const SizedBox(width: 10),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: topPerformers.length,
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    itemBuilder: (context, index) {
-                      final performer = topPerformers[index];
-                      return Stack(
-                        children: [
-                          Container(
-                            width: 130.w,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 20,),
-                                ClipOval(
-                                  child: CustomNetworkImage(
-                                    imageUrl: performer["profileUrl"] ?? "",
-                                    width: 60.sp,
-                                    height: 60.sp,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                SizedBox(height: 5.h),
-                                Text(
-                                  performer["rank"],
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: poppinsBold(size: 14.sp, color: black)
-                                ),
-                                Text(
-                                  performer["name"],
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: poppinsRegular(size: 14.sp, color: black)
-                                ),
-                                SizedBox(height: 10.h),
-                                Container(
-                                  constraints: BoxConstraints(
-                                    minWidth: 80.w
-                                  ),
-                                  padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                                  decoration: BoxDecoration(
-                                    color: maroon.withOpacity(0.95),
-                                    borderRadius: BorderRadius.circular(6.sp),
-                                  ),
-                                  child: RichText(
-                                    text: TextSpan(
-                                      style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
-                                      children: [
-                                        WidgetSpan(
-                                          child: Padding(
-                                            padding: EdgeInsets.only(right: 4.sp),
-                                            child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp)
-                                          ),
-                                        ),
-                                        TextSpan(
-                                          text: "${performer["cash"]} Points",
-                                          style: poppinsMedium(color: white, size: 12.sp ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                )
-                              ],
-                            ),
-                          ),
-                          // Ribbon for 1st, 2nd, and 3rd place
-                          Positioned(
-                            top: 0,
-                            left: 0,
-                            child: buildRibbon(performer["rank"]),
-                          ),
-                        ],
-                      );
-                    },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Replacing SingleChildScrollView with ListView.builder
+        SizedBox(
+          height: 230.h,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  SizedBox(width: 20.w),
+                  const Icon(Icons.star, color: primary, size: 24),
+                  SizedBox(width: 5.w),
+                  Text(
+                    "Top Five Performers",
+                    style: poppinsSemiBold(size: 14.sp, color : black)
                   ),
+                ],
+              ),
+              const SizedBox(height: 16,),
+              Expanded(
+                child: ListView.separated(
+                  separatorBuilder: (context, index) => SizedBox(width: 10.sp),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: topPerformers.length,
+                  padding: EdgeInsets.symmetric(horizontal: 20.sp),
+                  itemBuilder: (context, index) {
+                    final performer = topPerformers[index];
+                    return Stack(
+                      children: [
+                        Container(
+                          width: 130.w,
+                          decoration: BoxDecoration(
+                            color: gray.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: EdgeInsets.all(10.sp),
+                          child: Column(
+                            children: [
+                              SizedBox(height: 30.h,),
+                              ClipOval(
+                                child: CustomNetworkImage(
+                                  imageUrl: performer["profileUrl"] ?? "",
+                                  width: 70.sp,
+                                  height: 70.sp,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              SizedBox(height: 10.h),
+                              Text(
+                                performer["name"],
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: poppinsRegular(size: 13.sp, color: black)
+                              ),
+                              SizedBox(height: 10.h),
+                              Container(
+                                constraints: BoxConstraints(
+                                  minWidth: 80.w
+                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                                decoration: BoxDecoration(
+                                  color: maroon.withOpacity(0.95),
+                                  borderRadius: BorderRadius.circular(6.sp),
+                                ),
+                                child: RichText(
+                                  text: TextSpan(
+                                    style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
+                                    children: [
+                                      WidgetSpan(
+                                        child: Padding(
+                                          padding: EdgeInsets.only(right: 4.sp),
+                                          child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp)
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: "${performer["cash"]} Points",
+                                        style: poppinsMedium(color: white, size: 12.sp ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              )
+                            ],
+                          ),
+                        ),
+                        // Ribbon for 1st, 2nd, and 3rd place
+                        Positioned(
+                          top: 0,
+                          left: 0,
+                          child: buildRibbon(performer["rank"]),
+                        ),
+                      ],
+                    );
+                  },
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
+  
   
   // Function to build ribbons
   buildRibbon(String rank) {
