@@ -1,5 +1,5 @@
 import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/view/login.dart';
+import 'package:pecon/src/controllers/auth_controller.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
 import 'package:pecon/src/widgets/custom_text_field.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,12 +15,14 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  // Get Controllers
+  final AuthController authCon = Get.put(AuthController());
+
   final formKey = GlobalKey<FormState>();
 
   final TextEditingController mobileController = TextEditingController();
-
+  final TextEditingController nameCon = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
   final TextEditingController confirmPasswordController = TextEditingController();
 
   bool isObscure = true;
@@ -63,15 +65,15 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Column _registerHeading() {
+  _registerHeading() {
     return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Register", style: poppinsBold(size: 20.sp, color: black),),
-                    SizedBox(height: 10.h),
-                    Text("Create a new account by filling up the form below.", style: poppinsMedium(size: 14.sp, color: black),),
-                  ],
-                );
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Register", style: poppinsBold(size: 20.sp, color: black),),
+        SizedBox(height: 10.h),
+        Text("Create a new account by filling up the form below.", style: poppinsMedium(size: 14.sp, color: black),),
+      ],
+    );
   }
 
   // Registration Form
@@ -91,6 +93,14 @@ class _RegisterPageState extends State<RegisterPage> {
             validator: (mobile) => mobile != null && mobile.length == 10
                 ? null
                 : "Enter a valid 10-digit mobile number",
+          ),
+          SizedBox(height: 20.h),
+
+          // Name
+          CustomTextFormField(
+            controller: nameCon,
+            textInputAction: TextInputAction.next,
+            headingText: "Name",
           ),
           SizedBox(height: 20.h),
 
@@ -213,20 +223,24 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // Register Button
   Widget _registerButton() {
-    return Center(
+    return Obx(()=>
+      Center(
         child: CustomButton(
-        width: double.infinity,
-        isLoading: false,
-        onPressed: () async {
-          // Remove Keyboard Focus
-          FocusManager.instance.primaryFocus?.unfocus();
-    
-          final isValid = formKey.currentState!.validate();
-          if (!isValid) return;
-    
-          Get.to(()=> const LoginPage());
-        },
-        text: "Register",
+          width: double.infinity,
+          isLoading: authCon.isRegisterLoading.value,
+          onPressed: () async {
+            final isValid = formKey.currentState!.validate();
+            if (!isValid) return;
+
+            await authCon.register(
+              name: nameCon.text.toString().trim(),
+              number: mobileController.text.toString().trim(),
+              password: confirmPasswordController.text.toString().trim(),
+              role: selectedRole.toString().trim()
+            );
+          },
+          text: "Register",
+        ),
       ),
     );
   }

@@ -1,5 +1,5 @@
 import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/view/login.dart';
+import 'package:pecon/src/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -13,11 +13,14 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  // Get Controllers
+  final AuthController authCon = Get.put(AuthController());
 
   @override
   void initState() {
     Future.delayed(const Duration(seconds: 3), () {
-      Get.off(() => const LoginPage());
+      // Route Acc To Auth Status
+      authCon.checkUserAuthStatus();
     });
     super.initState();
   }

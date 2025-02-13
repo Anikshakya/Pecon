@@ -16,10 +16,16 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  // Get Controllers
   final AuthController authCon = Get.put(AuthController());
+
   final formKey = GlobalKey<FormState>();
+
+  // Text Editing Controllers
   final TextEditingController mobileNoController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  // Bool helper
   bool isObscure = true;
 
 @override
@@ -113,13 +119,14 @@ class _LoginPageState extends State<LoginPage> {
           width: double.infinity,
           isLoading: authCon.isLoginLoading.value,
           onPressed: () async {
-            // Remove Keyboard Focus
-            FocusManager.instance.primaryFocus?.unfocus();
       
             final isValid = formKey.currentState!.validate();
             if (!isValid) return;
       
-            await authCon.login();
+            await authCon.login(
+              number: mobileNoController.text.toString().trim(),
+              password: passwordController.text.toString().trim(),
+            );
           },
           text: "Log In",
         ),
