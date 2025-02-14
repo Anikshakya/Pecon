@@ -3,7 +3,6 @@ import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/app_controller.dart';
 import 'package:pecon/src/controllers/home_controller.dart';
 import 'package:pecon/src/controllers/user_controller.dart';
-import 'package:pecon/src/model/redeeme_item_model.dart';
 import 'package:pecon/src/view/product_details.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
 import 'package:pecon/src/widgets/custom_network_image.dart';
@@ -109,6 +108,7 @@ class _HomePageState extends State<HomePage> {
   getData() async{
     // Get AdBanner/Slider data
     await homeCon.getAdBanner();
+    await homeCon.getRedeemInformation();
 
   }
 
@@ -202,8 +202,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget rewardsSection() {
-    List<RedeemItem> redeemItems = redeemItemsJson.map((itemJson) => RedeemItem.fromJson(itemJson)).toList();
-
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -212,129 +210,132 @@ class _HomePageState extends State<HomePage> {
       ),
       padding: EdgeInsets.symmetric(horizontal: 10.sp, vertical: 20.sp),
       margin: EdgeInsets.symmetric(horizontal: 20.sp),
-      child: Column(
-        children: [
-          Text(
-            "Points-Based \nRewards",
-            textAlign: TextAlign.center,
-            style: poppinsSemiBold(size: 20.sp, color: black),
-          ),
-          // Image.asset("assets/images/logo.png", height: 50.h),
-          SizedBox(height: 16.h,),
-          // Redeem Code Grid
-          LayoutBuilder(
-            builder: (context, constraints) {
-              double itemWidth = (constraints.maxWidth - 8 * 2) / 3; // 3 items per row
-          
-              return Wrap(
-                spacing: 8,
-                runSpacing: 16,
-                alignment: WrapAlignment.center,
-                children: List.generate(redeemItems.length, (index) {
-                  final item = redeemItems[index];
-          
-                  Widget itemWidget = Stack(
-                    children: [
-                      // Info
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: GestureDetector(
-                          onTap: (){
-                            Get.to(()=> const ProductDetailsPage());
-                          },
-                          child: Column(
-                            children: [
-                              Container(
-                                width: double.infinity,
-                                padding: EdgeInsets.all(10.sp),
-                                margin: EdgeInsets.only(top: 36.sp),
-                                decoration: BoxDecoration(
-                                  color: white,
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20.r),
-                                    topRight: Radius.circular(20.r),
-                                    bottomLeft: Radius.circular(8.r),
-                                    bottomRight: Radius.circular(8.r),
-                                  ),
-                                  border: Border.all(
-                                    width: 0.8,
-                                    color: yellow
-                                  ),
-                                  // boxShadow: [
-                                  //   BoxShadow(
-                                  //     color: Colors.grey.withOpacity(0.3),
-                                  //     blurRadius: 4,
-                                  //     spreadRadius: 2,
-                                  //   ),
-                                  // ],
-                                ),
-                                child: Column(
-                                  children: [
-                                    SizedBox(height: 25.h),
-                                    Text(
-                                      item.name,
-                                      style: poppinsBold(size: 10.sp, color: black),
-                                      textAlign: TextAlign.center,
+      child: Obx(() => homeCon.isRedeemInfoLoading.isTrue
+        ? SizedBox(height: 300.h,)
+        : Column(
+          children: [
+            Text(
+              "Points-Based \nRewards",
+              textAlign: TextAlign.center,
+              style: poppinsSemiBold(size: 20.sp, color: black),
+            ),
+            // Image.asset("assets/images/logo.png", height: 50.h),
+            SizedBox(height: 16.h,),
+            // Redeem Code Grid
+            LayoutBuilder(
+              builder: (context, constraints) {
+                double itemWidth = (constraints.maxWidth - 8 * 2) / 3; // 3 items per row
+            
+                return Wrap(
+                  spacing: 8,
+                  runSpacing: 16,
+                  alignment: WrapAlignment.center,
+                  children: List.generate(homeCon.redeemInfoData.length, (index) {
+                    final item = homeCon.redeemInfoData[index];
+            
+                    Widget itemWidget = Stack(
+                      children: [
+                        // Info
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: GestureDetector(
+                            onTap: (){
+                              Get.to(()=> const ProductDetailsPage());
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.all(10.sp),
+                                  margin: EdgeInsets.only(top: 36.sp),
+                                  decoration: BoxDecoration(
+                                    color: white,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20.r),
+                                      topRight: Radius.circular(20.r),
+                                      bottomLeft: Radius.circular(8.r),
+                                      bottomRight: Radius.circular(8.r),
                                     ),
-                                    SizedBox(height: 5.h),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                                      decoration: BoxDecoration(
-                                        color: userCon.userPoints < item.points ? gray.withOpacity(0.5) : maroon.withOpacity(.95),
-                                        borderRadius: BorderRadius.circular(6.sp),
+                                    border: Border.all(
+                                      width: 0.8,
+                                      color: yellow
+                                    ),
+                                    // boxShadow: [
+                                    //   BoxShadow(
+                                    //     color: Colors.grey.withOpacity(0.3),
+                                    //     blurRadius: 4,
+                                    //     spreadRadius: 2,
+                                    //   ),
+                                    // ],
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      SizedBox(height: 25.h),
+                                      Text(
+                                        item.title,
+                                        style: poppinsBold(size: 10.sp, color: black),
+                                        textAlign: TextAlign.center,
                                       ),
-                                      child: RichText(
-                                        text: TextSpan(
-                                          style: poppinsSemiBold(size: 10.sp, color: userCon.userPoints < item.points ? white : black),
-                                          children: [
-                                            WidgetSpan(
-                                              child: Padding(
-                                                padding: EdgeInsets.only(right: 4.sp),
-                                                child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp,)
-                                              ),
-                                            ),
-                                            TextSpan(
-                                              text: formatter.format(int.parse("${item.points}")),
-                                              style: poppinsSemiBold(color:  white, size: 10.sp ),
-                                            ),
-                                          ],
+                                      SizedBox(height: 5.h),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                                        decoration: BoxDecoration(
+                                          color: userCon.userPoints < item.points ? gray.withOpacity(0.5) : maroon.withOpacity(.95),
+                                          borderRadius: BorderRadius.circular(6.sp),
                                         ),
+                                        child: RichText(
+                                          text: TextSpan(
+                                            style: poppinsSemiBold(size: 10.sp, color: userCon.userPoints < item.points ? white : black),
+                                            children: [
+                                              WidgetSpan(
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(right: 4.sp),
+                                                  child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp,)
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: formatter.format(int.parse("${item.points}")),
+                                                style: poppinsSemiBold(color:  white, size: 10.sp ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
                                       )
-                                    )
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              
-                            ],
+                                
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      // Image
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: CustomNetworkImage(
-                            imageUrl: item.imageUrl,
-                            height: 65.sp,
-                            width: 65.sp,
-                            fit: BoxFit.cover,
+                        // Image
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: CustomNetworkImage(
+                              imageUrl: item.image,
+                              height: 65.sp,
+                              width: 65.sp,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  );
-
-                  return Container(
-                    width: itemWidth,
-                    alignment: Alignment.center,
-                    child: itemWidget,
-                  );
-                }),
-              );
-            },
-          ),
-        ],
+                      ],
+                    );
+            
+                    return Container(
+                      width: itemWidth,
+                      alignment: Alignment.center,
+                      child: itemWidget,
+                    );
+                  }),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
