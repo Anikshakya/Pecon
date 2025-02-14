@@ -65,7 +65,7 @@ customerServiceDialog() {
                 SizedBox(height: 5.h,),
                 //facebook
                 InkWell(
-                  onTap: ()=> AppUtils().openLinkWithUrl(Platform.isIOS ? "fb://profile/bbcnews" : "fb://page/bbcnews"),
+                  onTap: ()=> AppUtils().openLinkWithUrl(Platform.isIOS ? "fb://profile/100095631698490" : "fb://page/100095631698490"),
                   borderRadius: BorderRadius.circular(30.r),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
