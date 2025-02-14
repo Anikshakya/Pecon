@@ -1,9 +1,38 @@
+import 'dart:developer';
+
+import 'package:pecon/src/api_config/api_repo.dart';
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class AppController extends GetxController{
+  //loadings
+  final RxBool isLoading = false.obs;
+  //website link
+  String webUrl = "";
+  //termsCondition
+  String termsCondition = "";
+  String privacyPolicy = "";
+
+
+  // terms condition/splash screen link api
+  getSettingApi() async {
+    try{
+      isLoading(true); // Start Loading
+      var response = await ApiRepo.apiGet('api/settings', "", 'SettingApiAPI');
+      if(response != null && response['code'] == 200) {
+        webUrl = response["data"]["website_link"] ?? "";
+        termsCondition = response["data"]["terms_and_condition"] ?? "";
+        privacyPolicy = response["data"]["privacy_policy"] ?? "";
+      }
+    }catch (e){
+      log(e.toString());
+    } finally{
+      isLoading(false); // Stop Loading
+    }
+  }
+
   // Single function to show the ad dialog
   showAdDialog() {
     return Get.dialog(

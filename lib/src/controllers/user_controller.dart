@@ -37,12 +37,14 @@ class UserController extends GetxController {
   }
 
   //update profile
-  updateProfile({name, number, email, address, gender, dob}) async{
+  updateProfile({name, number, email, address, gender, dob, city, district}) async{
     var data = {
       "name": name,
       "number": number,
       "email": email,
       "address" : address,
+      "district" : district,
+      "city" : city,
       "gender": gender,
       "dob" : dob
     };

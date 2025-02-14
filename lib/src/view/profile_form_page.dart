@@ -41,6 +41,8 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   final TextEditingController emailController    = TextEditingController();
   final TextEditingController numController      = TextEditingController();
   final TextEditingController addressController  = TextEditingController();
+  final TextEditingController districtController  = TextEditingController();
+  final TextEditingController cityController  = TextEditingController();
   final TextEditingController genderController   = TextEditingController();
   final TextEditingController dobController      = TextEditingController();
 
@@ -194,6 +196,22 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             controller: addressController,
             textInputAction: TextInputAction.next,
             headingText: "Address",
+            filledColor: gray.withOpacity(0.2),
+          ),
+          SizedBox(height: 20.h),
+          //District
+          CustomTextFormField(
+            controller: districtController,
+            textInputAction: TextInputAction.next,
+            headingText: "District",
+            filledColor: gray.withOpacity(0.2),
+          ),
+          SizedBox(height: 20.h),
+          //City Controll
+          CustomTextFormField(
+            controller: cityController,
+            textInputAction: TextInputAction.next,
+            headingText: "City",
             filledColor: gray.withOpacity(0.2),
           ),
           SizedBox(height: 20.h),
@@ -464,6 +482,8 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     number: numController.text.toString().trim(),
                     email: emailController.text.toString().trim(),
                     address: addressController.text.toString().trim(),
+                    district : districtController.text.toString().trim(),
+                    city : cityController.text.toString().trim(),
                     gender: genderController.text.toString().trim(),
                     dob: dobController.text.toString().trim(),
                   );

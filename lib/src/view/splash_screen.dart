@@ -1,4 +1,5 @@
 import 'package:pecon/src/app_config/styles.dart';
+import 'package:pecon/src/controllers/app_controller.dart';
 import 'package:pecon/src/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,10 +16,13 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   // Get Controllers
   final AuthController authCon = Get.put(AuthController());
+  final AppController appCon = Get.put(AppController());
 
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 3), () async{
+    Future.delayed(const Duration(milliseconds: 1500), () async{
+      //get splahs api link/ terms and conditions
+      await appCon.getSettingApi();
       // Route Acc To Auth Status
       await authCon.checkUserAuthStatus();
     });
