@@ -49,7 +49,7 @@ class UserController extends GetxController {
     try{
       isProfileBtnLoading(true);// Start Loading
       var response = await ApiRepo.apiPut('profile/update', data, 'Update Profile');
-      if(response != null && response['code'] == 201) {
+      if(response != null && response['code'] == 200) {
         Get.back();
         showToast(isSuccess: true, message: "Profile Details Updated");
       }
@@ -73,7 +73,7 @@ class UserController extends GetxController {
     try{
       isBankBtnLoading(true);// Start Loading
       var response = await ApiRepo.apiPut('profile/update-bank-details', data, 'Update Bank Details');
-      if(response != null && response['code'] == 201) {
+      if(response != null && response['code'] == 200) {
         Get.back();
         showToast(isSuccess: true, message: "Bank Details Updated");
       }
