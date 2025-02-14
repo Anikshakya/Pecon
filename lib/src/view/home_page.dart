@@ -223,9 +223,9 @@ class _HomePageState extends State<HomePage> {
           children: [
             CustomNetworkImage(
               imageUrl: homeCon.headerImage.toString(), 
-              height: 100, 
-              width: 120,
-              borderRadius: 0.0,
+              height: 120.h, 
+              width: 300.w,
+              borderRadius: 8.r,
             ),
             SizedBox(height: 26.h,),
             // Redeem Code Grid
