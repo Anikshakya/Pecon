@@ -1,4 +1,6 @@
 import 'package:pecon/src/app_config/styles.dart';
+import 'package:pecon/src/controllers/app_controller.dart';
+import 'package:pecon/src/controllers/user_controller.dart';
 import 'package:pecon/src/view/accounts.dart';
 import 'package:pecon/src/view/home_page.dart';
 import 'package:pecon/src/view/products_page.dart';
@@ -15,6 +17,10 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  // Get Controller
+  final UserController userCon = Get.put(UserController());
+  final AppController  appCon  = Get.put(AppController());
+  
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
@@ -28,6 +34,21 @@ class _DashboardState extends State<Dashboard> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if(mounted){
+      getData();
+    }
+  }
+
+  // Get Initial Data
+  getData() async{
+    // Get Logged In User data
+    // appCon.showAdDialog();
+    await userCon.getUserData();
   }
 
   @override

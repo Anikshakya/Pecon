@@ -2,21 +2,22 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 import 'package:pecon/src/api_config/api_repo.dart';
+import 'package:pecon/src/model/ad_slider_model.dart';
 
 class HomeController extends GetxController{
   // Get Controllers 
   final RxBool isAdBannerLoading = false.obs;
 
   // Ad List Banner
-  List adBannerList = [];
+  dynamic adSliderData;
 
   // Slider/AdBanner API
-  login({number, password}) async {
+  getAdBanner({number, password}) async {
     try{
       isAdBannerLoading(true); // Start Loading
       var response = await ApiRepo.apiGet('api/sliders', "", 'Sliders API');
       if(response != null && response['code'] == 200) {
-        adBannerList = response['data'];
+        adSliderData = AdSlider.fromJson(response);
       }
     }catch (e){
       isAdBannerLoading(false); // Stop Loading

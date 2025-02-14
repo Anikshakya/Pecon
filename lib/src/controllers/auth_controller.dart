@@ -42,7 +42,6 @@ class AuthController extends GetxController {
 
         isLoginLoading(false); // Stop Loading
         Get.offAll(()=>const Dashboard());
-        appCon.showAdDialog();
       }
     }catch (e){
       log(e.toString());

@@ -20,9 +20,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final formKey = GlobalKey<FormState>();
 
-  final TextEditingController mobileController = TextEditingController();
-  final TextEditingController nameCon = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  // Text Controllers
+  final TextEditingController mobileController          = TextEditingController();
+  final TextEditingController nameCon                   = TextEditingController();
+  final TextEditingController passwordController        = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
 
   bool isObscure = true;

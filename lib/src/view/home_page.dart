@@ -1,6 +1,7 @@
 
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/app_controller.dart';
+import 'package:pecon/src/controllers/home_controller.dart';
 import 'package:pecon/src/controllers/user_controller.dart';
 import 'package:pecon/src/model/redeeme_item_model.dart';
 import 'package:pecon/src/view/product_details.dart';
@@ -23,8 +24,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // Get Controller
   final UserController userCon = Get.put(UserController());
-  final AppController appCon = Get.put(AppController());
-  
+  final HomeController homeCon = Get.put(HomeController());
+  final AppController  appCon  = Get.put(AppController());
+
+  // Formate Number to US standard
   final NumberFormat formatter = NumberFormat("#,##0", "en_US");
   
   int _currentIndex = 0;
@@ -95,6 +98,21 @@ class _HomePageState extends State<HomePage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    if(mounted){
+      getData();
+    }
+  }
+
+  // Get Initial Data
+  getData() async{
+    // Get AdBanner/Slider data
+    await homeCon.getAdBanner();
+
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: white,
@@ -124,52 +142,62 @@ class _HomePageState extends State<HomePage> {
   }
 
   topBanner() {
-    return SizedBox(
-      height: 220.h,
-      child: Column(
-        children: [
-          CarouselSlider(
-            options: CarouselOptions(
-              height: 200.h,
-              autoPlay: true,
-              enlargeCenterPage: true,
-              viewportFraction: 1,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
-            ),
-            items: adImages.map((imageUrl) {
-              return Container(
-                margin: const EdgeInsets.fromLTRB(20, 14, 20, 10),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 236, 236, 236),
-                  borderRadius: BorderRadius.circular(8),
-                  image: DecorationImage(
-                    image: NetworkImage(imageUrl),
-                    fit: BoxFit.cover,
+    return Obx(() => homeCon.isAdBannerLoading.isTrue
+      ? Container(
+          height: 175.h,
+          margin: const EdgeInsets.fromLTRB(20, 14, 20, 10),
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 236, 236, 236),
+            borderRadius: BorderRadius.circular(8),
+          ),
+        )
+      : SizedBox(
+        height: 220.h,
+        child: Column(
+          children: [
+            CarouselSlider(
+              options: CarouselOptions(
+                height: 200.h,
+                autoPlay: true,
+                enlargeCenterPage: true,
+                viewportFraction: 1,
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+              ),
+              items: List.generate(homeCon.adSliderData.data.length, (index) {
+                return Container(
+                  margin: const EdgeInsets.fromLTRB(20, 14, 20, 10),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 236, 236, 236),
+                    borderRadius: BorderRadius.circular(8),
+                    image: DecorationImage(
+                      image: NetworkImage(homeCon.adSliderData.data[index].image.toString()),
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-              );
-            }).toList(),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: adImages.asMap().entries.map((entry) {
-              return Container(
-                width: 12.w,
-                height: 2.5.h,
-                margin: const EdgeInsets.symmetric(horizontal: 2),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: _currentIndex == entry.key ? black.withOpacity(0.8) : black.withOpacity(0.1),
-                ),
-              );
-            }).toList(),
-          ),
-        ],
-      ),
+                );
+              })
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: adImages.asMap().entries.map((entry) {
+                return Container(
+                  width: 12.w,
+                  height: 2.5.h,
+                  margin: const EdgeInsets.symmetric(horizontal: 2),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: _currentIndex == entry.key ? black.withOpacity(0.8) : black.withOpacity(0.1),
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      )
     );
   }
 
