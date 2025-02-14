@@ -1,7 +1,9 @@
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/auth_controller.dart';
 import 'package:pecon/src/controllers/user_controller.dart';
+import 'package:pecon/src/view/privacy_policy.dart';
 import 'package:pecon/src/view/profile_form_page.dart';
+import 'package:pecon/src/view/terms_condition.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
 import 'package:pecon/src/widgets/custom_network_image.dart';
 import 'package:flutter/material.dart';
@@ -96,8 +98,16 @@ class _AccountPageState extends State<AccountPage> {
                     _buildListTile('Warranty Replacement', Icons.swap_horiz),
                     _buildListTile('Withdrawal Requests', Icons.request_page),
                     _buildListTile('Offers And Promotions', Icons.local_offer),
-                    _buildListTile('Privacy Policy', Icons.lock),
-                    _buildListTile('Terms And Conditions', Icons.description),
+                    _buildListTile('Privacy Policy', Icons.lock,
+                      onTap: (){
+                        Get.to(()=> PrivacyPolicy());
+                      }
+                    ),
+                    _buildListTile('Terms And Conditions', Icons.description,
+                      onTap: (){
+                        Get.to(()=> TermsAndConditions());
+                      }
+                    ),
                     _buildListTile(
                       onTap: () async{
                         await authCon.logout();

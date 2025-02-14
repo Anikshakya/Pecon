@@ -3,6 +3,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:html2md/html2md.dart' as html2md;
 
 class CustomMarkdownWidget extends StatelessWidget {
   final String data;
@@ -37,20 +38,20 @@ class CustomMarkdownWidget extends StatelessWidget {
         //   color: Colors.transparent, // em use here
         // ),
         // Define different styles for each heading level
-        // h1: h1(black),
-        // h2: h2(black),
-        // h3: h3(black),
-        // h4: h4(black),
-        // h5: h5(black),
-        h6: null,
-        p: poppinsMedium(size: 12.sp, color: gray),
+        h1: poppinsMedium(size: 22.sp, color: black),
+        h2: poppinsMedium(size: 20.sp, color: black),
+        h3: poppinsMedium(size: 18.sp, color: black),
+        h4: poppinsMedium(size: 16.sp, color: black),
+        h5: poppinsMedium(size: 14.sp, color: black),
+        h6: poppinsMedium(size: 12.sp, color: black),
+        p: poppinsMedium(size: 14.sp, color: black),
         listBullet: null, //Bullet Color
         listIndent: null, //Bullet Spacing
-        strong: poppinsBold(size: 12.sp, color: black), //Bullet Heading
-        blockquote:poppinsBold(size: 14.sp, color: black),
+        strong: poppinsBold(size: 16.sp, color: black), //Bullet Heading
+        blockquote:poppinsBold(size: 16.sp, color: black),
         blockquoteDecoration: const BoxDecoration(color: grey3),
       ),
-      data: data.toString().replaceAll('<br>', '\u2028').replaceAll('![image](![file]', ''),
+      data: html2md.convert(data),
       imageBuilder: imageBuilder,
     );
   }

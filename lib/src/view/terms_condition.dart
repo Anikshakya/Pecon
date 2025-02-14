@@ -1,16 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:pecon/src/app_config/styles.dart';
+import 'package:pecon/src/controllers/app_controller.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
+import 'package:pecon/src/widgets/custom_markdown.dart';
+import 'package:pecon/src/widgets/custom_network_image.dart';
+import 'package:pecon/src/widgets/view_full_screen_image.dart';
 
 class TermsAndConditions extends StatelessWidget {
-  const TermsAndConditions({super.key});
+  TermsAndConditions({super.key});
+  //GetController
+  final AppController appCon = Get.put(AppController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: white,
-      appBar: appbar(),
-      body: const SizedBox(),
+      appBar: appbar(title: "Terms and Conditions"),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 24.sp),
+          child: CustomMarkdownWidget(
+            data: appCon.termsCondition,
+            imageBuilder: (uri, title, alt) {
+              var imageList = [];
+              imageList.add(uri.toString());
+              return InkWell(
+                onTap: () {
+                  Get.to(() => FullScreenImagePage(imageUrl: imageList[imageList.indexOf(uri.toString())]),
+                    transition: Transition.downToUp
+                  );
+                },
+                child: CustomNetworkImage(
+                  imageUrl: uri.toString(),
+                  height: 442.0.h,
+                  width: double.infinity,
+                ),
+              );
+            },
+          ),
+        ),
+      ),
     );
   }
 }
