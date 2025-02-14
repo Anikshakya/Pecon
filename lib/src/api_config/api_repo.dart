@@ -9,7 +9,7 @@ class ApiRepo{
   static apiPost(apiPath,params, [apiName]) async {
     try {
       var response = await dio.post(apiPath, data: params);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         
         return response.data;
       }
