@@ -8,12 +8,14 @@ import 'package:pecon/src/model/redeeme_item_model.dart';
 class HomeController extends GetxController{
   // Get Controllers 
   final RxBool isAdBannerLoading = false.obs;
-  final RxBool isRedeemInfoLoading = true.obs;
+  final RxBool isRedeemInfoLoading = false.obs;
 
   // Ad List Banner
   dynamic adSliderData;
   //redeem List
-  dynamic redeemInfoData;
+  List redeemInfoData = [];
+  //redeem header image
+  String headerImage = "";
 
   // Slider/AdBanner API
   getAdBanner({number, password}) async {
@@ -38,7 +40,9 @@ class HomeController extends GetxController{
       var response = await ApiRepo.apiGet('api/redeem-information', "", 'RedeemInfo API');
       if(response != null && response['code'] == 200) {
         var allData = RedeemInformationModel.fromJson(response);
-        redeemInfoData = allData.data!;
+        headerImage = allData.data!.headerImage!;
+        redeemInfoData = allData.data!.reedemInformation!;
+
       }
     }catch (e){
       log(e.toString());

@@ -210,17 +210,24 @@ class _HomePageState extends State<HomePage> {
       ),
       padding: EdgeInsets.symmetric(horizontal: 10.sp, vertical: 20.sp),
       margin: EdgeInsets.symmetric(horizontal: 20.sp),
-      child: Obx(() => homeCon.isRedeemInfoLoading.isTrue
+      child: Obx(() => homeCon.isRedeemInfoLoading.isTrue 
         ? SizedBox(height: 300.h,)
+        : homeCon.redeemInfoData.isEmpty 
+        ? SizedBox(
+          height: 300.h,
+          child: Center(
+            child: Text("No Data", style: poppinsMedium(size: 13.sp, color: black),),
+          ),
+        )
         : Column(
           children: [
-            Text(
-              "Points-Based \nRewards",
-              textAlign: TextAlign.center,
-              style: poppinsSemiBold(size: 20.sp, color: black),
+            CustomNetworkImage(
+              imageUrl: homeCon.headerImage.toString(), 
+              height: 100, 
+              width: 120,
+              borderRadius: 0.0,
             ),
-            // Image.asset("assets/images/logo.png", height: 50.h),
-            SizedBox(height: 16.h,),
+            SizedBox(height: 26.h,),
             // Redeem Code Grid
             LayoutBuilder(
               builder: (context, constraints) {

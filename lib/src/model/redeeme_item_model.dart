@@ -12,7 +12,7 @@ class RedeemInformationModel {
     bool? status;
     int? code;
     String? message;
-    List<Datum>? data;
+    Data? data;
 
     RedeemInformationModel({
         this.status,
@@ -25,18 +25,38 @@ class RedeemInformationModel {
         status: json["status"],
         code: json["code"],
         message: json["message"] ?? "",
-        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+        data: Data.fromJson(json["data"]),
     );
 
     Map<String, dynamic> toJson() => {
         "status": status,
         "code": code,
         "message": message,
-        "data": List<dynamic>.from(data!.map((x) => x.toJson())),
+        "data": data!.toJson(),
     };
 }
 
-class Datum {
+class Data {
+    List<ReedemInformation>? reedemInformation;
+    String? headerImage;
+
+    Data({
+        this.reedemInformation,
+        this.headerImage,
+    });
+
+    factory Data.fromJson(Map<String, dynamic> json) => Data(
+        reedemInformation: List<ReedemInformation>.from(json["reedemInformation"].map((x) => ReedemInformation.fromJson(x))),
+        headerImage: json["header_image"] ?? "",
+    );
+
+    Map<String, dynamic> toJson() => {
+        "reedemInformation": List<dynamic>.from(reedemInformation!.map((x) => x.toJson())),
+        "header_image": headerImage,
+    };
+}
+
+class ReedemInformation {
     int? id;
     String? title;
     int? points;
@@ -45,7 +65,7 @@ class Datum {
     String? createdAt;
     String? updatedAt;
 
-    Datum({
+    ReedemInformation({
         this.id,
         this.title,
         this.points,
@@ -55,12 +75,12 @@ class Datum {
         this.updatedAt,
     });
 
-    factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+    factory ReedemInformation.fromJson(Map<String, dynamic> json) => ReedemInformation(
         id: json["id"],
         title: json["title"] ?? "",
         points: json["points"] ?? "",
         image: json["image"] ?? "",
-        position: json["position"] ?? "",
+        position: json["position"],
         createdAt: json["created_at"],
         updatedAt: json["updated_at"],
     );
