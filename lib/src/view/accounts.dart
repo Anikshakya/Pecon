@@ -97,7 +97,6 @@ class _AccountPageState extends State<AccountPage> {
                     _buildListTile('Withdrawal Requests', Icons.request_page),
                     _buildListTile('Offers And Promotions', Icons.local_offer),
                     _buildListTile('Privacy Policy', Icons.lock),
-                    _buildListTile('FAQ', Icons.help_outline),
                     _buildListTile('Terms And Conditions', Icons.description),
                     _buildListTile(
                       onTap: () async{
