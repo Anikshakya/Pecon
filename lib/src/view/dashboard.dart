@@ -40,7 +40,9 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     if(mounted){
-      getData();
+      WidgetsBinding.instance.addPostFrameCallback((_) async{
+        await getData();
+      });
     }
   }
 

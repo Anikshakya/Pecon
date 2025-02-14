@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 
 class AppController extends GetxController{
   // Single function to show the ad dialog
-  void showAdDialog() {
-    Get.dialog(
+  showAdDialog() {
+    return Get.dialog(
       // Transparent background, no title, no extra padding
       Dialog(
         backgroundColor: Colors.transparent,
