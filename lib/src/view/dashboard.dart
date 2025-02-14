@@ -47,7 +47,7 @@ class _DashboardState extends State<Dashboard> {
   // Get Initial Data
   getData() async{
     // Get Logged In User data
-    // appCon.showAdDialog();
+    appCon.showAdDialog();
     await userCon.getUserData();
   }
 
