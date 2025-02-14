@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -29,6 +31,7 @@ customerServiceDialog() {
                   ),
                 ),
                 SizedBox(height: 15.h,),
+                //call
                 InkWell(
                   onTap: ()=> AppUtils().openLinkWithUrl("tel:9863021878"),
                   borderRadius: BorderRadius.circular(30.r),
@@ -44,6 +47,7 @@ customerServiceDialog() {
                   ),
                 ),
                 SizedBox(height: 5.h,),
+                //whatsapp
                 InkWell(
                   onTap: ()=> AppUtils().openLinkWithUrl("https://wa.me/9863021878"),
                   borderRadius: BorderRadius.circular(30.r),
@@ -54,6 +58,22 @@ customerServiceDialog() {
                         Image.asset("assets/images/whatsapp.png", width: 30.w, height: 30.w, fit: BoxFit.cover), // Replace with your WhatsApp icon
                         SizedBox(width: 20.w),
                         Text("WhatsApp",style: TextStyle(fontSize: 13.sp, color: black, fontWeight: FontWeight.w500),),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 5.h,),
+                //facebook
+                InkWell(
+                  onTap: ()=> AppUtils().openLinkWithUrl(Platform.isIOS ? "fb://profile/bbcnews" : "fb://page/bbcnews"),
+                  borderRadius: BorderRadius.circular(30.r),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                    child: Row(
+                      children: [
+                        Image.asset("assets/images/facebook.png", width: 30.w, height: 30.w, fit: BoxFit.cover), // Replace with your WhatsApp icon
+                        SizedBox(width: 20.w),
+                        Text("Facebook",style: TextStyle(fontSize: 13.sp, color: black, fontWeight: FontWeight.w500),),
                       ],
                     ),
                   ),

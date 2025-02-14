@@ -21,12 +21,20 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
 
   dynamic changedProfileImage;
 
-  // Text Editing Controllers
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController bankController = TextEditingController();
-  final TextEditingController accNoController = TextEditingController();
-  final TextEditingController esewaController = TextEditingController();
-  final TextEditingController khaltiController = TextEditingController();
+
+  // Profile Text Editing Controllers 
+  final TextEditingController nameController     = TextEditingController();
+  final TextEditingController numController      = TextEditingController();
+
+  // Bank Text Editing Controllers 
+  final TextEditingController accNameController  = TextEditingController();
+  final TextEditingController bankController     = TextEditingController();
+  final TextEditingController accNoController    = TextEditingController();
+  final TextEditingController esewaController    = TextEditingController();
+  final TextEditingController khaltiController   = TextEditingController();
+
+  //current form view
+  bool isProfileView = true;
 
   @override
   void initState() {
@@ -55,16 +63,168 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
-            padding: EdgeInsets.all(30.w),
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.0.h),
             child: Column(
               children: [
-                changeProfilePic(),
-                SizedBox(height: 30.h,),
-                profileInfoForms(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    //get profile form button
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          isProfileView = true;
+                        });
+                      },
+                      child: Container(
+                        height: 50.h,
+                        width: 160.w,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.r),
+                          color: isProfileView ? primary : black.withOpacity(0.15)
+                        ),
+                        child: Center(child: Text("Personal Details", style: poppinsSemiBold(size: 14.sp, color: black),)),
+                      ),
+                    ),
+                    //get bank form button
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          isProfileView = false;
+                        });
+                      },  
+                      child: Container(
+                        height: 50.h,
+                        width: 160.w,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.r),
+                          color: isProfileView ? black.withOpacity(0.15) : primary
+                        ),
+                        child: Center(child: Text("Bank Details", style: poppinsSemiBold(size: 14.sp, color: black),)),
+                      ),
+                    ),
+                  ],
+                ),
+                //form
+                isProfileView 
+                  ? profileView()
+                  : bankView(),
+                //submitButton
+                submitButton()
               ],
-            )
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  //profileView
+  profileView(){
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 30.0.h),
+      child: Column(
+        children: [
+          changeProfilePic(),
+          SizedBox(height: 30.h,),
+          profileInfoForm(),
+        ],
+      )
+    );
+  }
+  
+  //profile form
+  profileInfoForm() {
+    return Form(
+      key: formKey,
+      child: Column(
+        children: [
+          //Name
+          CustomTextFormField(
+            controller: nameController,
+            textInputAction: TextInputAction.next,
+            headingText: "User Name",
+            filledColor: gray.withOpacity(0.2),
+          ),
+          SizedBox(height: 20.h),
+          //number
+          CustomTextFormField(
+            controller: numController,
+            textInputAction: TextInputAction.next,
+            headingText: "Mobile Number",
+            filledColor: gray.withOpacity(0.2),
+          ),
+        ],
+      ),
+    );
+  }
+
+  //bankView
+  bankView(){
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 30.0.h),
+      child: Column(
+        children: [
+          bankInfoForm(),
+        ],
+      )
+    );
+  }
+  
+  //bank form
+  bankInfoForm() {
+    return Form(
+      key: formKey,
+      child: Column(
+        children: [
+          //Name
+          CustomTextFormField(
+            controller: accNameController,
+            textInputAction: TextInputAction.next,
+            headingText: "Account Holder Name",
+            filledColor: gray.withOpacity(0.2),
+          ),
+          SizedBox(height: 20.h),
+          //bank name
+          CustomTextFormField(
+            controller: bankController,
+            textInputAction: TextInputAction.next,
+            headingText: "Bank Name",
+            filledColor: gray.withOpacity(0.2),
+          ),
+          SizedBox(height: 20.h),
+          //bank acc no
+          CustomTextFormField(
+            controller: accNoController,
+            textInputAction: TextInputAction.next,
+            headingText: "Account Number",
+            filledColor: gray.withOpacity(0.2),
+          ),
+          SizedBox(height: 20.h),
+          //esewa number
+          CustomTextFormField(
+            controller: esewaController,
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.number,
+            headingText: "Esewa Number",
+            filledColor: gray.withOpacity(0.2),
+            validator: (value) => value != null && value.length == 10
+                ? null
+                : "Enter a valid 10-digit mobile number",
+          ),
+          SizedBox(height: 20.h),
+          //khalti number
+          CustomTextFormField(
+            controller: khaltiController,
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.number,
+            headingText: "Khalti Number",
+            filledColor: gray.withOpacity(0.2),
+            validator: (value) => value != null && value.length == 10
+                ? null
+                : "Enter a valid 10-digit mobile number",
+          ),
+        ],
       ),
     );
   }
@@ -212,76 +372,25 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
     );
   }
   
-  //profile form
-  profileInfoForms() {
-    return Form(
-      key: formKey,
-      child: Column(
-        children: [
-          //Name
-          CustomTextFormField(
-            controller: nameController,
-            textInputAction: TextInputAction.next,
-            headingText: "Account Holder Name",
-            filledColor: gray.withOpacity(0.2),
+  //submit button
+  submitButton() {
+    return 
+    // Submit Button
+    // Obx(()=>
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10.0.w),
+        child: Center(
+          child: CustomButton(
+            width: double.infinity,
+            // isLoading: authCon.isLoginLoading.value,
+            onPressed: () async {
+              final isValid = formKey.currentState!.validate();
+                if (!isValid) return;
+            },
+            text: "Submit",
           ),
-          SizedBox(height: 20.h),
-          //bank name
-          CustomTextFormField(
-            controller: bankController,
-            textInputAction: TextInputAction.next,
-            headingText: "Bank Name",
-            filledColor: gray.withOpacity(0.2),
-          ),
-          SizedBox(height: 20.h),
-          //bank acc no
-          CustomTextFormField(
-            controller: accNoController,
-            textInputAction: TextInputAction.next,
-            headingText: "Account Number",
-            filledColor: gray.withOpacity(0.2),
-          ),
-          SizedBox(height: 20.h),
-          //esewa number
-          CustomTextFormField(
-            controller: esewaController,
-            textInputAction: TextInputAction.next,
-            keyboardType: TextInputType.number,
-            headingText: "Esewa Number",
-            filledColor: gray.withOpacity(0.2),
-            validator: (value) => value != null && value.length == 10
-                ? null
-                : "Enter a valid 10-digit mobile number",
-          ),
-          SizedBox(height: 20.h),
-          //khalti number
-          CustomTextFormField(
-            controller: khaltiController,
-            textInputAction: TextInputAction.next,
-            keyboardType: TextInputType.number,
-            headingText: "Khalti Number",
-            filledColor: gray.withOpacity(0.2),
-            validator: (value) => value != null && value.length == 10
-                ? null
-                : "Enter a valid 10-digit mobile number",
-          ),
-          SizedBox(height: 40.h),
-          // Submit Button
-          // Obx(()=>
-            Center(
-              child: CustomButton(
-                width: double.infinity,
-                // isLoading: authCon.isLoginLoading.value,
-                onPressed: () async {
-                  final isValid = formKey.currentState!.validate();
-                    if (!isValid) return;
-                },
-                text: "Submit",
-              ),
-            ),
-          // ),
-        ],
-      ),
-    );
+        ),
+      );
+    // ),
   }
 }
