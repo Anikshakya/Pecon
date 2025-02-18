@@ -70,10 +70,10 @@ class Data {
         number: json["number"] ?? "",
         profileUrl: json["profile_url"] ?? "https://images.squarespace-cdn.com/content/v1/56c346b607eaa09d9189a870/1551408857522-4ZFG11B2M7UPFYBFBRO0/FLAUNT-MAGAZINE-JOJI-2.jpg",
         redeemed: json["reedemed"] ?? 0,
-        city: json["city"],
-        district: json["district"],
-        dob: json["dob"],
-        gender: json["gender"],
+        city: json["city"] ?? "",
+        district: json["district"] ?? "",
+        dob: json["dob"] ?? "",
+        gender: json["gender"] ?? "",
         bank: json["bank"] != null ? Bank.fromJson(json["bank"]) : Bank(),
     );
 
