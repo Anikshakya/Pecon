@@ -29,8 +29,8 @@ class _RegisterPageState extends State<RegisterPage> {
   bool isObscure = true;
   bool isConfirmPassObscure = true;
 
-  List<String> roles = ["Shopkeeper", "Electrician", "Customer"];
-  String selectedRole = "Shopkeeper";
+  List<String> roles = ["Vendor", "Technician", "Customer"];
+  String selectedRole = "Customer";
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +43,11 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
         backgroundColor: primary,
         extendBodyBehindAppBar: true,
-        body: Padding(
-          padding: EdgeInsets.all(30.sp),
-          child: Center(
-            child: SingleChildScrollView(
+        body: Center(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Padding(
+              padding: EdgeInsets.all(30.sp),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,

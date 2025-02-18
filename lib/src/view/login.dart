@@ -36,11 +36,11 @@ class _LoginPageState extends State<LoginPage> {
         onTap: () {
           FocusManager.instance.primaryFocus?.unfocus();
         },
-        child: Padding(
-          padding: EdgeInsets.all(30.sp),
-          child: Center(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
+        child: Center(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Padding(
+              padding: EdgeInsets.all(30.sp),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
