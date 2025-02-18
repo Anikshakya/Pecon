@@ -30,8 +30,12 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   dynamic changedProfileImage;
 
   //gender selection
-  List<String> gender = ["Male", "Female", "Others"];
+  List<String> gender = ["Male", "Female"];
   int selectedIndex = 0; // Store initial selection
+  int selectedDistrict = 0; 
+  int selectedCityIndex = 0; 
+  int? districtId; 
+  int? cityId; 
 
   //initial DOB
   DateTime selectedDate = DateTime.now(); 
@@ -41,8 +45,8 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   final TextEditingController emailController    = TextEditingController();
   final TextEditingController numController      = TextEditingController();
   final TextEditingController addressController  = TextEditingController();
-  final TextEditingController districtController  = TextEditingController();
-  final TextEditingController cityController  = TextEditingController();
+  final TextEditingController districtController = TextEditingController();
+  final TextEditingController cityController     = TextEditingController();
   final TextEditingController genderController   = TextEditingController();
   final TextEditingController dobController      = TextEditingController();
 
@@ -85,6 +89,8 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
         esewaController.text    = userCon.user.value.data.bank.esewa;
         khaltiController.text   = userCon.user.value.data.bank.khalti;
       });
+      await userCon.getDistrictData();
+      await userCon.getcityData();
     });
   }
 
@@ -172,83 +178,117 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   profileInfoForm() {
     return Form(
       key: formKey,
-      child: Column(
-        children: [
-          //Name
-          CustomTextFormField(
-            controller: nameController,
-            textInputAction: TextInputAction.next,
-            headingText: "User Name",
-            filledColor: gray.withOpacity(0.2),
-            validator: (value) => value != ""
-                ? null
-                : "Required",
-          ),
-          SizedBox(height: 20.h),
-          //number
-          CustomTextFormField(
-            controller: numController,
-            textInputAction: TextInputAction.next,
-            keyboardType: TextInputType.number,
-            headingText: "Mobile Number",
-            filledColor: gray.withOpacity(0.2),
-            validator: (value) => value != ""
-                ? null
-                : "Required",
-          ),
-          SizedBox(height: 20.h),
-          //Email
-          CustomTextFormField(
-            controller: emailController,
-            textInputAction: TextInputAction.next,
-            headingText: "Email",
-            filledColor: gray.withOpacity(0.2),
-          ),
-          SizedBox(height: 20.h),
-          //Address
-          CustomTextFormField(
-            controller: addressController,
-            textInputAction: TextInputAction.next,
-            headingText: "Address",
-            filledColor: gray.withOpacity(0.2),
-          ),
-          SizedBox(height: 20.h),
-          //District
-          CustomTextFormField(
-            controller: districtController,
-            textInputAction: TextInputAction.next,
-            headingText: "District",
-            filledColor: gray.withOpacity(0.2),
-          ),
-          SizedBox(height: 20.h),
-          //City Controll
-          CustomTextFormField(
-            controller: cityController,
-            textInputAction: TextInputAction.next,
-            headingText: "City",
-            filledColor: gray.withOpacity(0.2),
-          ),
-          SizedBox(height: 20.h),
-          //Gender
-          CustomTextFormField(
-            onTap: showCupertinoGenderPicker,
-            readOnly: true,
-            controller: genderController,
-            textInputAction: TextInputAction.next,
-            headingText: "Gender",
-            filledColor: gray.withOpacity(0.2),
-          ),
-          SizedBox(height: 20.h),
-          //Dob
-          CustomTextFormField(
-            onTap: showCupertinoDatePicker,
-            readOnly: true,
-            controller: dobController,
-            textInputAction: TextInputAction.done,
-            headingText: "Date of Birth",
-            filledColor: gray.withOpacity(0.2),
-          ),
-        ],
+      child: Obx(() =>
+        Column(
+          children: [
+            //Name
+            CustomTextFormField(
+              controller: nameController,
+              textInputAction: TextInputAction.next,
+              headingText: "User Name",
+              filledColor: gray.withOpacity(0.2),
+              validator: (value) => value != ""
+                  ? null
+                  : "Required",
+            ),
+            SizedBox(height: 20.h),
+            //number
+            CustomTextFormField(
+              controller: numController,
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              headingText: "Mobile Number",
+              filledColor: gray.withOpacity(0.2),
+              validator: (value) => value != ""
+                  ? null
+                  : "Required",
+            ),
+            SizedBox(height: 20.h),
+            //Email
+            CustomTextFormField(
+              controller: emailController,
+              textInputAction: TextInputAction.next,
+              headingText: "Email",
+              filledColor: gray.withOpacity(0.2),
+            ),
+            SizedBox(height: 20.h),
+            //Address
+            CustomTextFormField(
+              controller: addressController,
+              textInputAction: TextInputAction.next,
+              headingText: "Address",
+              filledColor: gray.withOpacity(0.2),
+            ),
+            SizedBox(height: 20.h),
+            //District
+            CustomTextFormField(
+              readOnly: true,
+              onTap: userCon.isAddressLoading.isTrue ? (){} : showCupertinoDistrictPicker,
+              controller: districtController,
+              textInputAction: TextInputAction.next,
+              headingText: "District",
+              filledColor: gray.withOpacity(0.2),
+              suffixIcon: userCon.isAddressLoading.isTrue 
+                ? Container(
+                  height: 48.h,
+                  width: 48.h,
+                  padding: EdgeInsets.all(14.sp),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: grey1,
+                      strokeWidth: 1.5.sp,
+                    ),
+                  ),
+                )
+                : const Icon(Icons.arrow_drop_down, color: grey1,),
+            ),
+            SizedBox(height: 20.h),
+            //City Controll
+            CustomTextFormField(
+              readOnly: true,
+              onTap: userCon.isAddressLoading.isTrue ? (){} : showCupertinoCityPicker,
+              controller: cityController,
+              textInputAction: TextInputAction.next,
+              headingText: "City",
+              filledColor: gray.withOpacity(0.2),
+              suffixIcon: userCon.isAddressLoading.isTrue
+                ? Container(
+                  height: 48.h,
+                  width: 48.h,
+                  padding: EdgeInsets.all(14.sp),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: grey1,
+                      strokeWidth: 1.5.sp,
+                    ),
+                  ),
+                )
+                : const Icon(Icons.arrow_drop_down, color: grey1,),
+            ),
+            SizedBox(height: 20.h),
+            //Gender
+            CustomTextFormField(
+              onTap: showCupertinoGenderPicker,
+              readOnly: true,
+              controller: genderController,
+              textInputAction: TextInputAction.next,
+              headingText: "Gender",
+              filledColor: gray.withOpacity(0.2),
+              isDropdown: true,
+            ),
+            SizedBox(height: 20.h),
+            //Dob
+            CustomTextFormField(
+              onTap: showCupertinoDatePicker,
+              readOnly: true,
+              controller: dobController,
+              textInputAction: TextInputAction.done,
+              headingText: "Date of Birth",
+              filledColor: gray.withOpacity(0.2),
+              isDropdown: true,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -496,9 +536,9 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     number: numController.text.toString().trim(),
                     email: emailController.text.toString().trim(),
                     address: addressController.text.toString().trim(),
-                    district : districtController.text.toString().trim(),
-                    city : cityController.text.toString().trim(),
-                    gender: genderController.text.toString().trim(),
+                    district : districtId,
+                    city : cityId,
+                    gender: genderController.text.toLowerCase().toString().trim(),
                     dob: dobController.text.toString().trim(),
                   );
               }
@@ -518,6 +558,136 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
           ),
         ),
       ),
+    );
+  }
+
+  //district picker
+  showCupertinoDistrictPicker() {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 240.h,
+          color: Colors.white,
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16.sp),
+                height: 40.h,
+                color: Colors.grey[200],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context), // Cancel
+                      child: Text("Cancel", style: poppinsMedium(size: 15.sp, color: purple)),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          // Store selected district ID in text controller
+                          districtController.text = userCon.districtList[selectedDistrict]["name"].toString();
+                          districtId = userCon.districtList[selectedDistrict]["id"];
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: Text("Done", style: poppinsMedium(size: 15.sp, color: purple)),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 200.h,
+                child: CupertinoPicker(
+                  backgroundColor: Colors.white,
+                  itemExtent: 40.h,
+                  scrollController: FixedExtentScrollController(
+                    initialItem: selectedDistrict,
+                  ),
+                  onSelectedItemChanged: (index) {
+                    setState(() {
+                      selectedDistrict = index;
+                    });
+                  },
+                  children: userCon.districtList
+                      .map<Widget>((district) => Center(
+                            child: Text(
+                              district["name"].toString(), // Ensure the name is displayed
+                              style: TextStyle(fontSize: 18.sp),
+                            ),
+                          ))
+                      .toList(),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  //gender picker
+  showCupertinoCityPicker() {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 240.h,
+          color: Colors.white,
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16.sp),
+                height: 40.h,
+                color: Colors.grey[200],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context), // Cancel
+                      child: Text("Cancel", style: poppinsMedium(size: 15.sp, color: purple)),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          // Store selected district ID in text controller
+                          cityController.text = userCon.cityList[selectedCityIndex]["name"].toString();
+                          cityId = userCon.cityList[selectedCityIndex]["id"];
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: Text("Done", style: poppinsMedium(size: 15.sp, color: purple)),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 200.h,
+                child: CupertinoPicker(
+                  backgroundColor: Colors.white,
+                  itemExtent: 40.h,
+                  scrollController: FixedExtentScrollController(
+                    initialItem: selectedCityIndex,
+                  ),
+                  onSelectedItemChanged: (index) {
+                    setState(() {
+                      selectedCityIndex = index;
+                    });
+                  },
+                  children: userCon.cityList
+                      .map<Widget>((city) => Center(
+                            child: Text(
+                              city["name"].toString(), // Ensure the name is displayed
+                              style: TextStyle(fontSize: 18.sp),
+                            ),
+                          ))
+                      .toList(),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

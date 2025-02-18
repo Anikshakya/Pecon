@@ -20,7 +20,7 @@ class ProductsController extends GetxController{
       isLoading(true); // Start Loading
       var response = await ApiRepo.apiGet('api/categories', "", 'Get Search Category');
       if(response != null && response['code'] == 200) {
-        if(response["data"] != null || response["data"] != []){
+        if(response["data"] != null && response["data"] != []){
           categoryList = response["data"];
         }
       }

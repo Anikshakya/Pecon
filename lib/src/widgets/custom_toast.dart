@@ -12,7 +12,7 @@ showToast({message, bool? isSuccess, bool? isEn}) {
     borderColor: isSuccess == true ? const Color(0xff266CD4) : red,
     borderWidth: 1,
     margin: EdgeInsets.symmetric(horizontal : 16.sp, vertical: 6.sp),
-    duration: const Duration(seconds: 7),
+    duration: const Duration(seconds: 3),
     messageText: const SizedBox.shrink(),
     titleText: Padding(
       padding: EdgeInsets.only(top: 1.sp),
