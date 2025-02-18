@@ -72,6 +72,8 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
       setState((){
         districtId              = userCon.user.value.data.districtId;
         cityId                  = userCon.user.value.data.cityId;
+        selectedDistrict        = userCon.districtList.indexWhere((item) => item["name"] == userCon.user.value.data.district.toString());
+        selectedCityIndex       = userCon.cityList.indexWhere((item) => item["name"] == userCon.user.value.data.city.toString());
         changedProfileImage     = userCon.user.value.data.profileUrl;
         // Profile Text Editing Controllers 
         nameController.text     = userCon.user.value.data.name;
