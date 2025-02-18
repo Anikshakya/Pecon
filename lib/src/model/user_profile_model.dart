@@ -46,6 +46,8 @@ class Data {
     String gender;
     String dob;
     String city;
+    int cityId;
+    int districtId;
     String district;
     Bank bank;
 
@@ -59,6 +61,8 @@ class Data {
         this.gender = "",
         this.dob = "",
         this.district = "",
+        this.districtId = 0,
+        this.cityId = 0,
         this.city = "",
         Bank? bank,
     }) : bank = bank ?? Bank();
@@ -74,6 +78,8 @@ class Data {
         district: json["district"] ?? "",
         dob: json["dob"] ?? "",
         gender: json["gender"] ?? "",
+        districtId: json["district_id"] ?? "",
+        cityId: json["city_id"] ?? "",
         bank: json["bank"] != null ? Bank.fromJson(json["bank"]) : Bank(),
     );
 
@@ -89,6 +95,8 @@ class Data {
         "district" : district,
         "city" : city,
         "bank": bank.toJson(),
+        "city_id" : cityId,
+        "district_id": districtId
     };
 }
 

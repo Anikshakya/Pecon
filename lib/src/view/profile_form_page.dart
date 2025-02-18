@@ -69,6 +69,8 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   initialise() async{
     WidgetsBinding.instance.addPostFrameCallback((_) async{
       setState((){
+        districtId              = userCon.user.value.data.districtId;
+        cityId                  = userCon.user.value.data.cityId;
         changedProfileImage     = userCon.user.value.data.profileUrl;
         // Profile Text Editing Controllers 
         nameController.text     = userCon.user.value.data.name;
