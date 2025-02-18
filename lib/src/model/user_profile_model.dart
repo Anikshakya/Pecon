@@ -80,8 +80,8 @@ class Data {
         district: json["district"] ?? "",
         dob: json["dob"] ?? "",
         gender: json["gender"] ?? "",
-        districtId: json["district_id"] ?? "",
-        cityId: json["city_id"] ?? "", 
+        districtId: json["district_id"] ?? 0,
+        cityId: json["city_id"] ?? 0, 
         address: json["address"] ?? "",
         bank: json["bank"] != null ? Bank.fromJson(json["bank"]) : Bank(),
     );
