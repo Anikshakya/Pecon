@@ -307,7 +307,7 @@ class _ProductsPageState extends State<ProductsPage> {
                         productCon.filteredSubcategories = selectedCategoryData["subcategories"] ?? [];
 
                         //store category id to search
-                        categoryId = selectedCategoryData["subcategories"][0]["id"];
+                        categoryId = selectedCategoryData["id"];
 
                       });
                     },
