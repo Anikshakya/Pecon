@@ -43,6 +43,10 @@ class Data {
     String number;
     String profileUrl;
     int redeemed;
+    String gender;
+    String dob;
+    String city;
+    String district;
     Bank bank;
 
     Data({
@@ -52,6 +56,10 @@ class Data {
         this.number = "",
         this.profileUrl = "https://images.squarespace-cdn.com/content/v1/56c346b607eaa09d9189a870/1551408857522-4ZFG11B2M7UPFYBFBRO0/FLAUNT-MAGAZINE-JOJI-2.jpg",
         this.redeemed = 0,
+        this.gender = "",
+        this.dob = "",
+        this.district = "",
+        this.city = "",
         Bank? bank,
     }) : bank = bank ?? Bank();
 
@@ -62,6 +70,10 @@ class Data {
         number: json["number"] ?? "",
         profileUrl: json["profile_url"] ?? "https://images.squarespace-cdn.com/content/v1/56c346b607eaa09d9189a870/1551408857522-4ZFG11B2M7UPFYBFBRO0/FLAUNT-MAGAZINE-JOJI-2.jpg",
         redeemed: json["reedemed"] ?? 0,
+        city: json["city"],
+        district: json["district"],
+        dob: json["dob"],
+        gender: json["gender"],
         bank: json["bank"] != null ? Bank.fromJson(json["bank"]) : Bank(),
     );
 
@@ -72,6 +84,10 @@ class Data {
         "number": number,
         "profile_url": profileUrl,
         "reedemed": redeemed,
+        "gender" : gender,
+        "dob": dob,
+        "district" : district,
+        "city" : city,
         "bank": bank.toJson(),
     };
 }

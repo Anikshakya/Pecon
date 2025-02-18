@@ -44,7 +44,6 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   final TextEditingController nameController     = TextEditingController();
   final TextEditingController emailController    = TextEditingController();
   final TextEditingController numController      = TextEditingController();
-  final TextEditingController addressController  = TextEditingController();
   final TextEditingController districtController = TextEditingController();
   final TextEditingController cityController     = TextEditingController();
   final TextEditingController genderController   = TextEditingController();
@@ -75,11 +74,10 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
         nameController.text     = userCon.user.value.data.name;
         emailController.text    = userCon.user.value.data.email;
         numController.text      = userCon.user.value.data.number;
-        addressController.text  = userCon.user.value.data.name;
-        districtController.text = userCon.user.value.data.name;
-        cityController.text     = userCon.user.value.data.name;
-        genderController.text   = userCon.user.value.data.name;
-        dobController.text      = userCon.user.value.data.name;
+        districtController.text = userCon.user.value.data.district;
+        cityController.text     = userCon.user.value.data.city;
+        genderController.text   = userCon.user.value.data.gender;
+        dobController.text      = userCon.user.value.data.dob;
 
         // Bank Text Editing Controllers 
         accNameController.text  = userCon.user.value.data.bank.holderName;
@@ -209,14 +207,6 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
               controller: emailController,
               textInputAction: TextInputAction.next,
               headingText: "Email",
-              filledColor: gray.withOpacity(0.2),
-            ),
-            SizedBox(height: 20.h),
-            //Address
-            CustomTextFormField(
-              controller: addressController,
-              textInputAction: TextInputAction.next,
-              headingText: "Address",
               filledColor: gray.withOpacity(0.2),
             ),
             SizedBox(height: 20.h),
@@ -535,7 +525,6 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     name: nameController.text.toString().trim(),
                     number: numController.text.toString().trim(),
                     email: emailController.text.toString().trim(),
-                    address: addressController.text.toString().trim(),
                     district : districtId,
                     city : cityId,
                     gender: genderController.text.toLowerCase().toString().trim(),
