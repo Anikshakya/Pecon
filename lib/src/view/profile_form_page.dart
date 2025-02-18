@@ -48,6 +48,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   final TextEditingController cityController     = TextEditingController();
   final TextEditingController genderController   = TextEditingController();
   final TextEditingController dobController      = TextEditingController();
+  final TextEditingController addressController      = TextEditingController();
 
   // Bank Text Editing Controllers 
   final TextEditingController accNameController  = TextEditingController();
@@ -78,6 +79,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
         cityController.text     = userCon.user.value.data.city;
         genderController.text   = userCon.user.value.data.gender;
         dobController.text      = userCon.user.value.data.dob;
+        addressController.text  = userCon.user.value.data.address;
 
         // Bank Text Editing Controllers 
         accNameController.text  = userCon.user.value.data.bank.holderName;
@@ -207,6 +209,14 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
               controller: emailController,
               textInputAction: TextInputAction.next,
               headingText: "Email",
+              filledColor: gray.withOpacity(0.2),
+            ),
+            SizedBox(height: 20.h),
+            //Address
+            CustomTextFormHeaderField(
+              controller: addressController,
+              textInputAction: TextInputAction.next,
+              headingText: "Address",
               filledColor: gray.withOpacity(0.2),
             ),
             SizedBox(height: 20.h),
@@ -529,6 +539,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     city : cityId,
                     gender: genderController.text.toLowerCase().toString().trim(),
                     dob: dobController.text.toString().trim(),
+                    address: addressController.text.toString().trim(),
                   );
               }
               : () async {
