@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:pecon/src/app_config/styles.dart';
+import 'package:pecon/src/controllers/product_controller.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
 import 'package:pecon/src/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,9 @@ class QRScannerPage extends StatefulWidget {
 }
 
 class _QRScannerPageState extends State<QRScannerPage> {
+  // Get Controllers
+   final ProductsController productCon = Get.put(ProductsController());
+   
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
 
@@ -70,7 +75,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
                     code: null, 
                     isReadOnly: false,
                     headingText: "Manual Code",
-                    infoText: "Enter a code that points out to a QR."
+                    infoText: "Enter a code that points out to a QR.",
                   );
                 },
                 text: "Manual Code",
@@ -90,10 +95,10 @@ class _QRScannerPageState extends State<QRScannerPage> {
                     // Show scanned data in a popup
                     Get.back();
                     scannedCodeDialogue(
-                      code: scannedData, 
+                      code: jsonDecode(scannedData)["code"], 
                       isReadOnly: true,
                       headingText: "Redeeme Points",
-                      infoText: "You can redeeme points by submitting."
+                      infoText: "You can redeeme points by submitting.",
                     );
                     Future.delayed(const Duration(milliseconds: 300), () {
                       controller!.resumeCamera();
@@ -296,14 +301,16 @@ class _QRScannerPageState extends State<QRScannerPage> {
                   ),
                   SizedBox(height: 10.h),
                   // Submit Button
-                  CustomButton(
-                    onPressed: () {
-                      // Handle manual code submission
-                      Get.back();
-                    },
-                    text: "Submit",
-                    bgColor: black,
-                    fontColor: white,
+                  Obx(()=>
+                    CustomButton(
+                      onPressed: () async{
+                        await productCon.redeemePoints(code: codeCon.text);
+                      },
+                      isLoading: productCon.isRedeemeLoading.isTrue,
+                      text: "Submit",
+                      bgColor: black,
+                      fontColor: white,
+                    ),
                   ),
                   SizedBox(height: 10.h),
                   // Cancel Button
