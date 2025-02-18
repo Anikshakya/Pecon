@@ -8,10 +8,10 @@ class ProductsController extends GetxController{
   final RxBool isLoading = true.obs;
 
   //category List
-  List categoryList = [];
-  String selectedCategory = "";
-  List filteredSubcategories = [];
-  String selectedSubCategory = "";
+  List categoryList             = [];
+  List filteredSubcategories    = [];
+  String selectedCategory       = "";
+  String selectedSubCategory    = "";
 
 
   // Slider/AdBanner API
@@ -25,7 +25,6 @@ class ProductsController extends GetxController{
         }
       }
     }catch (e){
-      isLoading(false); // Stop Loading
       log(e.toString());
     } finally{
       isLoading(false); // Stop Loading

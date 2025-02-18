@@ -305,10 +305,10 @@ class _ProductsPageState extends State<ProductsPage> {
                     },
                     itemBuilder: (context) => productCon.categoryList
                         .map((item) => PopupMenuItem<String>(
-                              value: item["name"],
+                              value: item["name"] ?? "",
                               child: SizedBox(
                                 width: 200.w,
-                                child: Text(item["name"])
+                                child: Text(item["name"] ?? "")
                               ),
                             ))
                         .toList(),
@@ -350,10 +350,10 @@ class _ProductsPageState extends State<ProductsPage> {
                       },
                       itemBuilder: (context) => productCon.filteredSubcategories
                           .map((sub) => PopupMenuItem<String>(
-                                value: sub["name"],
+                                value: sub["name"] ?? "",
                                 child: SizedBox(
                                   width: 200.w,
-                                  child: Text(sub["name"]),
+                                  child: Text(sub["name"] ?? ""),
                                 ),
                               ))
                           .toList(),
