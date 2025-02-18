@@ -1,11 +1,14 @@
 import 'package:get/get.dart';
+import 'package:pecon/src/controllers/product_controller.dart';
 import 'package:pecon/src/view/product_details.dart';
+import 'package:pecon/src/widgets/custom_button.dart';
 import 'package:pecon/src/widgets/custom_network_image.dart';
 import 'package:intl/intl.dart';
 import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:pecon/src/widgets/custom_text_field.dart';
+import 'package:pecon/src/widgets/customer_service_dialog.dart';
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
@@ -15,7 +18,18 @@ class ProductsPage extends StatefulWidget {
 }
 
 class _ProductsPageState extends State<ProductsPage> {
+  final ProductsController productCon = Get.put(ProductsController());
   final NumberFormat formatter = NumberFormat("#,##0", "en_US");
+
+  @override
+  void initState() {
+    initialise();
+    super.initState();
+  }
+
+  initialise() async{
+    await productCon.getSearchCategory();
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -162,6 +176,233 @@ class _ProductsPageState extends State<ProductsPage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  //appbar with search
+  productAppbar(context){
+    return PreferredSize(
+      preferredSize: Size(double.infinity, 124.0.h),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 12.0.sp),
+        decoration: const BoxDecoration(
+          color: primary,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(20),
+            bottomRight: Radius.circular(20),
+          ),
+        ),
+        child: SafeArea(
+          bottom: false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    height: 34.h,
+                    child: Image.asset("assets/images/peacon_logo.png"),
+                  ),
+                  const Spacer(),
+                  InkWell(
+                    onTap: (){
+                      customerServiceDialog();
+                    },
+                    child: Image.asset("assets/images/customer_service.png", width:22.w, height:26.w, fit: BoxFit.cover,),
+                  ),
+                ],
+              ),
+              SizedBox(height: 14.h),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 280.w,
+                    height: 48.h,
+                    child:  CustomTextFormField(
+                      headingText: "Search", 
+                      prefixIcon: Icon(Icons.search, color: grey10.withOpacity(0.8),),
+                      filledColor: white,
+                    )
+                  ),
+                  const Spacer(),
+                  Obx(() => productCon.isLoading.isTrue 
+                    ? SizedBox(
+                      height: 16.sp,
+                      width: 16.sp,
+                      child: CircularProgressIndicator(
+                        color: black,
+                        strokeWidth: 1.5.sp,
+                      ),
+                    )
+                    : GestureDetector(
+                      onTap: (){
+                          filterDialog();
+                        },
+                      child: const Icon(Icons.filter_alt_outlined, color: black)
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      )
+    );
+  }
+
+  // Show manual code entry dialog
+  filterDialog() {
+    Get.defaultDialog(
+      backgroundColor: boxCol,
+      title: '',
+      titlePadding: EdgeInsets.symmetric(horizontal: 20.0.w),
+      contentPadding: EdgeInsets.symmetric(horizontal: 20.0.w),
+      content: StatefulBuilder(
+        builder: (context, setState) {
+          return SizedBox(
+            width: double.infinity,
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  Text(
+                    "Filter Search Results",
+                    style: TextStyle(
+                      fontSize: 19.sp,
+                      fontWeight: FontWeight.bold,
+                      color: black,
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  Text(
+                    "Filter Category",
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                      color: black,
+                    ),
+                  ),
+                  SizedBox(height: 7.h),
+                  PopupMenuButton<String>(
+                    onSelected: (value) {
+                      setState(() {
+                        productCon.selectedCategory = value;
+
+                        // Find selected category and get its subcategories
+                        var selectedCategoryData = productCon.categoryList.firstWhere(
+                          (item) => item["name"] == value,
+                          orElse: () => {},
+                        );
+
+                        // Extract subcategories list or set it to empty if not found
+                        productCon.filteredSubcategories = selectedCategoryData["subcategories"] ?? [];
+                      });
+                    },
+                    itemBuilder: (context) => productCon.categoryList
+                        .map((item) => PopupMenuItem<String>(
+                              value: item["name"],
+                              child: SizedBox(
+                                width: 200.w,
+                                child: Text(item["name"])
+                              ),
+                            ))
+                        .toList(),
+                    offset: Offset(4.w,0),
+                    position: PopupMenuPosition.under, // Ensures the menu appears below
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(8.0),
+                        border: Border.all(color: Colors.transparent, width: 0),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(productCon.selectedCategory),
+                          const Icon(Icons.arrow_drop_down),
+                        ],
+                      ),
+                    ),
+                  ),
+                  if (productCon.filteredSubcategories.isNotEmpty) 
+                  ...[
+                    SizedBox(height: 16.h),
+                    Text(
+                      "Filter Sub-Category",
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400,
+                        color: black,
+                      ),
+                    ),
+                    SizedBox(height: 7.h),
+                    PopupMenuButton<String>(
+                      onSelected: (value) {
+                        setState(() {
+                          productCon.selectedSubCategory = value;
+                        });
+                      },
+                      itemBuilder: (context) => productCon.filteredSubcategories
+                          .map((sub) => PopupMenuItem<String>(
+                                value: sub["name"],
+                                child: SizedBox(
+                                  width: 200.w,
+                                  child: Text(sub["name"]),
+                                ),
+                              ))
+                          .toList(),
+                      offset: Offset(4.w, 0),
+                      position: PopupMenuPosition.under,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.9),
+                          borderRadius: BorderRadius.circular(8.0),
+                          border: Border.all(color: Colors.transparent, width: 0),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(productCon.selectedSubCategory),
+                            const Icon(Icons.arrow_drop_down),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                  SizedBox(height: 24.h),
+                  // Submit Button
+                  CustomButton(
+                    onPressed: () {
+                      // Handle manual code submission
+                      Get.back();
+                    },
+                    text: "Apply",
+                    bgColor: black,
+                    fontColor: white,
+                  ),
+                  SizedBox(height: 10.h),
+                  // Cancel Button
+                  CustomButton(
+                    onPressed: () {
+                      // Handle manual code submission
+                      Get.back();
+                    },
+                    text: "Cancel",
+                    bgColor: Colors.transparent,
+                    fontColor: black,
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
