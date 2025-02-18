@@ -20,6 +20,8 @@ class ProductsPage extends StatefulWidget {
 class _ProductsPageState extends State<ProductsPage> {
   final ProductsController productCon = Get.put(ProductsController());
   final NumberFormat formatter = NumberFormat("#,##0", "en_US");
+  int? categoryId;
+  int? subCategoryId;
 
   @override
   void initState() {
@@ -291,6 +293,8 @@ class _ProductsPageState extends State<ProductsPage> {
                   PopupMenuButton<String>(
                     onSelected: (value) {
                       setState(() {
+                        productCon.selectedSubCategory = "";
+
                         productCon.selectedCategory = value;
 
                         // Find selected category and get its subcategories
@@ -301,6 +305,10 @@ class _ProductsPageState extends State<ProductsPage> {
 
                         // Extract subcategories list or set it to empty if not found
                         productCon.filteredSubcategories = selectedCategoryData["subcategories"] ?? [];
+
+                        //store category id to search
+                        categoryId = selectedCategoryData["subcategories"][0]["id"];
+
                       });
                     },
                     itemBuilder: (context) => productCon.categoryList
@@ -346,6 +354,15 @@ class _ProductsPageState extends State<ProductsPage> {
                       onSelected: (value) {
                         setState(() {
                           productCon.selectedSubCategory = value;
+
+                          // Find selected subcategory and get its subcategories
+                          var selectedSubCategoryData = productCon.filteredSubcategories.firstWhere(
+                            (item) => item["name"] == value,
+                            orElse: () => {},
+                          );
+
+                          //store subcategory id to search
+                          subCategoryId = selectedSubCategoryData["id"];
                         });
                       },
                       itemBuilder: (context) => productCon.filteredSubcategories
