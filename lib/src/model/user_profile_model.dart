@@ -81,7 +81,7 @@ class Data {
         dob: json["dob"] ?? "",
         gender: json["gender"] ?? "",
         districtId: json["district_id"] ?? "",
-        cityId: json["city_id"] ?? "",
+        cityId: json["city_id"] ?? "", 
         address: json["address"] ?? "",
         bank: json["bank"] != null ? Bank.fromJson(json["bank"]) : Bank(),
     );
