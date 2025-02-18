@@ -183,6 +183,7 @@ class _HomePageState extends State<HomePage> {
                   );
                 })
               ),
+              SizedBox(height: 10.h,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: adImages.asMap().entries.map((entry) {

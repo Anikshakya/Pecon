@@ -10,7 +10,7 @@ import 'package:pecon/src/controllers/user_controller.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
 import 'package:pecon/src/widgets/custom_network_image.dart';
-import 'package:pecon/src/widgets/custom_text_field.dart';
+import 'package:pecon/src/widgets/custom_textfieldheader.dart';
 
 class ProfileFormPage extends StatefulWidget {
   const ProfileFormPage({super.key});
@@ -180,7 +180,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
         Column(
           children: [
             //Name
-            CustomTextFormField(
+            CustomTextFormHeaderField(
               controller: nameController,
               textInputAction: TextInputAction.next,
               headingText: "User Name",
@@ -191,7 +191,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             ),
             SizedBox(height: 20.h),
             //number
-            CustomTextFormField(
+            CustomTextFormHeaderField(
               controller: numController,
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.number,
@@ -203,7 +203,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             ),
             SizedBox(height: 20.h),
             //Email
-            CustomTextFormField(
+            CustomTextFormHeaderField(
               controller: emailController,
               textInputAction: TextInputAction.next,
               headingText: "Email",
@@ -211,7 +211,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             ),
             SizedBox(height: 20.h),
             //District
-            CustomTextFormField(
+            CustomTextFormHeaderField(
               readOnly: true,
               onTap: userCon.isAddressLoading.isTrue ? (){} : showCupertinoDistrictPicker,
               controller: districtController,
@@ -234,7 +234,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             ),
             SizedBox(height: 20.h),
             //City Controll
-            CustomTextFormField(
+            CustomTextFormHeaderField(
               readOnly: true,
               onTap: userCon.isAddressLoading.isTrue ? (){} : showCupertinoCityPicker,
               controller: cityController,
@@ -257,7 +257,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             ),
             SizedBox(height: 20.h),
             //Gender
-            CustomTextFormField(
+            CustomTextFormHeaderField(
               onTap: showCupertinoGenderPicker,
               readOnly: true,
               controller: genderController,
@@ -268,7 +268,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             ),
             SizedBox(height: 20.h),
             //Dob
-            CustomTextFormField(
+            CustomTextFormHeaderField(
               onTap: showCupertinoDatePicker,
               readOnly: true,
               controller: dobController,
@@ -302,7 +302,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
       child: Column(
         children: [
           //Name
-          CustomTextFormField(
+          CustomTextFormHeaderField(
             controller: accNameController,
             textInputAction: TextInputAction.next,
             headingText: "Account Holder Name",
@@ -313,7 +313,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
           ),
           SizedBox(height: 20.h),
           //bank name
-          CustomTextFormField(
+          CustomTextFormHeaderField(
             controller: bankController,
             textInputAction: TextInputAction.next,
             headingText: "Bank Name",
@@ -324,7 +324,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
           ),
           SizedBox(height: 20.h),
           //bank acc no
-          CustomTextFormField(
+          CustomTextFormHeaderField(
             controller: accNoController,
             textInputAction: TextInputAction.next,
             headingText: "Account Number",
@@ -335,7 +335,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
           ),
           SizedBox(height: 20.h),
           //branchName
-          CustomTextFormField(
+          CustomTextFormHeaderField(
             controller: branchController,
             textInputAction: TextInputAction.next,
             headingText: "Branch Name",
@@ -343,7 +343,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
           ),
           SizedBox(height: 20.h),
           //esewa number
-          CustomTextFormField(
+          CustomTextFormHeaderField(
             controller: esewaController,
             textInputAction: TextInputAction.next,
             keyboardType: TextInputType.number,
@@ -352,7 +352,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
           ),
           SizedBox(height: 20.h),
           //khalti number
-          CustomTextFormField(
+          CustomTextFormHeaderField(
             controller: khaltiController,
             textInputAction: TextInputAction.done,
             keyboardType: TextInputType.number,
