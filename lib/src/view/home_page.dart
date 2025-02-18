@@ -107,8 +107,8 @@ class _HomePageState extends State<HomePage> {
   // Get Initial Data
   getData() async{
     // Get AdBanner/Slider data
-    await homeCon.getAdBanner();
-    await homeCon.getRedeemInformation();
+    homeCon.getAdBanner();
+    homeCon.getRedeemInformation();
 
   }
 
@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage> {
               userInfo(),
               // SizedBox(height: 20),
               topBanner(),
-              // SizedBox(height: 10),
+              SizedBox(height: 10.h),
               rewardsSection(),
               SizedBox(height: 20.h),
               topFivePerformersSection(),
@@ -145,203 +145,210 @@ class _HomePageState extends State<HomePage> {
     return Obx(() => homeCon.isAdBannerLoading.isTrue
       ? Container(
           height: 175.h,
-          margin: const EdgeInsets.fromLTRB(20, 14, 20, 10),
+          margin: const EdgeInsets.fromLTRB(20, 14, 20, 0),
           decoration: BoxDecoration(
             color: const Color.fromARGB(255, 236, 236, 236),
             borderRadius: BorderRadius.circular(8),
           ),
         )
-      : SizedBox(
-        height: 220.h,
-        child: Column(
-          children: [
-            CarouselSlider(
-              options: CarouselOptions(
-                height: 200.h,
-                autoPlay: true,
-                enlargeCenterPage: true,
-                viewportFraction: 1,
-                onPageChanged: (index, reason) {
-                  setState(() {
-                    _currentIndex = index;
-                  });
-                },
-              ),
-              items: List.generate(homeCon.adSliderData.data.length, (index) {
-                return Container(
-                  margin: const EdgeInsets.fromLTRB(20, 14, 20, 10),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 236, 236, 236),
-                    borderRadius: BorderRadius.circular(8),
-                    image: DecorationImage(
-                      image: NetworkImage(homeCon.adSliderData.data[index].image.toString()),
-                      fit: BoxFit.cover,
+      : Visibility(
+        visible: homeCon.adSliderData.data.length != 0,
+        child: SizedBox(
+          height: 220.h,
+          child: Column(
+            children: [
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: 200.h,
+                  autoPlay: true,
+                  enlargeCenterPage: true,
+                  viewportFraction: 1,
+                  onPageChanged: (index, reason) {
+                    setState(() {
+                      _currentIndex = index;
+                    });
+                  },
+                ),
+                items: List.generate(homeCon.adSliderData.data.length, (index) {
+                  return Container(
+                    margin: const EdgeInsets.fromLTRB(20, 14, 20, 0),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 236, 236, 236),
+                      borderRadius: BorderRadius.circular(8),
+                      image: DecorationImage(
+                        image: NetworkImage(homeCon.adSliderData.data[index].image.toString()),
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                );
-              })
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: adImages.asMap().entries.map((entry) {
-                return Container(
-                  width: 12.w,
-                  height: 2.5.h,
-                  margin: const EdgeInsets.symmetric(horizontal: 2),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: _currentIndex == entry.key ? black.withOpacity(0.8) : black.withOpacity(0.1),
-                  ),
-                );
-              }).toList(),
-            ),
-          ],
+                  );
+                })
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: adImages.asMap().entries.map((entry) {
+                  return Container(
+                    width: 12.w,
+                    height: 2.5.h,
+                    margin: const EdgeInsets.symmetric(horizontal: 2),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: _currentIndex == entry.key ? black.withOpacity(0.8) : black.withOpacity(0.1),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
         ),
       )
     );
   }
 
   Widget rewardsSection() {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: yellowL,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 10.sp, vertical: 20.sp),
-      margin: EdgeInsets.symmetric(horizontal: 20.sp),
-      child: Obx(() => homeCon.isRedeemInfoLoading.isTrue 
-        ? SizedBox(height: 300.h,)
-        : homeCon.redeemInfoData.isEmpty 
-        ? SizedBox(
-          height: 300.h,
-          child: Center(
-            child: Text("No Data", style: poppinsMedium(size: 13.sp, color: black),),
+    return Obx(()=> homeCon.isRedeemInfoLoading.isTrue
+      ? Container(
+        height: 300.h,
+        width: double.infinity,
+        margin: EdgeInsets.symmetric(horizontal: 20.sp),
+        decoration: BoxDecoration(
+          color: yellowL,
+          borderRadius: BorderRadius.circular(12),
+        ),
+      )
+      : Visibility(
+        visible: homeCon.redeemInfoData.isNotEmpty,
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: yellowL,
+            borderRadius: BorderRadius.circular(12),
           ),
-        )
-        : Column(
-          children: [
-            CustomNetworkImage(
-              imageUrl: homeCon.headerImage.toString(), 
-              height: 120.h, 
-              width: 300.w,
-              borderRadius: 8.r,
-            ),
-            SizedBox(height: 26.h,),
-            // Redeem Code Grid
-            LayoutBuilder(
-              builder: (context, constraints) {
-                double itemWidth = (constraints.maxWidth - 8 * 2) / 3; // 3 items per row
-            
-                return Wrap(
-                  spacing: 8,
-                  runSpacing: 16,
-                  alignment: WrapAlignment.center,
-                  children: List.generate(homeCon.redeemInfoData.length, (index) {
-                    final item = homeCon.redeemInfoData[index];
-            
-                    Widget itemWidget = Stack(
-                      children: [
-                        // Info
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: GestureDetector(
-                            onTap: (){
-                              Get.to(()=> const ProductDetailsPage());
-                            },
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: double.infinity,
-                                  padding: EdgeInsets.all(10.sp),
-                                  margin: EdgeInsets.only(top: 36.sp),
-                                  decoration: BoxDecoration(
-                                    color: white,
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(20.r),
-                                      topRight: Radius.circular(20.r),
-                                      bottomLeft: Radius.circular(8.r),
-                                      bottomRight: Radius.circular(8.r),
-                                    ),
-                                    border: Border.all(
-                                      width: 0.8,
-                                      color: yellow
-                                    ),
-                                    // boxShadow: [
-                                    //   BoxShadow(
-                                    //     color: Colors.grey.withOpacity(0.3),
-                                    //     blurRadius: 4,
-                                    //     spreadRadius: 2,
-                                    //   ),
-                                    // ],
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      SizedBox(height: 25.h),
-                                      Text(
-                                        item.title,
-                                        style: poppinsBold(size: 10.sp, color: black),
-                                        textAlign: TextAlign.center,
+          padding: EdgeInsets.symmetric(horizontal: 10.sp, vertical: 20.sp),
+          margin: EdgeInsets.symmetric(horizontal: 20.sp),
+          child: Column(
+            children: [
+              CustomNetworkImage(
+                imageUrl: homeCon.headerImage.toString(), 
+                height: 120.h, 
+                width: 300.w,
+                borderRadius: 8.r,
+              ),
+              SizedBox(height: 26.h,),
+              // Redeem Code Grid
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  double itemWidth = (constraints.maxWidth - 8 * 2) / 3; // 3 items per row
+              
+                  return Wrap(
+                    spacing: 8,
+                    runSpacing: 16,
+                    alignment: WrapAlignment.center,
+                    children: List.generate(homeCon.redeemInfoData.length, (index) {
+                      final item = homeCon.redeemInfoData[index];
+              
+                      Widget itemWidget = Stack(
+                        children: [
+                          // Info
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: GestureDetector(
+                              onTap: (){
+                                Get.to(()=> const ProductDetailsPage());
+                              },
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.all(10.sp),
+                                    margin: EdgeInsets.only(top: 36.sp),
+                                    decoration: BoxDecoration(
+                                      color: white,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(20.r),
+                                        topRight: Radius.circular(20.r),
+                                        bottomLeft: Radius.circular(8.r),
+                                        bottomRight: Radius.circular(8.r),
                                       ),
-                                      SizedBox(height: 5.h),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                                        decoration: BoxDecoration(
-                                          color: userCon.userPoints < item.points ? gray.withOpacity(0.5) : maroon.withOpacity(.95),
-                                          borderRadius: BorderRadius.circular(6.sp),
+                                      border: Border.all(
+                                        width: 0.8,
+                                        color: yellow
+                                      ),
+                                      // boxShadow: [
+                                      //   BoxShadow(
+                                      //     color: Colors.grey.withOpacity(0.3),
+                                      //     blurRadius: 4,
+                                      //     spreadRadius: 2,
+                                      //   ),
+                                      // ],
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(height: 25.h),
+                                        Text(
+                                          item.title,
+                                          style: poppinsBold(size: 10.sp, color: black),
+                                          textAlign: TextAlign.center,
                                         ),
-                                        child: RichText(
-                                          text: TextSpan(
-                                            style: poppinsSemiBold(size: 10.sp, color: userCon.userPoints < item.points ? white : black),
-                                            children: [
-                                              WidgetSpan(
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(right: 4.sp),
-                                                  child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp,)
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                text: formatter.format(int.parse("${item.points}")),
-                                                style: poppinsSemiBold(color:  white, size: 10.sp ),
-                                              ),
-                                            ],
+                                        SizedBox(height: 5.h),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                                          decoration: BoxDecoration(
+                                            color: userCon.user.value.data.redeemed < item.points ? gray.withOpacity(0.5) : maroon.withOpacity(.95),
+                                            borderRadius: BorderRadius.circular(6.sp),
                                           ),
+                                          child: RichText(
+                                            text: TextSpan(
+                                              style: poppinsSemiBold(size: 10.sp, color: userCon.user.value.data.redeemed < item.points ? white : black),
+                                              children: [
+                                                WidgetSpan(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(right: 4.sp),
+                                                    child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp,)
+                                                  ),
+                                                ),
+                                                TextSpan(
+                                                  text: formatter.format(int.parse("${item.points}")),
+                                                  style: poppinsSemiBold(color:  white, size: 10.sp ),
+                                                ),
+                                              ],
+                                            ),
+                                          )
                                         )
-                                      )
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                
-                              ],
+                                  
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        // Image
-                        Align(
-                          alignment: Alignment.topCenter,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: CustomNetworkImage(
-                              imageUrl: item.image,
-                              height: 65.sp,
-                              width: 65.sp,
-                              fit: BoxFit.cover,
+                          // Image
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: CustomNetworkImage(
+                                imageUrl: item.image,
+                                height: 65.sp,
+                                width: 65.sp,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    );
-            
-                    return Container(
-                      width: itemWidth,
-                      alignment: Alignment.center,
-                      child: itemWidget,
-                    );
-                  }),
-                );
-              },
-            ),
-          ],
+                        ],
+                      );
+              
+                      return Container(
+                        width: itemWidth,
+                        alignment: Alignment.center,
+                        child: itemWidget,
+                      );
+                    }),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -349,107 +356,106 @@ class _HomePageState extends State<HomePage> {
 
   
   userInfo() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          gradient: const LinearGradient(
-            colors: [Color(0xFFFFE5D9), Color(0xFFFCEED5)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+    return Obx(()=>
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            gradient: const LinearGradient(
+              colors: [Color(0xFFFFE5D9), Color(0xFFFCEED5)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
           ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Text(
-            //   'Welcome',
-            //   style: poppinsSemiBold(size: 20.sp, color: black),
-            //   overflow: TextOverflow.ellipsis, 
-            //   maxLines: 2,
-            // ),
-            // SizedBox(height: 5.h),
-            SizedBox(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
+          child: userCon.isProfileLoading.isTrue
+            ? SizedBox(
+              height: 50.h,
+            )
+            : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Profile Image
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: CustomNetworkImage(
-                          imageUrl: userCon.userImage,
-                          width: 40.sp,
-                          height: 40.sp,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      SizedBox(width: 10.w),
-                      // Name and Membership ID
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(userCon.userName.toString(), style: poppinsBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
-                          SizedBox(height: 2.h),
-                          Text("Membership ID: ${userCon.userId}", style: poppinsSemiBold(size: 9.sp, color: black.withOpacity(0.7)), maxLines: 2,),
-                          Text(
-                            userCon.userNumber.toString(),
-                            style: poppinsMedium(size: 11.sp, color: black.withOpacity(0.6))
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      // Total Gained Points
                       Row(
                         children: [
+                          // Profile Image
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(30),
+                            child: CustomNetworkImage(
+                              imageUrl: userCon.user.value.data.profileUrl.toString(),
+                              width: 40.sp,
+                              height: 40.sp,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          SizedBox(width: 10.w),
+                          // Name and Membership ID
                           Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Total Gain Points", style: poppinsSemiBold(size: 9.sp, color: black.withOpacity(0.5)),),
-                              SizedBox(height: 4.h),
-                              Container(
-                                constraints: BoxConstraints(
-                                  minWidth: 70.w
-                                ),
-                                padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                                decoration: BoxDecoration(
-                                  color: green,
-                                  borderRadius: BorderRadius.circular(6.sp),
-                                ),
-                                alignment: Alignment.center,
-                                child: RichText(
-                                  text: TextSpan(
-                                    style: poppinsSemiBold(size: 11.sp, color: white),
-                                    children: [
-                                      WidgetSpan(
-                                        child: Padding(
-                                          padding: EdgeInsets.only(right: 4.sp),
-                                          child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp)
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: formatter.format(int.parse("${userCon.userPoints}")),
-                                        style: poppinsSemiBold(color: white, size: 10.sp ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              )
+                              Text(userCon.user.value.data.name.toString(), style: poppinsBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
+                              SizedBox(height: 2.h),
+                              Text("Membership ID: ${userCon.user.value.data.id}", style: poppinsSemiBold(size: 9.sp, color: black.withOpacity(0.7)), maxLines: 2,),
+                              Text(
+                                userCon.user.value.data.number.toString(),
+                                style: poppinsMedium(size: 11.sp, color: black.withOpacity(0.6))
+                              ),
                             ],
                           ),
+                          const Spacer(),
+                          // Total Gained Points
+                          Row(
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text("Total Gain Points", style: poppinsSemiBold(size: 9.sp, color: black.withOpacity(0.5)),),
+                                  SizedBox(height: 4.h),
+                                  Container(
+                                    constraints: BoxConstraints(
+                                      minWidth: 70.w
+                                    ),
+                                    padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                                    decoration: BoxDecoration(
+                                      color: green,
+                                      borderRadius: BorderRadius.circular(6.sp),
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: RichText(
+                                      text: TextSpan(
+                                        style: poppinsSemiBold(size: 11.sp, color: white),
+                                        children: [
+                                          WidgetSpan(
+                                            child: Padding(
+                                              padding: EdgeInsets.only(right: 4.sp),
+                                              child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp)
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: formatter.format(int.parse("${userCon.user.value.data.redeemed}")),
+                                            style: poppinsSemiBold(color: white, size: 10.sp ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  )
+                                ],
+                              ),
+                            ],
+                          )
                         ],
-                      )
+                      ),
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
         ),
       ),
     );

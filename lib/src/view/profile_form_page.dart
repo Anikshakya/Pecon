@@ -65,12 +65,26 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
 
   initialise() async{
     WidgetsBinding.instance.addPostFrameCallback((_) async{
-      // await authCon.getUserProfile().then((value)
-      //   {
-      //     changedProfileImage       = read("profileImage") == "" ? null : read("profileImage");
-      //   }
-      // );
-      // setState((){});
+      setState((){
+        changedProfileImage     = userCon.user.value.data.profileUrl;
+        // Profile Text Editing Controllers 
+        nameController.text     = userCon.user.value.data.name;
+        emailController.text    = userCon.user.value.data.email;
+        numController.text      = userCon.user.value.data.number;
+        addressController.text  = userCon.user.value.data.name;
+        districtController.text = userCon.user.value.data.name;
+        cityController.text     = userCon.user.value.data.name;
+        genderController.text   = userCon.user.value.data.name;
+        dobController.text      = userCon.user.value.data.name;
+
+        // Bank Text Editing Controllers 
+        accNameController.text  = userCon.user.value.data.bank.holderName;
+        bankController.text     = userCon.user.value.data.bank.name;
+        accNoController.text    = userCon.user.value.data.bank.accountNumber;
+        branchController.text   = userCon.user.value.data.bank.branch;
+        esewaController.text    = userCon.user.value.data.bank.esewa;
+        khaltiController.text   = userCon.user.value.data.bank.khalti;
+      });
     });
   }
 

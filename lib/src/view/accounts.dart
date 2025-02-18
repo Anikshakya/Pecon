@@ -30,98 +30,102 @@ class _AccountPageState extends State<AccountPage> {
       body: SingleChildScrollView(
         child: SafeArea(
           bottom: false,
-          child: Column(
-            children: [
-              // Profile Header
-              Container(
-                padding: EdgeInsets.all(20.sp),
-                decoration: const BoxDecoration(
-                  color: primary,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    CustomNetworkImage(
-                      imageUrl: userCon.userImage, 
-                      height: 60.sp, 
-                      width: 60.sp,
-                      fit: BoxFit.cover,
+          child: Obx(()=>
+            Column(
+              children: [
+                // Profile Header
+                Container(
+                  padding: EdgeInsets.all(20.sp),
+                  decoration: const BoxDecoration(
+                    color: primary,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
                     ),
-                    SizedBox(width: 16.w),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                  child: userCon.isProfileLoading.isTrue 
+                    ? const SizedBox()
+                    : Row(
                       children: [
-                        Text(
-                          userCon.userName.toString(),
-                          style: poppinsMedium(size: 18.sp, color: black)
+                        CustomNetworkImage(
+                          imageUrl: userCon.user.value.data.profileUrl, 
+                          height: 60.sp, 
+                          width: 60.sp,
+                          fit: BoxFit.cover,
                         ),
-                        SizedBox(height: 4.h,),
-                        Text(
-                          'Member ID: ${userCon.userId}',
-                          style: poppinsMedium(size: 11.sp, color: black.withOpacity(0.6))
-                        ),
-                        Text(
-                          userCon.userNumber.toString(),
-                          style: poppinsMedium(size: 11.sp, color: black.withOpacity(0.6))
+                        SizedBox(width: 16.w),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              userCon.user.value.data.name.toString(),
+                              style: poppinsMedium(size: 18.sp, color: black)
+                            ),
+                            SizedBox(height: 4.h,),
+                            Text(
+                              'Member ID: ${userCon.user.value.data.id}',
+                              style: poppinsMedium(size: 11.sp, color: black.withOpacity(0.6))
+                            ),
+                            Text(
+                              userCon.user.value.data.number.toString(),
+                              style: poppinsMedium(size: 11.sp, color: black.withOpacity(0.6))
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
                 ),
-              ),
-              SizedBox(height: 18.h),
-              
-              // Action Buttons
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.sp),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _buildActionButton(Icons.favorite, 'My Benefits', maroon, (){}),
-                    _buildActionButton(Icons.notifications, 'Notifications', Colors.orange, (){}),
-                    _buildActionButton(Icons.arrow_forward, 'Profile', green, (){Get.to(() => const ProfileFormPage());}),
-                  ],
+                SizedBox(height: 18.h),
+                
+                // Action Buttons
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.sp),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildActionButton(Icons.favorite, 'My Benefits', maroon, (){}),
+                      _buildActionButton(Icons.notifications, 'Notifications', Colors.orange, (){}),
+                      _buildActionButton(Icons.arrow_forward, 'Profile', green, (){Get.to(() => const ProfileFormPage());}),
+                    ],
+                  ),
                 ),
-              ),
-              
-              SizedBox(height: 16.h),
-              
-              // Account Options List
-              Padding(
-                padding: EdgeInsets.all(16.0.sp),
-                child: Column(
-                  children: [
-                    _buildListTile('My Earnings', Icons.account_balance_wallet),
-                    _buildListTile('Warranty Replacement', Icons.swap_horiz),
-                    _buildListTile('Withdrawal Requests', Icons.request_page),
-                    _buildListTile('Offers And Promotions', Icons.local_offer),
-                    _buildListTile('Privacy Policy', Icons.lock,
-                      onTap: (){
-                        Get.to(()=> PrivacyPolicy());
-                      }
-                    ),
-                    _buildListTile('Terms And Conditions', Icons.description,
-                      onTap: (){
-                        Get.to(()=> TermsAndConditions());
-                      }
-                    ),
-                    _buildListTile(
-                      onTap: () async{
-                        await authCon.logout();
-                      },
-                      'Log Out', Icons.exit_to_app, 
-                      isDestructive: true
-                    ),
-                    _buildListTile('Delete Account', Icons.delete, isDestructive: true),
-                  ],
+                
+                SizedBox(height: 16.h),
+                
+                // Account Options List
+                Padding(
+                  padding: EdgeInsets.all(16.0.sp),
+                  child: Column(
+                    children: [
+                      _buildListTile('My Earnings', Icons.account_balance_wallet),
+                      _buildListTile('Warranty Replacement', Icons.swap_horiz),
+                      _buildListTile('Withdrawal Requests', Icons.request_page),
+                      _buildListTile('Offers And Promotions', Icons.local_offer),
+                      _buildListTile('Privacy Policy', Icons.lock,
+                        onTap: (){
+                          Get.to(()=> PrivacyPolicy());
+                        }
+                      ),
+                      _buildListTile('Terms And Conditions', Icons.description,
+                        onTap: (){
+                          Get.to(()=> TermsAndConditions());
+                        }
+                      ),
+                      _buildListTile(
+                        onTap: () async{
+                          await authCon.logout();
+                        },
+                        'Log Out', Icons.exit_to_app, 
+                        isDestructive: true
+                      ),
+                      _buildListTile('Delete Account', Icons.delete, isDestructive: true),
+                    ],
+                  ),
                 ),
-              ),
-
-              SizedBox(height: 60.h),
-            ],
+            
+                SizedBox(height: 60.h),
+              ],
+            ),
           ),
         ),
       ),

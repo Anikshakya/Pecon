@@ -1,40 +1,113 @@
-class User {
-  int id;
-  String name;
-  String email;
-  String? emailVerifiedAt;
-  DateTime createdAt;
-  DateTime updatedAt;
+// To parse this JSON data, do
+//
+//     final userModel = userModelFromJson(jsonString);
 
-  User({
-    this.id = 0,
-    this.name = "",
-    this.email = "",
-    this.emailVerifiedAt,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  })  : createdAt = createdAt ?? DateTime(1970, 1, 1),
-        updatedAt = updatedAt ?? DateTime(1970, 1, 1);
+import 'dart:convert';
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
+UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
+
+String userModelToJson(UserModel data) => json.encode(data.toJson());
+
+class UserModel {
+    bool status;
+    int code;
+    String message;
+    Data data;
+
+    UserModel({
+        this.status = false,
+        this.code = 0,
+        this.message = "",
+        Data? data,
+    }) : data = data ?? Data();
+
+    factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+        status: json["status"] ?? false,
+        code: json["code"] ?? 0,
+        message: json["message"] ?? "",
+        data: json["data"] != null ? Data.fromJson(json["data"]) : Data(),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "status": status,
+        "code": code,
+        "message": message,
+        "data": data.toJson(),
+    };
+}
+
+class Data {
+    int id;
+    String name;
+    String email;
+    String number;
+    String profileUrl;
+    int redeemed;
+    Bank bank;
+
+    Data({
+        this.id = 0,
+        this.name = "",
+        this.email = "",
+        this.number = "",
+        this.profileUrl = "https://images.squarespace-cdn.com/content/v1/56c346b607eaa09d9189a870/1551408857522-4ZFG11B2M7UPFYBFBRO0/FLAUNT-MAGAZINE-JOJI-2.jpg",
+        this.redeemed = 0,
+        Bank? bank,
+    }) : bank = bank ?? Bank();
+
+    factory Data.fromJson(Map<String, dynamic> json) => Data(
         id: json["id"] ?? 0,
         name: json["name"] ?? "",
         email: json["email"] ?? "",
-        emailVerifiedAt: json["email_verified_at"],
-        createdAt: json["created_at"] != null
-            ? DateTime.parse(json["created_at"])
-            : DateTime(1970, 1, 1),
-        updatedAt: json["updated_at"] != null
-            ? DateTime.parse(json["updated_at"])
-            : DateTime(1970, 1, 1),
-      );
+        number: json["number"] ?? "",
+        profileUrl: json["profile_url"] ?? "https://images.squarespace-cdn.com/content/v1/56c346b607eaa09d9189a870/1551408857522-4ZFG11B2M7UPFYBFBRO0/FLAUNT-MAGAZINE-JOJI-2.jpg",
+        redeemed: json["reedemed"] ?? 0,
+        bank: json["bank"] != null ? Bank.fromJson(json["bank"]) : Bank(),
+    );
 
-  Map<String, dynamic> toJson() => {
+    Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
         "email": email,
-        "email_verified_at": emailVerifiedAt,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
-      };
+        "number": number,
+        "profile_url": profileUrl,
+        "reedemed": redeemed,
+        "bank": bank.toJson(),
+    };
+}
+
+class Bank {
+    String name;
+    String accountNumber;
+    String branch;
+    String holderName;
+    String esewa;
+    String khalti;
+
+    Bank({
+        this.name = "",
+        this.accountNumber = "",
+        this.branch = "",
+        this.holderName = "",
+        this.esewa = "",
+        this.khalti = "",
+    });
+
+    factory Bank.fromJson(Map<String, dynamic> json) => Bank(
+        name: json["name"] ?? "",
+        accountNumber: json["account_number"] ?? "",
+        branch: json["branch"] ?? "",
+        holderName: json["holder_name"] ?? "",
+        esewa: json["esewa"] ?? "",
+        khalti: json["khalti"] ?? "",
+    );
+
+    Map<String, dynamic> toJson() => {
+        "name": name,
+        "account_number": accountNumber,
+        "branch": branch,
+        "holder_name": holderName,
+        "esewa": esewa,
+        "khalti": khalti,
+    };
 }
