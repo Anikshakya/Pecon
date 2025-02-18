@@ -46,7 +46,7 @@ class Data {
     String gender;
     String dob;
     String city;
-    int cityId;
+    int? cityId;
     int districtId;
     String district;
     String address;
@@ -63,7 +63,7 @@ class Data {
         this.dob = "",
         this.district = "",
         this.districtId = 0,
-        this.cityId = 0,
+        this.cityId,
         this.city = "",
         this.address ="",
         Bank? bank,
@@ -81,7 +81,7 @@ class Data {
         dob: json["dob"] ?? "",
         gender: json["gender"] ?? "",
         districtId: json["district_id"] ?? 0,
-        cityId: json["city_id"] ?? 0, 
+        cityId: json                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ["city_id"], 
         address: json["address"] ?? "",
         bank: json["bank"] != null ? Bank.fromJson(json["bank"]) : Bank(),
     );

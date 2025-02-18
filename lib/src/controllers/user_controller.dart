@@ -51,7 +51,7 @@ class UserController extends GetxController {
     try{
       isProfileBtnLoading(true);// Start Loading
       var response = await ApiRepo.apiPost('api/profile/update', data, 'Update Profile');
-      if(response != null && response['code'] == 200) {
+      if(response != null && response['code'] == 201) {
         await getUserData();
         Get.back();
         showToast(isSuccess: true, message: "Profile Details Updated");
@@ -76,7 +76,7 @@ class UserController extends GetxController {
     try{
       isBankBtnLoading(true);// Start Loading
       var response = await ApiRepo.apiPost('api/profile/update-bank-details', data, 'Update Bank Details');
-      if(response != null && response['code'] == 200) {
+      if(response != null && response['code'] == 201) {
         await getUserData();
         Get.back();
         showToast(isSuccess: true, message: "Bank Details Updated");
