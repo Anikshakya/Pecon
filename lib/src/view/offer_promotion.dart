@@ -63,13 +63,13 @@ class _OfferPageState extends State<OfferPage> {
                 ),
               )
               : ListView.separated(
-                separatorBuilder: (context, index) => SizedBox(height: 12.0.h,),
+                separatorBuilder: (context, index) => SizedBox(height: 30.0.h,),
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: settingCon.offersList.length,
                 itemBuilder: (context,index){
                   return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         decoration: BoxDecoration(
@@ -84,11 +84,8 @@ class _OfferPageState extends State<OfferPage> {
                           width: double.infinity
                         ),
                       ),
-                      SizedBox(height: 10.h,),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 4.0.sp),
-                        child: Text(settingCon.offersList[index]["title"] ?? "", style: poppinsMedium(size: 14.sp, color: black),),
-                      )
+                      SizedBox(height: 6.h,),
+                      Text(settingCon.offersList[index]["title"] ?? "", style: poppinsMedium(size: 14.sp, color: black), textAlign: TextAlign.center,)
                     ],
                   );
                 }
