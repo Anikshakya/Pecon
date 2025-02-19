@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 import 'package:pecon/src/api_config/api_repo.dart';
+import 'package:pecon/src/model/product_list_model.dart';
 import 'package:pecon/src/widgets/custom_toast.dart';
 
 class ProductsController extends GetxController{
@@ -16,17 +17,19 @@ class ProductsController extends GetxController{
   String selectedCategory       = "";
   String selectedSubCategory    = "";
 
+  //ProductList
+  List productList = [];
+
   //Get product List
   getProductList() async {
     try{
       isProductListLoading(true); // Start Loading
       var response = await ApiRepo.apiGet('api/product/display-products', "", 'Get Product List');
       if(response != null && response['code'] == 200) {
-        if(response["data"] != null && response["data"] != []){
-        }
+        var allData = ProductListModel.fromJson(response);
+        productList = allData.data!;
       }
     }catch (e){
-      isProductListLoading(false); // Stop Loading
       log(e.toString());
     } finally{
       isProductListLoading(false); // Stop Loading
