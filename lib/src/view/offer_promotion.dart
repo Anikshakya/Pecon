@@ -34,7 +34,7 @@ class _OfferPageState extends State<OfferPage> {
       body: RefreshIndicator(color: black,
         onRefresh: (){
           return Future.delayed(const Duration(seconds: 1),()async{// Get Athlete Details Data
-            initialise();
+            initialise(); 
           });
         },
         child: SingleChildScrollView(
