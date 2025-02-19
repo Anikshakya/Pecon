@@ -261,20 +261,13 @@ class _ProductsPageState extends State<ProductsPage> {
                     )
                   ),
                   const Spacer(),
-                  Obx(() => productCon.isLoading.isTrue 
-                    ? SizedBox(
-                      height: 16.sp,
-                      width: 16.sp,
-                      child: CircularProgressIndicator(
-                        color: black,
-                        strokeWidth: 1.5.sp,
-                      ),
-                    )
-                    : GestureDetector(
-                      onTap: (){
+                  Obx(() => GestureDetector(
+                      onTap: productCon.isLoading.isTrue 
+                        ? (){}
+                        :(){
                           filterDialog();
                         },
-                      child: const Icon(Icons.filter_alt_outlined, color: black)
+                      child: Icon(Icons.filter_alt_outlined, color: productCon.isLoading.isTrue ? black.withOpacity(0.2) : black)
                     ),
                   ),
                 ],

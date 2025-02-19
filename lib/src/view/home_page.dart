@@ -31,6 +31,8 @@ class _HomePageState extends State<HomePage> {
   
   int _currentIndex = 0;
 
+  var isLoading  = false;
+
   @override
   void initState() {
     super.initState();
@@ -41,12 +43,18 @@ class _HomePageState extends State<HomePage> {
 
   // Get Initial Data
   getData() async{
+    setState(() {
+      isLoading = true;
+    });
     // Get AdBanner/Slider data
-    homeCon.getAdBanner();
+    await homeCon.getAdBanner();
     // Get Prize List
-    homeCon.getRedeemInformation();
+    await homeCon.getRedeemInformation();
     // Get Top 5 Performer
-    homeCon.getTop5Performers();
+    await homeCon.getTop5Performers();
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -66,21 +74,35 @@ class _HomePageState extends State<HomePage> {
           },
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                SizedBox(height: 10.h),
-                userInfo(),
-                // SizedBox(height: 20),
-                topBanner(),
-                SizedBox(height: 10.h),
-                rewardsSection(),
-                SizedBox(height: 20.h),
-                topFivePerformersSection(),
-                SizedBox(height: 30.h),
-                partnerLogo(),
-                SizedBox(height: 50.h)
-              ],
-            ),
+            child: isLoading 
+              ? SizedBox(
+                  height: 620.0.h,
+                  child: Center(
+                    child: SizedBox(
+                      height: 30.sp,
+                      width: 30.sp,
+                      child: CircularProgressIndicator(
+                        color: black,
+                        strokeWidth: 1.5.sp,
+                      ),
+                    ),
+                  ),
+                )
+              : Column(
+                children: [
+                  SizedBox(height: 10.h),
+                  userInfo(),
+                  // SizedBox(height: 20),
+                  topBanner(),
+                  SizedBox(height: 10.h),
+                  rewardsSection(),
+                  SizedBox(height: 20.h),
+                  topFivePerformersSection(),
+                  SizedBox(height: 30.h),
+                  partnerLogo(),
+                  SizedBox(height: 50.h)
+                ],
+              ),
           ),
         ),
       ),
