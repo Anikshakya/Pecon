@@ -8,12 +8,31 @@ class ProductsController extends GetxController{
   // Get Controllers 
   final RxBool isLoading = true.obs;
   final RxBool isRedeemeLoading = false.obs;
+  final RxBool isProductListLoading = false.obs;
 
   //category List
   List categoryList             = [];
   List filteredSubcategories    = [];
   String selectedCategory       = "";
   String selectedSubCategory    = "";
+
+  //Get product List
+  getProductList() async {
+    try{
+      isProductListLoading(true); // Start Loading
+      var response = await ApiRepo.apiGet('api/product/display-products', "", 'Get Product List');
+      if(response != null && response['code'] == 200) {
+        if(response["data"] != null && response["data"] != []){
+        }
+      }
+    }catch (e){
+      isProductListLoading(false); // Stop Loading
+      log(e.toString());
+    } finally{
+      isProductListLoading(false); // Stop Loading
+    }
+  }
+
 
 
   // Slider/AdBanner API
