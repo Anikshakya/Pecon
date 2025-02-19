@@ -3,8 +3,8 @@ import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/app_controller.dart';
 import 'package:pecon/src/controllers/home_controller.dart';
 import 'package:pecon/src/controllers/user_controller.dart';
-import 'package:pecon/src/view/product_details.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
+import 'package:pecon/src/widgets/custom_button.dart';
 import 'package:pecon/src/widgets/custom_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -31,71 +31,6 @@ class _HomePageState extends State<HomePage> {
   
   int _currentIndex = 0;
 
-  final List<String> adImages = [
-    'https://auxbeam.in/cdn/shop/files/RA80_XL-Banner_--_1_6996a792-2824-4901-be7f-b6d76bb4b138.jpg?v',
-    'https://www.shutterstock.com/image-vector/vector-illustration-realistic-silver-color-260nw-2202634611.jpg',
-    'https://endel.io/pages/index/hero-top-banner/hero-top-banner-desktop.jpg',
-    'https://img.freepik.com/free-psd/black-friday-super-sale-facebook-cover-banner-template_120329-5177.jpg',
-    'https://graphicsfamily.com/wp-content/uploads/edd/2021/06/Gadget-Banner-Design-Template-scaled.jpg',
-    'https://img.freepik.com/premium-psd/black-friday-sale-laptops-gadgets-banner-template-3d-render_444361-44.jpg'
-  ];
-
-  final List redeemItemData = List.generate(5, (index) =>
-      {
-        "imageUrl" : "https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg",
-        "redeemPoints" : index+99,
-      });
-
-  final List<Map<String, dynamic>> topPerformers = [
-    {
-      "name": "Anjan Kumar",
-      "phone": "+91 6201277689",
-      "rank": "First",
-      "cash": 2935,
-      "profileUrl": "https://t3.ftcdn.net/jpg/07/72/07/02/360_F_772070223_m2tqMfNW4DSpmTS0QorQvlta9Qeyc4As.jpg"
-    },
-    {
-      "name": "Manisha Sharma",
-      "phone": "+91 9142149403",
-      "rank": "Second",
-      "cash": 2400,
-      "profileUrl": "https://img.freepik.com/free-photo/lifestyle-people-emotions-casual-concept-confident-nice-smiling-asian-woman-cross-arms-chest-confident-ready-help-listening-coworkers-taking-part-conversation_1258-59335.jpg"
-    },
-    {
-      "name": "Ramesh Kumar",
-      "phone": "+91 8051789652",
-      "rank": "Third",
-      "cash": 1395,
-      "profileUrl": "https://t3.ftcdn.net/jpg/09/99/44/94/360_F_999449473_eq6Om1kdD5Y5yZ29fR1j9TsiwbY583nw.jpg"
-    },
-    {
-      "name": "Sahina Joshi",
-      "phone": "+91 8051789652",
-      "rank": "Fourth",
-      "cash": 1395,
-      "profileUrl": "https://img.freepik.com/free-photo/lifestyle-people-emotions-casual-concept-confident-nice-smiling-asian-woman-cross-arms-chest-confident-ready-help-listening-coworkers-taking-part-conversation_1258-59335.jpg"
-    },
-    {
-      "name": "Anjan Lal Mishra",
-      "phone": "+91 8051789652",
-      "rank": "Fifth",
-      "cash": 1395,
-      "profileUrl": "https://t3.ftcdn.net/jpg/07/72/07/02/360_F_772070223_m2tqMfNW4DSpmTS0QorQvlta9Qeyc4As.jpg"
-    },
-  ];
-
-
-  // Redeeme Items
-  List<Map<String, dynamic>> redeemItemsJson = [
-    {"id": 1, "name": "NEON HELMET", "imageUrl": "https://wroom.co.in/wp-content/uploads/2022/11/Vega-Bolt-Bunny-Black-Neon-Blue-Helmet-Online-Buy-India.jpg", "points": 600},
-    {"id": 2, "name": "POWER BANK", "imageUrl": "https://i0.wp.com/mypowernepal.com/wp-content/uploads/2021/12/e4eba131e18bc2c2b357987ce3522d1a.png?fit", "points": 1500},
-    {"id": 3, "name": "HAND GRINDER", "imageUrl": "https://hardwarepasal.com/src/img/product/multipleimages/2022-05-18-16-45-37_STvz8Ae7IJ.png", "points": 2000},
-    {"id": 4, "name": "DRILL MACHINE", "imageUrl": "https://m.media-amazon.com/images/I/51fSluIoV2L._SL1000_.jpg", "points": 4000},
-    {"id": 5, "name": "BICYCLE", "imageUrl": "https://cdn.shopify.com/s/files/1/0834/5213/3657/files/2025_STRATTOS_S7D-844233.jpg?v=1717547195", "points": 5500},
-    {"id": 6, "name": "SMART PHONE", "imageUrl": "https://image.made-in-china.com/318f0j00ktZYIbnKflce/MIC-mp4.webp", "points": 12500},
-    {"id": 7, "name": "SMART WATCH", "imageUrl": "https://ecdn6.globalso.com/upload/p/1417/image_product/2024-03/660275293990e60627.jpg", "points": 8000},
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -108,8 +43,10 @@ class _HomePageState extends State<HomePage> {
   getData() async{
     // Get AdBanner/Slider data
     homeCon.getAdBanner();
+    // Get Prize List
     homeCon.getRedeemInformation();
-
+    // Get Top 5 Performer
+    homeCon.getTop5Performers();
   }
 
   @override
@@ -214,7 +151,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget rewardsSection() {
+  rewardsSection() {
     return Obx(()=> homeCon.isRedeemInfoLoading.isTrue
       ? Container(
         height: 300.h,
@@ -248,115 +185,228 @@ class _HomePageState extends State<HomePage> {
               LayoutBuilder(
                 builder: (context, constraints) {
                   double itemWidth = (constraints.maxWidth - 8 * 2) / 3; // 3 items per row
-              
-                  return Wrap(
-                    spacing: 8,
-                    runSpacing: 16,
-                    alignment: WrapAlignment.center,
-                    children: List.generate(homeCon.redeemInfoData.length, (index) {
-                      final item = homeCon.redeemInfoData[index];
-              
-                      Widget itemWidget = Stack(
-                        children: [
-                          // Info
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: GestureDetector(
-                              onTap: (){
-                                Get.to(()=> const ProductDetailsPage());
-                              },
-                              child: Column(
-                                children: [
-                                  Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.all(10.sp),
-                                    margin: EdgeInsets.only(top: 36.sp),
-                                    decoration: BoxDecoration(
-                                      color: white,
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(20.r),
-                                        topRight: Radius.circular(20.r),
-                                        bottomLeft: Radius.circular(8.r),
-                                        bottomRight: Radius.circular(8.r),
-                                      ),
-                                      border: Border.all(
-                                        width: 0.8,
-                                        color: yellow
-                                      ),
-                                      // boxShadow: [
-                                      //   BoxShadow(
-                                      //     color: Colors.grey.withOpacity(0.3),
-                                      //     blurRadius: 4,
-                                      //     spreadRadius: 2,
-                                      //   ),
-                                      // ],
-                                    ),
+
+                  // Extract the last item
+                  final lastItem = homeCon.redeemInfoData.isNotEmpty
+                      ? homeCon.redeemInfoData.last
+                      : null;
+
+                  // Check if the length is greater than 3 to apply the larger layout for the last item
+                  bool isMoreThanThreeItems = homeCon.redeemInfoData.length > 3;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Wrap with items excluding the last one
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 16,
+                        alignment: WrapAlignment.center,
+                        children: List.generate(
+                          isMoreThanThreeItems
+                              ? homeCon.redeemInfoData.length - 1 // Exclude last item if more than 3 items
+                              : homeCon.redeemInfoData.length, // Show all items if there are 3 or fewer
+                          (index) {
+                            final item = homeCon.redeemInfoData[index];
+
+                            Widget itemWidget = Stack(
+                              children: [
+                                // Info
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      redeemPrzeDialogue();
+                                    },
                                     child: Column(
                                       children: [
-                                        SizedBox(height: 25.h),
-                                        Text(
-                                          item.title,
-                                          style: poppinsBold(size: 10.sp, color: black),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        SizedBox(height: 5.h),
                                         Container(
-                                          padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                                          width: double.infinity,
+                                          padding: EdgeInsets.all(10.sp),
+                                          margin: EdgeInsets.only(top: 36.sp),
                                           decoration: BoxDecoration(
-                                            color: userCon.user.value.data.redeemed < item.points ? gray.withOpacity(0.5) : maroon.withOpacity(.95),
-                                            borderRadius: BorderRadius.circular(6.sp),
+                                            color: white,
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(20.r),
+                                              topRight: Radius.circular(20.r),
+                                              bottomLeft: Radius.circular(8.r),
+                                              bottomRight: Radius.circular(8.r),
+                                            ),
+                                            border: Border.all(width: 0.8, color: yellow),
                                           ),
-                                          child: RichText(
-                                            text: TextSpan(
-                                              style: poppinsSemiBold(size: 10.sp, color: userCon.user.value.data.redeemed < item.points ? white : black),
-                                              children: [
-                                                WidgetSpan(
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(right: 4.sp),
-                                                    child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp,)
+                                          child: Column(
+                                            children: [
+                                              SizedBox(height: 25.h),
+                                              Text(
+                                                item.title,
+                                                style: poppinsBold(size: 10.sp, color: black),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              SizedBox(height: 5.h),
+                                              Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 8.sp, vertical: 4.sp),
+                                                decoration: BoxDecoration(
+                                                  color: userCon.user.value.data.redeemed < item.points
+                                                      ? gray.withOpacity(0.5)
+                                                      : maroon.withOpacity(.95),
+                                                  borderRadius: BorderRadius.circular(6.sp),
+                                                ),
+                                                child: RichText(
+                                                  text: TextSpan(
+                                                    style: poppinsSemiBold(
+                                                        size: 10.sp,
+                                                        color: userCon.user.value.data.redeemed < item.points
+                                                            ? white
+                                                            : black),
+                                                    children: [
+                                                      WidgetSpan(
+                                                        child: Padding(
+                                                          padding: EdgeInsets.only(right: 4.sp),
+                                                          child: Image.asset(
+                                                            "assets/images/golden_star.png",
+                                                            height: 14.sp,
+                                                            width: 14.sp,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      TextSpan(
+                                                        text: formatter.format(int.parse("${item.points}")),
+                                                        style: poppinsSemiBold(
+                                                            color: white, size: 10.sp),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
-                                                TextSpan(
-                                                  text: formatter.format(int.parse("${item.points}")),
-                                                  style: poppinsSemiBold(color:  white, size: 10.sp ),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        )
+                                              )
+                                            ],
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
-                                  
-                                ],
-                              ),
+                                ),
+                                // Image
+                                Align(
+                                  alignment: Alignment.topCenter,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: CustomNetworkImage(
+                                      imageUrl: item.image,
+                                      height: 65.sp,
+                                      width: 65.sp,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+
+                            return Container(
+                              width: itemWidth,
+                              alignment: Alignment.center,
+                              child: itemWidget,
+                            );
+                          },
+                        ),
+                      ),
+
+                      // If there is a last item, display it below with larger width, image, and text
+                      if (isMoreThanThreeItems && lastItem != null)
+                        Column(
+                          children: [
+                            SizedBox(height: 16.h,),
+                            // Last Item
+                            Stack(
+                              alignment: Alignment.topCenter,
+                              children: [
+                                // Prize info
+                                GestureDetector(
+                                  onTap: (){
+                                    redeemPrzeDialogue();
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 20.sp), // Optional spacing
+                                    child: Container(
+                                      width: 180.w, // Larger width for the last item
+                                      padding: EdgeInsets.all(10.sp), // Larger padding
+                                      margin: EdgeInsets.only(top: 36.sp),
+                                      decoration: BoxDecoration(
+                                        color: white,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(20.r),
+                                          topRight: Radius.circular(20.r),
+                                          bottomLeft: Radius.circular(8.r),
+                                          bottomRight: Radius.circular(8.r),
+                                        ),
+                                        border: Border.all(width: 0.8, color: yellow),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          SizedBox(height: 25.h),
+                                          Text(
+                                            lastItem.title,
+                                            style: poppinsBold(size: 14.sp, color: black), // Larger text size
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          SizedBox(height: 8.h),
+                                          Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp), // Larger padding
+                                            decoration: BoxDecoration(
+                                              color: userCon.user.value.data.redeemed < lastItem.points
+                                                  ? gray.withOpacity(0.5)
+                                                  : maroon.withOpacity(.95),
+                                              borderRadius: BorderRadius.circular(6.sp),
+                                            ),
+                                            child: RichText(
+                                              text: TextSpan(
+                                                style: poppinsSemiBold(
+                                                    size: 12.sp, color: userCon.user.value.data.redeemed < lastItem.points ? white : black),
+                                                children: [
+                                                  WidgetSpan(
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(right: 4.sp),
+                                                      child: Image.asset(
+                                                        "assets/images/golden_star.png",
+                                                        height: 16.sp,
+                                                        width: 16.sp, // Larger star icon
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  TextSpan(
+                                                    text: formatter.format(int.parse("${lastItem.points}")),
+                                                    style: poppinsSemiBold(color: white, size: 12.sp),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                // Image
+                                  Align(
+                                    alignment: Alignment.topCenter,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(100),
+                                      child: CustomNetworkImage(
+                                        imageUrl: lastItem.image,
+                                        height: 90.sp,
+                                        width: 90.sp,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                              ],
                             ),
-                          ),
-                          // Image
-                          Align(
-                            alignment: Alignment.topCenter,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: CustomNetworkImage(
-                                imageUrl: item.image,
-                                height: 65.sp,
-                                width: 65.sp,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-              
-                      return Container(
-                        width: itemWidth,
-                        alignment: Alignment.center,
-                        child: itemWidget,
-                      );
-                    }),
+                          ],
+                        ),
+                    ],
                   );
                 },
-              ),
+              )
             ],
           ),
         ),
@@ -364,7 +414,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  
   userInfo() {
     return Obx(()=>
       Padding(
@@ -471,141 +520,158 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-
   topFivePerformersSection() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.sp),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Replacing SingleChildScrollView with ListView.builder
-          Container(
-            height: 260.h, // Set a fixed height or adjust based on content
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: gray.withOpacity(0.1),
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    SizedBox(width: 15.w),
-                    const Icon(Icons.star, color: primary, size: 24),
-                    SizedBox(width: 5.w),
-                    Text(
-                      "Top Five Performers",
-                      style: poppinsSemiBold(size: 14.sp, color : black)
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16,),
-                Expanded(
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) => const SizedBox(width: 10),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: topPerformers.length,
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    itemBuilder: (context, index) {
-                      final performer = topPerformers[index];
-                      return Stack(
-                        children: [
-                          Container(
-                            width: 130.w,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 20,),
-                                ClipOval(
-                                  child: CustomNetworkImage(
-                                    imageUrl: performer["profileUrl"] ?? "",
-                                    width: 60.sp,
-                                    height: 60.sp,
-                                    fit: BoxFit.cover,
+    // Sort performers by highest totalRedeem
+
+    return Obx(() {
+      if (homeCon.isTop5PerformerLoading.value) {
+        return const SizedBox();
+      }
+
+      if (homeCon.topPerformer.isEmpty) {
+        return const SizedBox(); // Hide the entire section
+      }
+
+      final sortedPerformers = List.of(homeCon.topPerformer)..sort((a, b) => b.totalRedeem.compareTo(a.totalRedeem));
+
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20.sp),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 260.h,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: gray.withOpacity(0.1),
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      SizedBox(width: 15.w),
+                      const Icon(Icons.star, color: primary, size: 24),
+                      SizedBox(width: 5.w),
+                      Text(
+                        "Top Five Performers",
+                        style: poppinsSemiBold(size: 14.sp, color: black),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  Expanded(
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) => const SizedBox(width: 10),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: homeCon.topPerformer.length,
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      itemBuilder: (context, index) {
+                        final performer =sortedPerformers[index];
+
+                        return Stack(
+                          children: [
+                            Container(
+                              width: 130.w,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: const EdgeInsets.all(10),
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 20),
+                                  ClipOval(
+                                    child: CustomNetworkImage(
+                                      imageUrl: performer.profilePicture ?? "",
+                                      width: 60.sp,
+                                      height: 60.sp,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(height: 5.h),
-                                Text(
-                                  performer["rank"],
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: poppinsBold(size: 14.sp, color: black)
-                                ),
-                                Text(
-                                  performer["name"],
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: poppinsRegular(size: 14.sp, color: black)
-                                ),
-                                SizedBox(height: 10.h),
-                                Container(
-                                  constraints: BoxConstraints(
-                                    minWidth: 80.w
+                                  SizedBox(height: 5.h),
+                                  Text(
+                                    "#${index + 1}",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: poppinsBold(size: 14.sp, color: black),
                                   ),
-                                  padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                                  decoration: BoxDecoration(
-                                    color: maroon.withOpacity(0.95),
-                                    borderRadius: BorderRadius.circular(6.sp),
+                                  Text(
+                                    performer.user ?? "Unknown",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: poppinsRegular(size: 14.sp, color: black),
                                   ),
-                                  child: RichText(
-                                    text: TextSpan(
-                                      style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
-                                      children: [
-                                        WidgetSpan(
-                                          child: Padding(
-                                            padding: EdgeInsets.only(right: 4.sp),
-                                            child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp)
+                                  SizedBox(height: 10.h),
+                                  Container(
+                                    constraints: BoxConstraints(minWidth: 80.w),
+                                    padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                                    decoration: BoxDecoration(
+                                      color: maroon.withOpacity(0.95),
+                                      borderRadius: BorderRadius.circular(6.sp),
+                                    ),
+                                    child: RichText(
+                                      text: TextSpan(
+                                        style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
+                                        children: [
+                                          WidgetSpan(
+                                            child: Padding(
+                                              padding: EdgeInsets.only(right: 4.sp),
+                                              child: Image.asset(
+                                                "assets/images/golden_star.png",
+                                                height: 14.sp,
+                                                width: 14.sp,
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                        TextSpan(
-                                          text: "${performer["cash"]} Points",
-                                          style: poppinsMedium(color: white, size: 12.sp ),
-                                        ),
-                                      ],
+                                          TextSpan(
+                                            text: "${performer.totalRedeem ?? 0} Points",
+                                            style: poppinsMedium(color: white, size: 12.sp),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   )
-                                )
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          // Ribbon for 1st, 2nd, and 3rd place
-                          Positioned(
-                            top: 0,
-                            left: 0,
-                            child: buildRibbon(performer["rank"]),
-                          ),
-                        ],
-                      );
-                    },
+                            // Ribbon for 1st, 2nd, and 3rd place
+                            Positioned(
+                              top: 0,
+                              left: 0,
+                              child: buildRibbon(index + 1),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
+
   }
   
   // Function to build ribbons
-  buildRibbon(String rank) {
+  buildRibbon( rank) {
     Color ribbonColor;
     String ribbonText;
 
     switch (rank) {
-      case "First":
+      case 1:
         ribbonColor = Colors.amber; // Gold for 1st
         ribbonText = "🥇 1st";
         break;
-      case "Second":
+      case 2:
         ribbonColor = Colors.grey; // Silver for 2nd
         ribbonText = "🥈 2nd";
         break;
-      case "Third":
+      case 3:
         ribbonColor = Colors.brown; // Bronze for 3rd
         ribbonText = "🥉 3rd";
         break;
@@ -664,5 +730,115 @@ class _HomePageState extends State<HomePage> {
   //     )
   //   );
   // }
+
+  // Redeem Prize Dialogue
+  redeemPrzeDialogue(){
+    var redeemeList = [
+      {
+        "name" : "Prize"
+      },
+      {
+        "name" : "Cash"
+      },
+    ];
+
+    var selectedItem = "";
+
+    return Get.defaultDialog(
+      backgroundColor: boxCol,
+      title: '',
+      titlePadding: EdgeInsets.symmetric(horizontal: 20.0.w),
+      contentPadding: EdgeInsets.symmetric(horizontal: 20.0.w),
+      content: StatefulBuilder(
+        builder: (context, setState) {
+          return SizedBox(
+            width: double.infinity,
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  Text(
+                    "Redeeme Prize",
+                    style: TextStyle(
+                      fontSize: 19.sp,
+                      fontWeight: FontWeight.bold,
+                      color: black,
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  Text(
+                    "Select Reward Type",
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                      color: black,
+                    ),
+                  ),
+                  SizedBox(height: 7.h),
+                  PopupMenuButton<String>(
+                    onSelected: (value) {
+                      setState(() {
+                        selectedItem = value;
+                      });
+                    },
+                    itemBuilder: (context) => redeemeList
+                        .map((item) => PopupMenuItem<String>(
+                              value: item["name"] ?? "",
+                              child: SizedBox(
+                                width: 200.w,
+                                child: Text(item["name"] ?? "")
+                              ),
+                            ))
+                        .toList(),
+                    offset: Offset(4.w,0),
+                    position: PopupMenuPosition.under, // Ensures the menu appears below
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(8.0),
+                        border: Border.all(color: Colors.transparent, width: 0),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(selectedItem),
+                          const Icon(Icons.arrow_drop_down),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 24.h),
+                  // Submit Button
+                  CustomButton(
+                    onPressed: () {
+                      // Handle manual code submission
+                      Get.back();
+                    },
+                    text: "Redeem",
+                    bgColor: black,
+                    fontColor: white,
+                  ),
+                  SizedBox(height: 10.h),
+                  // Cancel Button
+                  CustomButton(
+                    onPressed: () {
+                      // Handle manual code submission
+                      Get.back();
+                    },
+                    text: "Cancel",
+                    bgColor: Colors.transparent,
+                    fontColor: black,
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
 }
