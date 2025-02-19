@@ -30,6 +30,7 @@ class _ProductsPageState extends State<ProductsPage> {
   }
 
   initialise() async{
+    await productCon.getProductList();
     await productCon.getSearchCategory();
   }
   
