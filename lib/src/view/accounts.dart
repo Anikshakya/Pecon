@@ -7,6 +7,7 @@ import 'package:pecon/src/view/privacy_policy.dart';
 import 'package:pecon/src/view/profile_form_page.dart';
 import 'package:pecon/src/view/terms_condition.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
+import 'package:pecon/src/widgets/custom_button.dart';
 import 'package:pecon/src/widgets/custom_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -82,7 +83,57 @@ class _AccountPageState extends State<AccountPage> {
                       ),
                       _buildListTile(
                         onTap: () async{
-                          await authCon.logout();
+                          Get.defaultDialog(
+                            backgroundColor: boxCol,
+                            title: '',
+                            titlePadding: EdgeInsets.symmetric(horizontal: 20.0.w),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 20.0.w),
+                            content: StatefulBuilder(
+                              builder: (context, setState) {
+                                return SizedBox(
+                                  width: double.infinity,
+                                  child: SingleChildScrollView(
+                                    physics: const BouncingScrollPhysics(),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        // Title
+                                        Text(
+                                          "Do you want To Logout?",
+                                          style: poppinsSemiBold(size: 16.sp, color: black)
+                                        ),
+                                        
+                                        SizedBox(height: 24.h),
+                                        // Submit Button
+                                        Obx(()=>
+                                          CustomButton(
+                                            isLoading: authCon.isLogOutLoading.isTrue,
+                                            onPressed: () async{
+                                              await authCon.logout();
+                                            },
+                                            text: "Logout",
+                                            bgColor: black,
+                                            fontColor: white,
+                                          ),
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        // Cancel Button
+                                        CustomButton(
+                                          onPressed: () {
+                                            // Handle manual code submission
+                                            Get.back();
+                                          },
+                                          text: "Cancel",
+                                          bgColor: Colors.transparent,
+                                          fontColor: black,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
                         },
                         'Log Out', Icons.exit_to_app, 
                         isDestructive: true
