@@ -71,6 +71,9 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
 
   initialise() async{
     WidgetsBinding.instance.addPostFrameCallback((_) async{
+      await userCon.getDistrictData();
+      await userCon.getcityData();
+
       setState((){
         districtId              = userCon.user.value.data.districtId;
         cityId                  = userCon.user.value.data.cityId;
@@ -84,7 +87,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
         numController.text      = userCon.user.value.data.number;
         districtController.text = userCon.user.value.data.district;
         cityController.text     = userCon.user.value.data.city;
-        genderController.text   = userCon.user.value.data.gender[0].toUpperCase() + userCon.user.value.data.gender.substring(1);
+        genderController.text   = userCon.user.value.data.gender == "" ? "" : userCon.user.value.data.gender[0].toUpperCase() + userCon.user.value.data.gender.substring(1);
         dobController.text      = userCon.user.value.data.dob;
         addressController.text  = userCon.user.value.data.address;
 
@@ -96,8 +99,6 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
         esewaController.text    = userCon.user.value.data.bank.esewa;
         khaltiController.text   = userCon.user.value.data.bank.khalti;
       });
-      await userCon.getDistrictData();
-      await userCon.getcityData();
     });
   }
 
