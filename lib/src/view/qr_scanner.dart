@@ -222,7 +222,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
       // Show scanned data in a popup
       Get.back();
       scannedCodeDialogue(
-        code: scannedData, 
+        code: jsonDecode(scannedData)["code"] ?? "Invalid Data",
         isReadOnly: true,
         headingText: "Redeeme Points",
         infoText: "You can redeeme points by submitting."
@@ -296,7 +296,6 @@ class _QRScannerPageState extends State<QRScannerPage> {
                       controller: codeCon,
                       readOnly: isReadOnly ?? false,
                       headingText: "Ënter Code",
-                      keyboardType: TextInputType.number,
                     ),
                   ),
                   SizedBox(height: 10.h),

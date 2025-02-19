@@ -119,22 +119,31 @@ class _HomePageState extends State<HomePage> {
       appBar: customAppbar(),
       body: SafeArea(
         bottom: false,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              SizedBox(height: 10.h),
-              userInfo(),
-              // SizedBox(height: 20),
-              topBanner(),
-              SizedBox(height: 10.h),
-              rewardsSection(),
-              SizedBox(height: 20.h),
-              topFivePerformersSection(),
-              SizedBox(height: 30.h),
-              partnerLogo(),
-              SizedBox(height: 50.h)
-            ],
+        child: RefreshIndicator(
+          color: black,
+          onRefresh: (){
+            return Future.delayed(const Duration(seconds: 1),()async{// Get Athlete Details Data
+              getData();
+              userCon.getUserData();
+            });
+          },
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                SizedBox(height: 10.h),
+                userInfo(),
+                // SizedBox(height: 20),
+                topBanner(),
+                SizedBox(height: 10.h),
+                rewardsSection(),
+                SizedBox(height: 20.h),
+                topFivePerformersSection(),
+                SizedBox(height: 30.h),
+                partnerLogo(),
+                SizedBox(height: 50.h)
+              ],
+            ),
           ),
         ),
       ),
@@ -186,17 +195,17 @@ class _HomePageState extends State<HomePage> {
               SizedBox(height: 10.h,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: adImages.asMap().entries.map((entry) {
+                children: List<Widget>.generate(homeCon.adSliderData.data.length, (index) {
                   return Container(
                     width: 12.w,
                     height: 2.5.h,
                     margin: const EdgeInsets.symmetric(horizontal: 2),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: _currentIndex == entry.key ? black.withOpacity(0.8) : black.withOpacity(0.1),
+                      color: _currentIndex == index ? black.withOpacity(0.8) : black.withOpacity(0.1),
                     ),
                   );
-                }).toList(),
+                }),
               ),
             ],
           ),
