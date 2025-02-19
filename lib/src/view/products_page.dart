@@ -38,144 +38,152 @@ class _ProductsPageState extends State<ProductsPage> {
     return Scaffold(
       backgroundColor: white,
       appBar: productAppbar(context),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: EdgeInsets.only(bottom: 60.0.sp),
-          //products list
-          child: Column(
-            children: [
-              ListView.separated(
-                separatorBuilder: (context, index) => 
-                  Divider(
-                    color: gray.withOpacity(0.25),
-                    thickness: 0.8.sp,
-                    height: 0,
-                  ),
-                itemCount: productsList.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: (){
-                      Get.to(()=> const ProductDetailsPage());
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0.sp,vertical: 16.0.sp),
-                      color: white,
-                      child: Row(
-                        children: [
-                          //products image
-                          Container(
-                            decoration: BoxDecoration(
-                              color: gray.withOpacity(0.1),
-                              border: Border.all(
-                                color: gray.withOpacity(0.25), width: 0.8.sp
-                              ),
-                              borderRadius: BorderRadius.circular(6.sp),
-                            ),
-                            height: 80.sp,
-                            width: 80.sp,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(6.sp),
-                              child: CustomNetworkImage(
-                                imageUrl: productsList[index]["productUrl"], 
-                                height: 80.sp,
-                                width: 80.sp,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                          //products name and desc
-                          SizedBox(
-                            width: 244.w,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(productsList[index]["productName"], style: poppinsSemiBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
-                                SizedBox(height: 2.h),
-                                Text("Product Code: ${productsList[index]["productCode"]}", style: poppinsSemiBold(size: 12.sp, color: black.withOpacity(0.7))),
-                                SizedBox(height: 10.h),
-                                //products price and rewar points
-                                Row(
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withOpacity(0.5)),),
-                                        SizedBox(height: 4.h),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                                          decoration: BoxDecoration(
-                                            color: gray.withOpacity(0.2),
-                                            borderRadius: BorderRadius.circular(6.sp),
-                                          ),
-                                          child: RichText(
-                                            text: TextSpan(
-                                              style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
-                                              children: [
-                                                const TextSpan(text: "₹  "),
-                                                TextSpan(
-                                                  text: formatter.format(int.parse(productsList[index]["productMrp"])),
-                                                  style: poppinsSemiBold(color: green, size: 13.sp ),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        )
-                                      ],
-                                    ),
-                                    const Spacer(),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Text("Points", style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),),
-                                        SizedBox(height: 4.h),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                                          decoration: BoxDecoration(
-                                            color: maroon.withOpacity(0.95),
-                                            borderRadius: BorderRadius.circular(6.sp),
-                                          ),
-                                          child: RichText(
-                                            text: TextSpan(
-                                              style: poppinsSemiBold(size: 11.sp, color: black),
-                                              children: [
-                                                WidgetSpan(
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(right: 4.sp),
-                                                    child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp)
-                                                  ),
-                                                ),
-                                                TextSpan(
-                                                  text: formatter.format(int.parse(productsList[index]["cashReward"])),
-                                                  style: poppinsSemiBold(color: white, size: 12.sp ),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+      body: RefreshIndicator(
+        color: black,
+        onRefresh: (){
+          return Future.delayed(const Duration(seconds: 1),()async{// Get Athlete Details Data
+            initialise();
+          });
+        },
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 60.0.sp),
+            //products list
+            child: Column(
+              children: [
+                ListView.separated(
+                  separatorBuilder: (context, index) => 
+                    Divider(
+                      color: gray.withOpacity(0.25),
+                      thickness: 0.8.sp,
+                      height: 0,
                     ),
-                  );
-                },
-              ),
-              Divider(
-                color: gray.withOpacity(0.25),
-                thickness: 0.8.sp,
-                height: 0,
-              ),
-            ],
+                  itemCount: productsList.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: (){
+                        Get.to(()=> const ProductDetailsPage());
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0.sp,vertical: 16.0.sp),
+                        color: white,
+                        child: Row(
+                          children: [
+                            //products image
+                            Container(
+                              decoration: BoxDecoration(
+                                color: gray.withOpacity(0.1),
+                                border: Border.all(
+                                  color: gray.withOpacity(0.25), width: 0.8.sp
+                                ),
+                                borderRadius: BorderRadius.circular(6.sp),
+                              ),
+                              height: 80.sp,
+                              width: 80.sp,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(6.sp),
+                                child: CustomNetworkImage(
+                                  imageUrl: productsList[index]["productUrl"], 
+                                  height: 80.sp,
+                                  width: 80.sp,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            //products name and desc
+                            SizedBox(
+                              width: 244.w,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(productsList[index]["productName"], style: poppinsSemiBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
+                                  SizedBox(height: 2.h),
+                                  Text("Product Code: ${productsList[index]["productCode"]}", style: poppinsSemiBold(size: 12.sp, color: black.withOpacity(0.7))),
+                                  SizedBox(height: 10.h),
+                                  //products price and rewar points
+                                  Row(
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withOpacity(0.5)),),
+                                          SizedBox(height: 4.h),
+                                          Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                                            decoration: BoxDecoration(
+                                              color: gray.withOpacity(0.2),
+                                              borderRadius: BorderRadius.circular(6.sp),
+                                            ),
+                                            child: RichText(
+                                              text: TextSpan(
+                                                style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
+                                                children: [
+                                                  const TextSpan(text: "₹  "),
+                                                  TextSpan(
+                                                    text: formatter.format(int.parse(productsList[index]["productMrp"])),
+                                                    style: poppinsSemiBold(color: green, size: 13.sp ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          )
+                                        ],
+                                      ),
+                                      const Spacer(),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          Text("Points", style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),),
+                                          SizedBox(height: 4.h),
+                                          Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                                            decoration: BoxDecoration(
+                                              color: maroon.withOpacity(0.95),
+                                              borderRadius: BorderRadius.circular(6.sp),
+                                            ),
+                                            child: RichText(
+                                              text: TextSpan(
+                                                style: poppinsSemiBold(size: 11.sp, color: black),
+                                                children: [
+                                                  WidgetSpan(
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(right: 4.sp),
+                                                      child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp)
+                                                    ),
+                                                  ),
+                                                  TextSpan(
+                                                    text: formatter.format(int.parse(productsList[index]["cashReward"])),
+                                                    style: poppinsSemiBold(color: white, size: 12.sp ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                Divider(
+                  color: gray.withOpacity(0.25),
+                  thickness: 0.8.sp,
+                  height: 0,
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/auth_controller.dart';
 import 'package:pecon/src/controllers/user_controller.dart';
@@ -21,6 +22,8 @@ class _AccountPageState extends State<AccountPage> {
   // Get Controllers
   final UserController userCon = Get.put(UserController());
   final AuthController authCon = Get.put(AuthController());
+  // Formate Number to US standard
+  final NumberFormat formatter = NumberFormat("#,##0", "en_US");
   
   @override
   Widget build(BuildContext context) {
@@ -28,54 +31,16 @@ class _AccountPageState extends State<AccountPage> {
       backgroundColor: Colors.white,
       appBar: customAppbar(),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: SafeArea(
           bottom: false,
           child: Obx(()=>
             Column(
               children: [
                 // Profile Header
-                Container(
-                  padding: EdgeInsets.all(20.sp),
-                  decoration: const BoxDecoration(
-                    color: primary,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20),
-                      bottomRight: Radius.circular(20),
-                    ),
-                  ),
-                  child: userCon.isProfileLoading.isTrue 
-                    ? const SizedBox()
-                    : Row(
-                      children: [
-                        CustomNetworkImage(
-                          imageUrl: userCon.user.value.data.profileUrl, 
-                          height: 60.sp, 
-                          width: 60.sp,
-                          fit: BoxFit.cover,
-                        ),
-                        SizedBox(width: 16.w),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              userCon.user.value.data.name.toString(),
-                              style: poppinsMedium(size: 18.sp, color: black)
-                            ),
-                            SizedBox(height: 4.h,),
-                            Text(
-                              'Member ID: ${userCon.user.value.data.id}',
-                              style: poppinsMedium(size: 11.sp, color: black.withOpacity(0.6))
-                            ),
-                            Text(
-                              userCon.user.value.data.number.toString(),
-                              style: poppinsMedium(size: 11.sp, color: black.withOpacity(0.6))
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                ),
-                SizedBox(height: 18.h),
+                SizedBox(height: 10.0.h,),
+                userInfo(),
+                SizedBox(height: 20.h),
                 
                 // Action Buttons
                 Padding(
@@ -90,7 +55,6 @@ class _AccountPageState extends State<AccountPage> {
                   ),
                 ),
                 
-                SizedBox(height: 16.h),
                 
                 // Account Options List
                 Padding(
@@ -123,11 +87,117 @@ class _AccountPageState extends State<AccountPage> {
                   ),
                 ),
             
-                SizedBox(height: 60.h),
+                SizedBox(height: 30.h),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+
+
+  userInfo() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          gradient: const LinearGradient(
+            colors: [Color(0xFFFFE5D9), Color(0xFFFCEED5)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: userCon.isProfileLoading.isTrue
+          ? SizedBox(
+            height: 50.h,
+          )
+          : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        // Profile Image
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(30),
+                          child: CustomNetworkImage(
+                            imageUrl: userCon.user.value.data.profileUrl.toString(),
+                            width: 40.sp,
+                            height: 40.sp,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        SizedBox(width: 10.w),
+                        // Name and Membership ID
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(userCon.user.value.data.name.toString(), style: poppinsBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
+                            SizedBox(height: 2.h),
+                            Text("Membership ID: ${userCon.user.value.data.id}", style: poppinsSemiBold(size: 9.sp, color: black.withOpacity(0.7)), maxLines: 2,),
+                            Text(
+                              userCon.user.value.data.number.toString(),
+                              style: poppinsMedium(size: 11.sp, color: black.withOpacity(0.6))
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        // Total Gained Points
+                        Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text("Total Gain Points", style: poppinsSemiBold(size: 9.sp, color: black.withOpacity(0.5)),),
+                                SizedBox(height: 4.h),
+                                Container(
+                                  constraints: BoxConstraints(
+                                    minWidth: 70.w
+                                  ),
+                                  padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                                  decoration: BoxDecoration(
+                                    color: green,
+                                    borderRadius: BorderRadius.circular(6.sp),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: RichText(
+                                    text: TextSpan(
+                                      style: poppinsSemiBold(size: 11.sp, color: white),
+                                      children: [
+                                        WidgetSpan(
+                                          child: Padding(
+                                            padding: EdgeInsets.only(right: 4.sp),
+                                            child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp)
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: formatter.format(int.parse("${userCon.user.value.data.redeemed}")),
+                                          style: poppinsSemiBold(color: white, size: 10.sp ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                )
+                              ],
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
       ),
     );
   }

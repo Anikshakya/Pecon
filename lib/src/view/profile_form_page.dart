@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pecon/src/app_config/styles.dart';
+import 'package:pecon/src/app_config/validator.dart';
 import 'package:pecon/src/controllers/user_controller.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
@@ -31,7 +33,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
 
   //gender selection
   List<String> gender = ["Male", "Female"];
-  int selectedIndex = 0; // Store initial selection
+  int selectedGender = 0; // Store initial selection
   int selectedDistrict = 0; 
   int selectedCityIndex = 0; 
   int? districtId; 
@@ -74,6 +76,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
         cityId                  = userCon.user.value.data.cityId;
         selectedDistrict        = userCon.districtList.indexWhere((item) => item["name"] == userCon.user.value.data.district.toString());
         selectedCityIndex       = userCon.cityList.indexWhere((item) => item["name"] == userCon.user.value.data.city.toString());
+        selectedGender          = gender.indexWhere((item) => item.toLowerCase() == userCon.user.value.data.gender.toLowerCase().toString());
         changedProfileImage     = userCon.user.value.data.profileUrl;
         // Profile Text Editing Controllers 
         nameController.text     = userCon.user.value.data.name;
@@ -81,7 +84,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
         numController.text      = userCon.user.value.data.number;
         districtController.text = userCon.user.value.data.district;
         cityController.text     = userCon.user.value.data.city;
-        genderController.text   = userCon.user.value.data.gender;
+        genderController.text   = userCon.user.value.data.gender[0].toUpperCase() + userCon.user.value.data.gender.substring(1);
         dobController.text      = userCon.user.value.data.dob;
         addressController.text  = userCon.user.value.data.address;
 
@@ -203,17 +206,23 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
               keyboardType: TextInputType.number,
               headingText: "Mobile Number",
               filledColor: gray.withOpacity(0.2),
-              validator: (value) => value != ""
+              validator: (value) => value != "" && value!.length == 10
                   ? null
-                  : "Required",
+                  : "Enter a valid 10-digit mobile number",
             ),
             SizedBox(height: 20.h),
             //Email
             CustomTextFormHeaderField(
               controller: emailController,
               textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.emailAddress,
+              autoValidateMode: AutovalidateMode.onUserInteraction,
               headingText: "Email",
               filledColor: gray.withOpacity(0.2),
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(255),
+              ],
+              validator: (email) => validateEmail(string: email!),
             ),
             SizedBox(height: 20.h),
             //Address
@@ -719,7 +728,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     TextButton(
                       onPressed: () {
                         setState(() {
-                          genderController.text = gender[selectedIndex]; // Update gender
+                          genderController.text = gender[selectedGender]; // Update gender
                         });
                         Navigator.pop(context);
                       },
@@ -734,10 +743,10 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                   backgroundColor: Colors.white,
                   itemExtent: 40.h,
                   scrollController: FixedExtentScrollController(
-                    initialItem: selectedIndex,
+                    initialItem: selectedGender,
                   ),
                   onSelectedItemChanged: (index) {
-                    selectedIndex = index;
+                    selectedGender = index;
                   },
                   children: gender.map((role) => Center(child: Text(role, style: TextStyle(fontSize: 18.sp),))).toList(),
                 ),

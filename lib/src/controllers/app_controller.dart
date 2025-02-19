@@ -11,6 +11,8 @@ class AppController extends GetxController{
   final RxBool isLoading = false.obs;
   //website link
   String webUrl = "";
+  String phoneLink = "";
+  String fbLink = "";
   //termsCondition
   String termsCondition = "";
   String privacyPolicy = "";
@@ -25,6 +27,8 @@ class AppController extends GetxController{
         webUrl = response["data"]["website_link"] ?? "";
         termsCondition = response["data"]["terms_and_condition"] ?? "";
         privacyPolicy = response["data"]["privacy_policy"] ?? "";
+        phoneLink = response["data"]["phone"] ?? "";
+        fbLink = response["data"]["facebook_link"] ?? "";
       }
     }catch (e){
       log(e.toString());

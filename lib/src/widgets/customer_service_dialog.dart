@@ -3,8 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:pecon/src/controllers/app_controller.dart';
 import 'package:pecon/src/utils/app_utils.dart';
 import 'package:pecon/src/app_config/styles.dart';
+
+final AppController appCon = Get.put(AppController());
 
 customerServiceDialog() {
   return Get.defaultDialog(
@@ -33,7 +36,7 @@ customerServiceDialog() {
                 SizedBox(height: 15.h,),
                 //call
                 InkWell(
-                  onTap: ()=> AppUtils().openLinkWithUrl("tel:9863021878"),
+                  onTap: ()=> AppUtils().openLinkWithUrl("tel:${appCon.phoneLink}"),
                   borderRadius: BorderRadius.circular(30.r),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
@@ -49,7 +52,7 @@ customerServiceDialog() {
                 SizedBox(height: 5.h,),
                 //whatsapp
                 InkWell(
-                  onTap: ()=> AppUtils().openLinkWithUrl("https://wa.me/9863021878"),
+                  onTap: ()=> AppUtils().openLinkWithUrl("https://wa.me/${appCon.phoneLink}"),
                   borderRadius: BorderRadius.circular(30.r),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
@@ -65,7 +68,7 @@ customerServiceDialog() {
                 SizedBox(height: 5.h,),
                 //facebook
                 InkWell(
-                  onTap: ()=> AppUtils().openLinkWithUrl(Platform.isIOS ? "fb://profile/100095631698490" : "fb://page/100095631698490"),
+                  onTap: ()=> AppUtils().openLinkWithUrl(Platform.isIOS ? "fb://profile/${appCon.fbLink}" : "fb://page/${appCon.fbLink}"),
                   borderRadius: BorderRadius.circular(30.r),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
