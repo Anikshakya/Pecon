@@ -674,9 +674,11 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     TextButton(
                       onPressed: () {
                         setState(() {
-                          // Store selected district ID in text controller
-                          cityController.text = distrctWiseCity[selectedCityIndex]["name"].toString();
-                          cityId = distrctWiseCity[selectedCityIndex]["id"];
+                          if(distrctWiseCity.isNotEmpty){
+                            // Store selected district ID in text controller
+                            cityController.text = distrctWiseCity[selectedCityIndex]["name"].toString();
+                            cityId = distrctWiseCity[selectedCityIndex]["id"];
+                          }
                         });
                         Navigator.pop(context);
                       },
