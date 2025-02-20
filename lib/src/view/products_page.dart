@@ -167,7 +167,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                             Container(
                                               padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
                                               decoration: BoxDecoration(
-                                                color: maroon.withOpacity(0.95),
+                                                color: green.withOpacity(0.95),
                                                 borderRadius: BorderRadius.circular(6.sp),
                                               ),
                                               child: RichText(

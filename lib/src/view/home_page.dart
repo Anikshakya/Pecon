@@ -630,7 +630,7 @@ class _HomePageState extends State<HomePage> {
                                     constraints: BoxConstraints(minWidth: 80.w),
                                     padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
                                     decoration: BoxDecoration(
-                                      color: maroon.withOpacity(0.95),
+                                      color: black.withOpacity(0.95),
                                       borderRadius: BorderRadius.circular(6.sp),
                                     ),
                                     child: RichText(
