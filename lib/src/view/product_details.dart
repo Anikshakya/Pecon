@@ -3,17 +3,25 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pecon/src/app_config/styles.dart';
+import 'package:pecon/src/controllers/product_controller.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
+import 'package:pecon/src/widgets/custom_markdown.dart';
+import 'package:pecon/src/widgets/custom_network_image.dart';
 import 'package:pecon/src/widgets/view_full_screen_image.dart';
 
 class ProductDetailsPage extends StatefulWidget {
-  const ProductDetailsPage({super.key});
+  final int index;
+  const ProductDetailsPage({super.key, required this.index});
+
 
   @override
   State<ProductDetailsPage> createState() => _ProductDetailsPageState();
 }
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
+  // Get Controller
+  final ProductsController productCon = Get.put(ProductsController());
+  
   int activeIndex = 0;
 
   final List<String> imageUrls = [
@@ -52,79 +60,96 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Category 2",
+            productCon.productList[widget.index].categoryId.toString(),
             style: poppinsMedium(size: 13.sp, color: gray)
           ),
           SizedBox(height: 6.h),
           Text(
-            "Electric Bike",
-            style: poppinsSemiBold(size: 21.sp, color: black)
-          ),
-          SizedBox(height: 6.h),
-          Text(
-            "by Bhrati Electra",
-            style: poppinsMedium(size: 13.sp, color: gray)
+            productCon.productList[widget.index].title ?? "",
+            style: poppinsBold(size: 21.sp, color: black)
           ),
           SizedBox(height: 14.h),
           Row(
             children: [
-              RichText(
-                text: TextSpan(
-                  style: poppinsSemiBold(size: 10.sp, color: black),
-                  children: [
-                    TextSpan(
-                      text: "2000 ",
-                      style: poppinsSemiBold(color: primary, size: 20.sp ),
-                    ),
-                    TextSpan(
-                      text: "CCT",
-                      style: poppinsSemiBold(color: black, size: 20.sp ),
-                    ),
-                  ],
+              Flexible(
+                child: RichText(
+                  text: TextSpan(
+                    style: poppinsSemiBold(size: 10.sp, color: black),
+                    children: [
+                      TextSpan(
+                        text: productCon.productList[widget.index].watt ?? "0",
+                        style: poppinsSemiBold(color: primary, size: 20.sp),
+                      ),
+                      WidgetSpan(
+                        child: Text(
+                          " CCT",
+                          style: poppinsMedium(color: black, size: 18.sp),
+                          maxLines: 2, // Allow up to 2 lines
+                          overflow: TextOverflow.ellipsis, // Truncate after 2 lines
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              SizedBox(width: 12.w),
+
+              SizedBox(width: 8.w),
+
               Text(
                 "/",
-                style: poppinsSemiBold(size: 18.sp, color: black)
+                style: poppinsSemiBold(size: 18.sp, color: black),
               ),
-              SizedBox(width: 12.w),
-              RichText(
-                text: TextSpan(
-                  style: poppinsSemiBold(size: 10.sp, color: black),
-                  children: [
-                    TextSpan(
-                      text: "120 ",
-                      style: poppinsSemiBold(color: primary, size: 20.sp ),
-                    ),
-                    TextSpan(
-                      text: "Watt",
-                      style: poppinsSemiBold(color: black, size: 20.sp ),
-                    ),
-                  ],
+
+              SizedBox(width: 8.w),
+
+              Flexible(
+                child: RichText(
+                  text: TextSpan(
+                    style: poppinsSemiBold(size: 10.sp, color: black),
+                    children: [
+                      TextSpan(
+                        text: productCon.productList[widget.index].watt ?? "0",
+                        style: poppinsSemiBold(color: primary, size: 20.sp),
+                      ),
+                      WidgetSpan(
+                        child: Text(
+                          " Watt",
+                          style: poppinsMedium(color: black, size: 18.sp),
+                          maxLines: 2, // Allow up to 2 lines
+                          overflow: TextOverflow.ellipsis, // Truncate after 2 lines
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 14.h),
+          SizedBox(height: 18.h),
           Text(
             "Technical Specification",
-            style: poppinsSemiBold(size: 18.sp, color: black)
+            style: poppinsBold(size: 18.sp, color: black)
           ),
           SizedBox(height: 6.h),
-          Text(
-            "Mauris neque tellus, placerat sit amet quam et, facilisis suscipit dui. "
-            "Mauris neque tellus, placerat sit amet quam et, facilisis suscipit dui. "
-            "Mauris neque tellus, placerat sit amet quam et, facilisis suscipit dui. "
-            "Mauris neque tellus, placerat sit amet quam et, facilisis suscipit dui. "
-            "Mauris neque tellus, placerat sit amet quam et, facilisis suscipit dui. "
-            "Mauris neque tellus, placerat sit amet quam et, facilisis suscipit dui. "
-            "Mauris neque tellus, placerat sit amet quam et, facilisis suscipit dui. "
-            "Mauris neque tellus, placerat sit amet quam et, facilisis suscipit dui. "
-            "Mauris neque tellus, placerat sit amet quam et, facilisis suscipit dui. "
-            "Cras a pretium ena mauris. Mauris eget sapien ut nisi posuere.",
-            style: poppinsMedium(size: 13.sp, color: gray)
-          ),
+          CustomMarkdownWidget(
+            data: productCon.productList[widget.index].specification  ?? "", 
+            imageBuilder: (uri, title, alt) {
+              var imageList = [];
+              imageList.add(uri.toString());
+              return InkWell(
+                onTap: () {
+                  Get.to(() => FullScreenImagePage(imageUrl: imageList[imageList.indexOf(uri.toString())]),
+                    transition: Transition.downToUp
+                  );
+                },
+                child: CustomNetworkImage(
+                  imageUrl: uri.toString(),
+                  height: 442.0.h,
+                  width: double.infinity,
+                ),
+              );
+            },
+          )
         ],
       ),
     );
@@ -136,21 +161,24 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     return Column(
       children: [
         CarouselSlider(
-          items: imageUrls.map((url) {
-            return GestureDetector(
-              onTap: (){
-                Get.to(()=> FullScreenImagePage(imageUrl: url));
-              },
-              child: Container(
-                color: const Color.fromARGB(255, 236, 236, 236),
-                child: Image.network(
-                  url,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                ),
-              ),
-            );
-          }).toList(),
+          items: (productCon.productList[widget.index].images as List<dynamic>?)
+              ?.cast<String>() // Ensure it's List<String>
+              .map<Widget>((url) => GestureDetector(
+                    onTap: () {
+                      Get.to(() => FullScreenImagePage(imageUrl: url));
+                    },
+                    child: Container(
+                      color: const Color.fromARGB(255, 236, 236, 236),
+                      child: Image.network(
+                        url,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        errorBuilder: (context, error, stackTrace) => 
+                          const Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                      ),
+                    ),
+                  ))
+              .toList() ?? [const SizedBox()], // Fallback widget
           options: CarouselOptions(
             height: 300.h,
             viewportFraction: 1.0,
@@ -162,21 +190,24 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             },
           ),
         ),
+
         SizedBox(height: 8.h),
         // Custom Page Indicator
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(imageUrls.length, (index) {
-            return Container(
-              width: 12.w,
-              height: 2.5.h,
+          children: List.generate(
+            productCon.productList[widget.index].images.length, // Ensure it matches image count
+            (index) => AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              width: activeIndex == index ? 16.w : 12.w, // Active indicator slightly wider
+              height: 3.h, // Keep a uniform height
               margin: const EdgeInsets.symmetric(horizontal: 4),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: activeIndex == index ? black.withOpacity(0.8) : black.withOpacity(0.1),
               ),
-            );
-          }),
+            ),
+          ),
         ),
     
       ],

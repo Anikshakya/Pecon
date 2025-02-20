@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/product_controller.dart';
@@ -95,7 +94,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
                     // Show scanned data in a popup
                     Get.back();
                     scannedCodeDialogue(
-                      code: jsonDecode(scannedData)["code"], 
+                      code: scannedData,
                       isReadOnly: true,
                       headingText: "Redeeme Points",
                       infoText: "You can redeeme points by submitting.",
@@ -222,7 +221,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
       // Show scanned data in a popup
       Get.back();
       scannedCodeDialogue(
-        code: jsonDecode(scannedData)["code"] ?? "Invalid Data",
+        code: scannedData,
         isReadOnly: true,
         headingText: "Redeeme Points",
         infoText: "You can redeeme points by submitting."

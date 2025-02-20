@@ -88,7 +88,9 @@ class _ProductsPageState extends State<ProductsPage> {
                     itemBuilder: (context, index) {
                       return InkWell(
                         onTap: (){
-                          Get.to(()=> const ProductDetailsPage());
+                          Get.to(()=> ProductDetailsPage(
+                            index: index,
+                          ));
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(horizontal: 16.0.sp,vertical: 16.0.sp),

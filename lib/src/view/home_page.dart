@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               CarouselSlider(
                 options: CarouselOptions(
-                  height: 200.h,
+                  height: 188.h,
                   autoPlay: true,
                   enlargeCenterPage: true,
                   viewportFraction: 1,
@@ -315,8 +315,8 @@ class _HomePageState extends State<HomePage> {
                                     borderRadius: BorderRadius.circular(100),
                                     child: CustomNetworkImage(
                                       imageUrl: item.image,
-                                      height: 65.sp,
-                                      width: 65.sp,
+                                      height: 70.sp,
+                                      width: 70.sp,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -409,18 +409,18 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 // Image
-                                  Align(
-                                    alignment: Alignment.topCenter,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(100),
-                                      child: CustomNetworkImage(
-                                        imageUrl: lastItem.image,
-                                        height: 90.sp,
-                                        width: 90.sp,
-                                        fit: BoxFit.cover,
-                                      ),
+                                Align(
+                                  alignment: Alignment.topCenter,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: CustomNetworkImage(
+                                      imageUrl: lastItem.image,
+                                      height: 90.sp,
+                                      width: 90.sp,
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
+                                ),
                               ],
                             ),
                           ],

@@ -24,6 +24,7 @@ class CustomMarkdownWidget extends StatelessWidget {
       onTapLink: (text, href, title) => href != null ? launchUrlString(href,mode: LaunchMode.externalApplication) : null,
       physics: const NeverScrollableScrollPhysics(),
       styleSheet: MarkdownStyleSheet(
+        
         horizontalRuleDecoration: const BoxDecoration(
           border: Border(
             top: BorderSide(// Set the color of the horizontal rule
@@ -47,7 +48,7 @@ class CustomMarkdownWidget extends StatelessWidget {
         p: poppinsMedium(size: 14.sp, color: black),
         listBullet: null, //Bullet Color
         listIndent: null, //Bullet Spacing
-        strong: poppinsBold(size: 16.sp, color: black), //Bullet Heading
+        strong: poppinsBold(size: 14.sp, color: black), //Bullet Heading
         blockquote:poppinsBold(size: 16.sp, color: black),
         blockquoteDecoration: const BoxDecoration(color: grey3),
       ),
