@@ -34,10 +34,12 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   //gender selection
   List<String> gender = ["Male", "Female"];
   int selectedGender = 0; // Store initial selection
-  int selectedDistrict = 0; 
+  int selectedDistrictIndex = 0; 
   int selectedCityIndex = 0; 
   int? districtId; 
-  int? cityId; 
+  int? cityId;
+
+  List distrctWiseCity = []; 
 
   //initial DOB
   DateTime selectedDate = DateTime.now(); 
@@ -77,9 +79,10 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
       setState((){
         districtId              = userCon.user.value.data.districtId;
         cityId                  = userCon.user.value.data.cityId;
-        selectedDistrict        = userCon.districtList.indexWhere((item) => item["name"] == userCon.user.value.data.district.toString());
-        selectedCityIndex       = userCon.cityList.indexWhere((item) => item["name"] == userCon.user.value.data.city.toString());
+        selectedDistrictIndex   = userCon.districtList.indexWhere((item) => item["name"] == userCon.user.value.data.district.toString());
         selectedGender          = gender.indexWhere((item) => item.toLowerCase() == userCon.user.value.data.gender.toLowerCase().toString());
+        distrctWiseCity         = userCon.cityList.isNotEmpty ? userCon.cityList.where((element) => element["id"] == districtId).toList() : [];
+        selectedCityIndex       = distrctWiseCity.indexWhere((item) => item["name"] == userCon.user.value.data.city.toString());
         changedProfileImage     = userCon.user.value.data.profileUrl;
         // Profile Text Editing Controllers 
         nameController.text     = userCon.user.value.data.name;
@@ -174,8 +177,8 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 30.0.h),
       child: Column(
         children: [
-          // changeProfilePic(),
-          // SizedBox(height: 20.h,),
+          changeProfilePic(),
+          SizedBox(height: 20.h,),
           profileInfoForm(),
         ],
       )
@@ -397,7 +400,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(100.r),
-            child: changedProfileImage == null
+            child: changedProfileImage == "" || changedProfileImage == null
             ? Container(
                 height: 120.sp,
                 width: 120.sp,
@@ -468,10 +471,10 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                       SizedBox(
                         height: 22.sp,
                         width: 22.sp,
-                        child: Icon(Icons.delete, color: changedProfileImage == null ? gray : black.withOpacity(0.7),)
+                        child: Icon(Icons.delete, color: changedProfileImage == null || changedProfileImage == "" ? gray : black.withOpacity(0.7),)
                       ),
                       SizedBox(width: 12.0.w,),
-                      Text("Delete", style: poppinsBold(size: 14.sp, color: changedProfileImage == null ? gray : black.withOpacity(0.7)),),
+                      Text("Delete", style: poppinsBold(size: 14.sp, color: changedProfileImage == null || changedProfileImage == "" ? gray : black.withOpacity(0.7)),),
                     ],
                   ),
                 ),
@@ -554,6 +557,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     gender: genderController.text.toLowerCase().toString().trim(),
                     dob: dobController.text.toString().trim(),
                     address: addressController.text.toString().trim(),
+                    image : changedProfileImage.runtimeType.toString() == 'XFile' ? changedProfileImage.toString() : null,
                   );
               }
               : () async {
@@ -600,8 +604,14 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                       onPressed: () {
                         setState(() {
                           // Store selected district ID in text controller
-                          districtController.text = userCon.districtList[selectedDistrict]["name"].toString();
-                          districtId = userCon.districtList[selectedDistrict]["id"];
+                          districtController.text = userCon.districtList[selectedDistrictIndex]["name"].toString();
+                          districtId = userCon.districtList[selectedDistrictIndex]["id"];
+
+                          //clear city data
+                          cityController.clear();
+                          cityId = null;
+                          selectedCityIndex = 0;
+                          distrctWiseCity = userCon.cityList.where((element) => element["id"] == districtId).toList();
                         });
                         Navigator.pop(context);
                       },
@@ -616,11 +626,11 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                   backgroundColor: Colors.white,
                   itemExtent: 40.h,
                   scrollController: FixedExtentScrollController(
-                    initialItem: selectedDistrict,
+                    initialItem: selectedDistrictIndex,
                   ),
                   onSelectedItemChanged: (index) {
                     setState(() {
-                      selectedDistrict = index;
+                      selectedDistrictIndex = index;
                     });
                   },
                   children: userCon.districtList
@@ -665,8 +675,8 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                       onPressed: () {
                         setState(() {
                           // Store selected district ID in text controller
-                          cityController.text = userCon.cityList[selectedCityIndex]["name"].toString();
-                          cityId = userCon.cityList[selectedCityIndex]["id"];
+                          cityController.text = distrctWiseCity[selectedCityIndex]["name"].toString();
+                          cityId = distrctWiseCity[selectedCityIndex]["id"];
                         });
                         Navigator.pop(context);
                       },
@@ -688,7 +698,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                       selectedCityIndex = index;
                     });
                   },
-                  children: userCon.cityList
+                  children: distrctWiseCity
                       .map<Widget>((city) => Center(
                             child: Text(
                               city["name"].toString(), // Ensure the name is displayed
