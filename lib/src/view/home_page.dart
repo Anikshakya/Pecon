@@ -337,7 +337,7 @@ class _HomePageState extends State<HomePage> {
                       if (isMoreThanThreeItems && lastItem != null)
                         Column(
                           children: [
-                            SizedBox(height: 16.h,),
+                            SizedBox(height: 12.h,),
                             // Last Item
                             Stack(
                               alignment: Alignment.topCenter,

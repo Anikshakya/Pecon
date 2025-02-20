@@ -538,7 +538,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     gender: genderController.text.toLowerCase().toString().trim(),
                     dob: dobController.text.toString().trim(),
                     address: addressController.text.toString().trim(),
-                    image : changedProfileImage.runtimeType.toString() == 'XFile' ? changedProfileImage.toString() : null,
+                    image : changedProfileImage.runtimeType.toString() == 'XFile' ? changedProfileImage : null,
                   );
               }
               : () async {

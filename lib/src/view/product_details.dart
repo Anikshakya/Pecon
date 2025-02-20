@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/product_controller.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
@@ -21,16 +22,10 @@ class ProductDetailsPage extends StatefulWidget {
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   // Get Controller
   final ProductsController productCon = Get.put(ProductsController());
+
+  final NumberFormat formatter = NumberFormat("#,##0", "en_US");
   
   int activeIndex = 0;
-
-  final List<String> imageUrls = [
-    'https://graphicsfamily.com/wp-content/uploads/edd/2021/06/Gadget-Banner-Design-Template-scaled.jpg',
-    'https://img.freepik.com/free-psd/black-friday-super-sale-facebook-cover-banner-template_120329-5177.jpg',
-    'https://graphicsfamily.com/wp-content/uploads/edd/2021/06/Gadget-Banner-Design-Template-scaled.jpg',
-    'https://img.freepik.com/premium-psd/black-friday-sale-laptops-gadgets-banner-template-3d-render_444361-44.jpg',
-    'https://graphicsfamily.com/wp-content/uploads/edd/2021/06/Gadget-Banner-Design-Template-scaled.jpg'
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -74,19 +69,14 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               Flexible(
                 child: RichText(
                   text: TextSpan(
-                    style: poppinsSemiBold(size: 10.sp, color: black),
+                    style: poppinsMedium(size: 18.sp, color: black),
                     children: [
                       TextSpan(
                         text: productCon.productList[widget.index].watt ?? "0",
-                        style: poppinsSemiBold(color: primary, size: 20.sp),
+                        style: poppinsMedium(color: primary, size: 18.sp),
                       ),
-                      WidgetSpan(
-                        child: Text(
-                          " CCT",
-                          style: poppinsMedium(color: black, size: 18.sp),
-                          maxLines: 2, // Allow up to 2 lines
-                          overflow: TextOverflow.ellipsis, // Truncate after 2 lines
-                        ),
+                      const TextSpan(
+                        text: " CCT",
                       ),
                     ],
                   ),
@@ -105,19 +95,14 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               Flexible(
                 child: RichText(
                   text: TextSpan(
-                    style: poppinsSemiBold(size: 10.sp, color: black),
+                    style: poppinsMedium(size: 18.sp, color: black),
                     children: [
                       TextSpan(
                         text: productCon.productList[widget.index].watt ?? "0",
-                        style: poppinsSemiBold(color: primary, size: 20.sp),
+                        style: poppinsMedium(color: primary, size: 18.sp),
                       ),
-                      WidgetSpan(
-                        child: Text(
-                          " Watt",
-                          style: poppinsMedium(color: black, size: 18.sp),
-                          maxLines: 2, // Allow up to 2 lines
-                          overflow: TextOverflow.ellipsis, // Truncate after 2 lines
-                        ),
+                      const TextSpan(
+                        text: " Watt",
                       ),
                     ],
                   ),
@@ -126,6 +111,75 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             ],
           ),
           SizedBox(height: 18.h),
+          Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withOpacity(0.5)),),
+                  SizedBox(height: 4.h),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                    decoration: BoxDecoration(
+                      color: gray.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(6.sp),
+                    ),
+                    child: RichText(
+                      text: TextSpan(
+                        style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
+                        children: [
+                          const TextSpan(text: "₹  "),
+                          TextSpan(
+                            text: formatter.format(double.parse(productCon.productList[widget.index].price)),
+                            style: poppinsSemiBold(color: green, size: 13.sp ),
+                          ),
+                        ],
+                      ),
+                    )
+                  )
+                ],
+              ),
+              const Spacer(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text("Points", style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),),
+                  SizedBox(height: 4.h),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                    decoration: BoxDecoration(
+                      color: maroon.withOpacity(0.95),
+                      borderRadius: BorderRadius.circular(6.sp),
+                    ),
+                    child: RichText(
+                      text: TextSpan(
+                        style: poppinsSemiBold(size: 11.sp, color: black),
+                        children: [
+                          WidgetSpan(
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 4.sp),
+                              child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp)
+                            ),
+                          ),
+                          TextSpan(
+                            text: formatter.format(double.parse(productCon.productList[widget.index].redeem)),
+                            style: poppinsSemiBold(color: white, size: 12.sp ),
+                          ),
+                        ],
+                      ),
+                    )
+                  )
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 10.h,),
+          Divider(
+            color: gray.withOpacity(0.25),
+            thickness: 0.8.sp,
+            height: 0,
+          ),
+          SizedBox(height: 10.h,),
           Text(
             "Technical Specification",
             style: poppinsSemiBold(size: 18.sp, color: black)
@@ -158,59 +212,65 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 
   // Product Image slider
   productImageSlider() {
-    return Column(
-      children: [
-        CarouselSlider(
-          items: (productCon.productList[widget.index].images as List<dynamic>?)
-              ?.cast<String>() // Ensure it's List<String>
-              .map<Widget>((url) => GestureDetector(
-                    onTap: () {
-                      Get.to(() => FullScreenImagePage(imageUrl: url));
-                    },
-                    child: Container(
-                      color: const Color.fromARGB(255, 236, 236, 236),
-                      child: Image.network(
-                        url,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        errorBuilder: (context, error, stackTrace) => 
-                          const Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+    return productCon.productList[widget.index].images == []
+      ? const SizedBox()
+      : Column(
+        children: [
+          CarouselSlider(
+            items: (productCon.productList[widget.index].images as List<dynamic>?)
+                ?.cast<String>() // Ensure it's List<String>
+                .map<Widget>((url) => GestureDetector(
+                      onTap: () {
+                        Get.to(() => FullScreenImagePage(imageUrl: url));
+                      },
+                      child: Container(
+                        color: const Color.fromARGB(255, 236, 236, 236),
+                        child: Image.network(
+                          url,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          errorBuilder: (context, error, stackTrace) => 
+                            const Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                        ),
                       ),
-                    ),
-                  ))
-              .toList() ?? [const SizedBox()], // Fallback widget
-          options: CarouselOptions(
-            height: 300.h,
-            viewportFraction: 1.0,
-            autoPlay: true,
-            onPageChanged: (index, reason) {
-              setState(() {
-                activeIndex = index;
-              });
-            },
+                    ))
+                .toList() ?? [const SizedBox()], // Fallback widget
+            options: CarouselOptions(
+              height: 300.h,
+              viewportFraction: 1.0,
+              scrollPhysics: productCon.productList[widget.index].images.length <= 1 ? const NeverScrollableScrollPhysics() : null,
+              autoPlay: productCon.productList[widget.index].images.length <= 1 ? false : true,
+              onPageChanged: (index, reason) {
+                setState(() {
+                  activeIndex = index;
+                });
+              },
+            ),
           ),
-        ),
 
-        SizedBox(height: 8.h),
-        // Custom Page Indicator
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            productCon.productList[widget.index].images.length, // Ensure it matches image count
-            (index) => AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              width: activeIndex == index ? 16.w : 12.w, // Active indicator slightly wider
-              height: 3.h, // Keep a uniform height
-              margin: const EdgeInsets.symmetric(horizontal: 4),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: activeIndex == index ? black.withOpacity(0.8) : black.withOpacity(0.1),
+          SizedBox(height: 8.h),
+          // Custom Page Indicator
+          Visibility(
+            visible: productCon.productList[widget.index].images.length > 1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                productCon.productList[widget.index].images.length, // Ensure it matches image count
+                (index) => AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  width: activeIndex == index ? 16.w : 12.w, // Active indicator slightly wider
+                  height: 3.h, // Keep a uniform height
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: activeIndex == index ? black.withOpacity(0.8) : black.withOpacity(0.1),
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-    
-      ],
-    );
+      
+        ],
+      );
   }
 }
