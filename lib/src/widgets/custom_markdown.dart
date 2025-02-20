@@ -45,7 +45,7 @@ class CustomMarkdownWidget extends StatelessWidget {
         h4: poppinsMedium(size: 16.sp, color: black),
         h5: poppinsMedium(size: 14.sp, color: black),
         h6: poppinsMedium(size: 12.sp, color: black),
-        p: poppinsMedium(size: 14.sp, color: black),
+        p: poppinsMedium(size: 14.sp, color: black.withOpacity(0.6)),
         listBullet: null, //Bullet Color
         listIndent: null, //Bullet Spacing
         strong: poppinsBold(size: 14.sp, color: black), //Bullet Heading

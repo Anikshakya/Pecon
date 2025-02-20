@@ -66,7 +66,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           SizedBox(height: 6.h),
           Text(
             productCon.productList[widget.index].title ?? "",
-            style: poppinsBold(size: 21.sp, color: black)
+            style: poppinsSemiBold(size: 20.sp, color: black)
           ),
           SizedBox(height: 14.h),
           Row(
@@ -128,7 +128,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           SizedBox(height: 18.h),
           Text(
             "Technical Specification",
-            style: poppinsBold(size: 18.sp, color: black)
+            style: poppinsSemiBold(size: 18.sp, color: black)
           ),
           SizedBox(height: 6.h),
           CustomMarkdownWidget(
