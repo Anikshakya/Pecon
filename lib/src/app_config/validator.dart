@@ -1,5 +1,6 @@
-/// email validator
 String? validateEmail({required String string}) { 
+  if (string.trim().isEmpty) return null; // Allow empty string
+
   String regex = r'^[a-zA-Z0-9._+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z-]{2,})+$';
   if (!validRegexExp(regex, string.trim())) {
     return "Invalid Email";
