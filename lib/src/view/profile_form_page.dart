@@ -52,7 +52,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   final TextEditingController cityController     = TextEditingController();
   final TextEditingController genderController   = TextEditingController();
   final TextEditingController dobController      = TextEditingController();
-  final TextEditingController addressController      = TextEditingController();
+  final TextEditingController addressController  = TextEditingController();
 
   // Bank Text Editing Controllers 
   final TextEditingController accNameController  = TextEditingController();
