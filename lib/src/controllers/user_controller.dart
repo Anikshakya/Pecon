@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-// import 'package:dio/dio.dart';
+import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:pecon/src/api_config/api_repo.dart';
 import 'package:pecon/src/model/user_profile_model.dart';
@@ -38,22 +38,38 @@ class UserController extends GetxController {
 
   //update profile
   updateProfile({name, number, email, gender, dob, city, district, address, image}) async{
-    var params = {
-      "name": name,
-      "phone": number,
-      "alternate_number": number,
-      "email": email,
-      "district_id" : district,
-      "address" : address,
-      "city_id" : city,
-      "gender": gender,
-      "dob" : dob,
-      // "profile" : image ?? await MultipartFile.fromFile(image.path, filename: image.path.split('/').last)
-    };
-    // var data = FormData.fromMap(params);
+    dynamic finaldata;
+    if(image == null){
+      finaldata = {
+        "name": name,
+        "phone": number,
+        "alternate_number": number,
+        "email": email,
+        "district_id" : district,
+        "address" : address,
+        "city_id" : city,
+        "gender": gender,
+        "dob" : dob,
+      };
+    }
+    else{
+      finaldata = {
+        "name": name,
+        "phone": number,
+        "alternate_number": number,
+        "email": email,
+        "district_id" : district,
+        "address" : address,
+        "city_id" : city,
+        "gender": gender,
+        "dob" : dob,
+        "profile" : await MultipartFile.fromFile(image.path, filename: image.path.split('/').last)
+      };
+    }
+    var data = FormData.fromMap(finaldata);
     try{
       isProfileBtnLoading(true);// Start Loading
-      var response = await ApiRepo.apiPost('api/profile/update', params, 'Update Profile');
+      var response = await ApiRepo.apiPost('api/profile/update', data, 'Update Profile');
       if(response != null && response['code'] == 201) {
         await getUserData();
         Get.back();

@@ -398,35 +398,43 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
       width: 126.sp,
       child: Stack(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(100.r),
-            child: changedProfileImage == "" || changedProfileImage == null
-            ? Container(
-                height: 120.sp,
-                width: 120.sp,
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 236, 236, 236),
-                  borderRadius: BorderRadius.circular(100.r),
-                ),
-                child: Icon(
-                  Icons.camera,
-                  color: black.withOpacity(0.1),
-                  size: 120 * 0.45,
-                ),
-            )
-            : changedProfileImage.runtimeType.toString() == 'XFile'
-            ? Image.file(
-                File(changedProfileImage!.path),
+          Container(
+            height: 120.sp,
+            width: 120.sp,
+            decoration: BoxDecoration(
+              border: Border.all(color: black.withOpacity(0.2), width: 0.8.sp),
+              borderRadius: BorderRadius.circular(100.r),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(100.r),
+              child: changedProfileImage == "" || changedProfileImage == null
+              ? Container(
+                  height: 120.sp,
+                  width: 120.sp,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 236, 236, 236),
+                    borderRadius: BorderRadius.circular(100.r),
+                  ),
+                  child: Icon(
+                    Icons.camera,
+                    color: black.withOpacity(0.1),
+                    size: 120 * 0.45,
+                  ),
+              )
+              : changedProfileImage.runtimeType.toString() == 'XFile'
+              ? Image.file(
+                  File(changedProfileImage!.path),
+                  height: 120.sp,
+                  width: 120.sp,
+                  fit: BoxFit.cover,
+                )
+              : CustomNetworkImage(
+                imageUrl: changedProfileImage.toString(),
                 height: 120.sp,
                 width: 120.sp,
                 fit: BoxFit.cover,
               )
-            : CustomNetworkImage(
-              imageUrl: changedProfileImage.toString(),
-              height: 120.sp,
-              width: 120.sp,
-              fit: BoxFit.cover,
-            )
+            ),
           ),
           Positioned(
             bottom: 0,
@@ -462,22 +470,6 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     ],
                   ),
                 ),
-                const PopupMenuDivider(),
-                PopupMenuItem(
-                  padding: EdgeInsets.only(left: 16.0.sp, right: 16.0.sp, top: 0.0, bottom: 0.0),
-                  value: 3,
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        height: 22.sp,
-                        width: 22.sp,
-                        child: Icon(Icons.delete, color: changedProfileImage == null || changedProfileImage == "" ? gray : black.withOpacity(0.7),)
-                      ),
-                      SizedBox(width: 12.0.w,),
-                      Text("Delete", style: poppinsBold(size: 14.sp, color: changedProfileImage == null || changedProfileImage == "" ? gray : black.withOpacity(0.7)),),
-                    ],
-                  ),
-                ),
               ],
               onSelected: (value) async{
                 switch (value) {
@@ -495,17 +487,6 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                       changedProfileImage = value;
                     });
                     break;
-                  case 3:
-                    if(changedProfileImage == null){
-                      break;
-                    }
-                    else{
-                      // await profileCon.deleteProfileImage();
-                      setState(() {
-                        changedProfileImage = null;
-                      });
-                      break;
-                    }
                 }
               },
               offset: const Offset(-10, 40),
@@ -603,15 +584,17 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     TextButton(
                       onPressed: () {
                         setState(() {
-                          // Store selected district ID in text controller
-                          districtController.text = userCon.districtList[selectedDistrictIndex]["name"].toString();
-                          districtId = userCon.districtList[selectedDistrictIndex]["id"];
+                          if(userCon.districtList.isNotEmpty){
+                            // Store selected district ID in text controller
+                            districtController.text = userCon.districtList[selectedDistrictIndex]["name"].toString();
+                            districtId = userCon.districtList[selectedDistrictIndex]["id"];
 
-                          //clear city data
-                          cityController.clear();
-                          cityId = null;
-                          selectedCityIndex = 0;
-                          distrctWiseCity = userCon.cityList.where((element) => element["id"] == districtId).toList();
+                            //clear city data
+                            cityController.clear();
+                            cityId = null;
+                            selectedCityIndex = 0;
+                            distrctWiseCity = userCon.cityList.where((element) => element["id"] == districtId).toList();
+                          }
                         });
                         Navigator.pop(context);
                       },
