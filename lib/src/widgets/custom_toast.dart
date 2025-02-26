@@ -9,7 +9,7 @@ showToast({message, bool? isSuccess, bool? isEn}) {
     "",
     colorText: Get.isDarkMode ? Colors.white : Colors.black,
     backgroundColor: const Color.fromARGB(255, 255, 250, 250),
-    borderColor: isSuccess == true ? const Color(0xff266CD4) : red,
+    borderColor: isSuccess == true ? green : red,
     borderWidth: 1,
     margin: EdgeInsets.symmetric(horizontal : 16.sp, vertical: 6.sp),
     duration: const Duration(seconds: 3),

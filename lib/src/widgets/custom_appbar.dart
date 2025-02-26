@@ -18,7 +18,6 @@ customAppbar(){
           children: [
             // Logo
             Row(
-              
               children: [
                 SizedBox(
                   height: 34.0.h,

@@ -12,6 +12,7 @@ class UserController extends GetxController {
   final RxBool isBankBtnLoading = false.obs;
   final RxBool isProfileLoading = false.obs;
   final RxBool isAddressLoading = false.obs;
+  final RxBool isChecoutLoading = false.obs;
 
   // Logged In User Data
   var user = UserModel().obs;
@@ -142,6 +143,25 @@ class UserController extends GetxController {
     }
     finally{
       isAddressLoading(false);
+    }
+  }
+
+  //cehckout prize
+  checkOutPrize(redeemId) async {
+    try{
+      isChecoutLoading(true); // Start Loading
+      var data = {
+        "redeem_information_id" : redeemId
+      };
+      var response = await ApiRepo.apiPost('api/redeem-checkout-request', data, 'Logout');
+      if(response != null && response['code'] == 200) {
+        Get.back();
+        showToast(isSuccess: true, message: response["message"]);
+      }
+    }catch (e){
+      log(e.toString());
+    } finally{
+      isChecoutLoading(false);
     }
   }
 }

@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:pecon/src/widgets/custom_toast.dart';
 import 'package:pecon/src/widgets/partner_logo.dart';
 
 class HomePage extends StatefulWidget {
@@ -237,9 +238,16 @@ class _HomePageState extends State<HomePage> {
                                 Align(
                                   alignment: Alignment.bottomCenter,
                                   child: GestureDetector(
-                                    onTap: () {
-                                      redeemPrzeDialogue();
-                                    },
+                                    onTap: userCon.user.value.data.redeemed < item.points
+                                      ? (){
+                                        showToast(
+                                          isSuccess: false,
+                                          message: "No enough points to redeem this prize"
+                                        );
+                                      }
+                                      : (){
+                                        redeemPrzeDialogue(item.id);
+                                      },
                                     child: Column(
                                       children: [
                                         Container(
@@ -344,9 +352,16 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 // Prize info
                                 GestureDetector(
-                                  onTap: (){
-                                    redeemPrzeDialogue();
-                                  },
+                                  onTap: userCon.user.value.data.redeemed < lastItem.points
+                                    ? (){
+                                      showToast(
+                                        isSuccess: false,
+                                        message: "No enough points to redeem this prize"
+                                      );
+                                    }
+                                    : (){
+                                      redeemPrzeDialogue(lastItem.id);
+                                    },
                                   child: Padding(
                                     padding: EdgeInsets.only(top: 20.sp), // Optional spacing
                                     child: Container(
@@ -754,17 +769,17 @@ class _HomePageState extends State<HomePage> {
   // }
 
   // Redeem Prize Dialogue
-  redeemPrzeDialogue(){
-    var redeemeList = [
-      {
-        "name" : "Prize"
-      },
-      {
-        "name" : "Cash"
-      },
-    ];
+  redeemPrzeDialogue(redeemId){
+    // var redeemeList = [
+    //   {
+    //     "name" : "Prize"
+    //   },
+    //   {
+    //     "name" : "Cash"
+    //   },
+    // ];
 
-    var selectedItem = "";
+    // var selectedItem = "";
 
     return Get.defaultDialog(
       backgroundColor: boxCol,
@@ -782,66 +797,68 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   // Title
                   Text(
-                    "Redeeme Prize",
+                    "Redeem Prize",
                     style: TextStyle(
                       fontSize: 19.sp,
                       fontWeight: FontWeight.bold,
                       color: black,
                     ),
                   ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    "Select Reward Type",
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w400,
-                      color: black,
-                    ),
-                  ),
-                  SizedBox(height: 7.h),
-                  PopupMenuButton<String>(
-                    onSelected: (value) {
-                      setState(() {
-                        selectedItem = value;
-                      });
-                    },
-                    itemBuilder: (context) => redeemeList
-                        .map((item) => PopupMenuItem<String>(
-                              value: item["name"] ?? "",
-                              child: SizedBox(
-                                width: 200.w,
-                                child: Text(item["name"] ?? "")
-                              ),
-                            ))
-                        .toList(),
-                    offset: Offset(4.w,0),
-                    position: PopupMenuPosition.under, // Ensures the menu appears below
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.9),
-                        borderRadius: BorderRadius.circular(8.0),
-                        border: Border.all(color: Colors.transparent, width: 0),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(selectedItem),
-                          const Icon(Icons.arrow_drop_down),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // SizedBox(height: 16.h),
+                  // Text(
+                  //   "Select Reward Type",
+                  //   style: TextStyle(
+                  //     fontSize: 12.sp,
+                  //     fontWeight: FontWeight.w400,
+                  //     color: black,
+                  //   ),
+                  // ),
+                  // SizedBox(height: 7.h),
+                  // PopupMenuButton<String>(
+                  //   onSelected: (value) {
+                  //     setState(() {
+                  //       selectedItem = value;
+                  //     });
+                  //   },
+                  //   itemBuilder: (context) => redeemeList
+                  //       .map((item) => PopupMenuItem<String>(
+                  //             value: item["name"] ?? "",
+                  //             child: SizedBox(
+                  //               width: 200.w,
+                  //               child: Text(item["name"] ?? "")
+                  //             ),
+                  //           ))
+                  //       .toList(),
+                  //   offset: Offset(4.w,0),
+                  //   position: PopupMenuPosition.under, // Ensures the menu appears below
+                  //   child: Container(
+                  //     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  //     decoration: BoxDecoration(
+                  //       color: Colors.white.withOpacity(0.9),
+                  //       borderRadius: BorderRadius.circular(8.0),
+                  //       border: Border.all(color: Colors.transparent, width: 0),
+                  //     ),
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       children: [
+                  //         Text(selectedItem),
+                  //         const Icon(Icons.arrow_drop_down),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                   SizedBox(height: 24.h),
                   // Submit Button
-                  CustomButton(
-                    onPressed: () {
-                      // Handle manual code submission
-                      Get.back();
-                    },
-                    text: "Redeem",
-                    bgColor: black,
-                    fontColor: white,
+                  Obx(()=>
+                    CustomButton(
+                      isLoading: userCon.isChecoutLoading.isTrue,
+                      onPressed: () async{
+                        await userCon.checkOutPrize(redeemId);
+                      },
+                      text: "Redeem",
+                      bgColor: black,
+                      fontColor: white,
+                    ),
                   ),
                   SizedBox(height: 10.h),
                   // Cancel Button
