@@ -334,9 +334,6 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             textInputAction: TextInputAction.next,
             headingText: "Account Holder Name",
             filledColor: gray.withOpacity(0.2),
-            validator: (value) => value != ""
-                ? null
-                : "Required",
           ),
           SizedBox(height: 20.h),
           //bank name
@@ -345,9 +342,6 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             textInputAction: TextInputAction.next,
             headingText: "Bank Name",
             filledColor: gray.withOpacity(0.2),
-            validator: (value) => value != ""
-                ? null
-                : "Required",
           ),
           SizedBox(height: 20.h),
           //bank acc no
@@ -356,9 +350,6 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             textInputAction: TextInputAction.next,
             headingText: "Account Number",
             filledColor: gray.withOpacity(0.2),
-            validator: (value) => value != ""
-                ? null
-                : "Required",
           ),
           SizedBox(height: 20.h),
           //branchName

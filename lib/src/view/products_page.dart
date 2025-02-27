@@ -111,7 +111,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(6.sp),
                                   child: CustomNetworkImage(
-                                    imageUrl: productCon.productList[index].images[0].toString(), 
+                                    imageUrl: productCon.productList[index].coverPhoto.toString(), 
                                     height: 80.sp,
                                     width: 80.sp,
                                     fit: BoxFit.cover,
@@ -132,31 +132,34 @@ class _ProductsPageState extends State<ProductsPage> {
                                     //products price and rewar points
                                     Row(
                                       children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withOpacity(0.5)),),
-                                            SizedBox(height: 4.h),
-                                            Container(
-                                              padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                                              decoration: BoxDecoration(
-                                                color: gray.withOpacity(0.2),
-                                                borderRadius: BorderRadius.circular(6.sp),
-                                              ),
-                                              child: RichText(
-                                                text: TextSpan(
-                                                  style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
-                                                  children: [
-                                                    const TextSpan(text: "₹  "),
-                                                    TextSpan(
-                                                      text: formatter.format(double.parse(productCon.productList[index].price)),
-                                                      style: poppinsSemiBold(color: green, size: 13.sp ),
-                                                    ),
-                                                  ],
+                                        Visibility(
+                                          visible: productCon.productList[index].price != "0",
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withOpacity(0.5)),),
+                                              SizedBox(height: 4.h),
+                                              Container(
+                                                padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                                                decoration: BoxDecoration(
+                                                  color: gray.withOpacity(0.2),
+                                                  borderRadius: BorderRadius.circular(6.sp),
                                                 ),
+                                                child: RichText(
+                                                  text: TextSpan(
+                                                    style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
+                                                    children: [
+                                                      const TextSpan(text: "₹  "),
+                                                      TextSpan(
+                                                        text: formatter.format(double.parse(productCon.productList[index].price ?? "0")),
+                                                        style: poppinsSemiBold(color: green, size: 13.sp ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
                                               )
-                                            )
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                         const Spacer(),
                                         Column(
@@ -181,7 +184,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                                       ),
                                                     ),
                                                     TextSpan(
-                                                      text: formatter.format(double.parse(productCon.productList[index].redeem)),
+                                                      text: formatter.format(double.parse(productCon.productList[index].redeem ?? "0")),
                                                       style: poppinsSemiBold(color: white, size: 12.sp ),
                                                     ),
                                                   ],

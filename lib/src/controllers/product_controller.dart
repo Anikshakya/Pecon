@@ -29,7 +29,7 @@ class ProductsController extends GetxController{
       var response = await ApiRepo.apiGet('api/product/display-products', "", 'Get Product List');
       if(response != null && response['code'] == 200) {
         var allData = ProductListModel.fromJson(response);
-        productList = allData.data!;
+        productList = allData.data;
       }
     }catch (e){
       log(e.toString());

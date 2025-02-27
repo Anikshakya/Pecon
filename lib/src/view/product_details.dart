@@ -49,21 +49,30 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 
   // About Product
   productDetails() {
+    String title = productCon.productList[widget.index].title;
+    List<String> words = title.split(" ");  
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.sp),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Product Name
           Text(
-            productCon.productList[widget.index].categoryId.toString(),
+            words.isNotEmpty ? words[0].toUpperCase() : "",
+            style: poppinsSemiBold(size: 20.sp, color: black),
+          ),
+          Text(
+            words.length > 1 ? words.sublist(1).join(" ") : "", // Joins all words after index 0
+            style: poppinsSemiBold(size: 18.sp, color: black),
+          ),
+          SizedBox(height: 8.h),
+          // Category
+          Text(
+            productCon.productList[widget.index].category.name.toString(),
             style: poppinsMedium(size: 13.sp, color: gray)
           ),
-          SizedBox(height: 6.h),
-          Text(
-            productCon.productList[widget.index].title ?? "",
-            style: poppinsSemiBold(size: 20.sp, color: black)
-          ),
           SizedBox(height: 14.h),
+          // CCT / Watt
           Row(
             children: [
               Flexible(
@@ -72,11 +81,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     style: poppinsMedium(size: 18.sp, color: black),
                     children: [
                       TextSpan(
-                        text: productCon.productList[widget.index].watt ?? "0",
+                        text: productCon.productList[widget.index].color ?? "0",
                         style: poppinsMedium(color: primary, size: 18.sp),
-                      ),
-                      const TextSpan(
-                        text: " CCT",
                       ),
                     ],
                   ),
@@ -111,33 +117,43 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             ],
           ),
           SizedBox(height: 18.h),
+          ListTile(
+            contentPadding: EdgeInsets.all(0),
+            leading: Icon(Icons.abc, color: black),
+            title: Text("askhdf kljghaskldf lkjashdfkjhlaksjdfhlkjas hdlfjkhalksjd fhlakjsdfhl kajsdhf lkjashdf lkajsd flkasjgd flksjaf"),
+            subtitle: Text("askhdf kljghaskldf lkjashdfkjhlaksjdfhlkjas hdlfjkhalksjd fhlakjsdfhl kajsdhf lkjashdf lkajsd flkasjgd flksjaf"),
+          ),
+          // Price and Redeem
           Row(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withOpacity(0.5)),),
-                  SizedBox(height: 4.h),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                    decoration: BoxDecoration(
-                      color: gray.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(6.sp),
-                    ),
-                    child: RichText(
-                      text: TextSpan(
-                        style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
-                        children: [
-                          const TextSpan(text: "₹  "),
-                          TextSpan(
-                            text: formatter.format(double.parse(productCon.productList[widget.index].price)),
-                            style: poppinsSemiBold(color: green, size: 13.sp ),
-                          ),
-                        ],
+              Visibility(
+                visible: productCon.productList[widget.index].price != "0",
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withOpacity(0.5)),),
+                    SizedBox(height: 4.h),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                      decoration: BoxDecoration(
+                        color: gray.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(6.sp),
                       ),
+                      child: RichText(
+                        text: TextSpan(
+                          style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
+                          children: [
+                            const TextSpan(text: "₹  "),
+                            TextSpan(
+                              text: formatter.format(double.parse(productCon.productList[widget.index].price ?? "0")),
+                              style: poppinsSemiBold(color: green, size: 13.sp ),
+                            ),
+                          ],
+                        ),
+                      )
                     )
-                  )
-                ],
+                  ],
+                ),
               ),
               const Spacer(),
               Column(
@@ -162,7 +178,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             ),
                           ),
                           TextSpan(
-                            text: formatter.format(double.parse(productCon.productList[widget.index].redeem)),
+                            text: formatter.format(double.parse(productCon.productList[widget.index].redeem ?? "0")),
                             style: poppinsSemiBold(color: white, size: 12.sp ),
                           ),
                         ],
