@@ -2,14 +2,16 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 import 'package:pecon/src/api_config/api_repo.dart';
+import 'package:pecon/src/app_config/read_write.dart';
 import 'package:pecon/src/model/product_list_model.dart';
 import 'package:pecon/src/widgets/custom_toast.dart';
 
 class ProductsController extends GetxController{
   // Get Controllers 
-  final RxBool isLoading = true.obs;
-  final RxBool isRedeemeLoading = false.obs;
-  final RxBool isProductListLoading = false.obs;
+  final RxBool isLoading               = true.obs;
+  final RxBool isRedeemeLoading        = false.obs;
+  final RxBool isProductListLoading    = false.obs;
+  final RxBool isProductReturnLoading  = false.obs;
 
   //category List
   List categoryList             = [];
@@ -36,8 +38,6 @@ class ProductsController extends GetxController{
     }
   }
 
-
-
   // Slider/AdBanner API
   getSearchCategory({number, password}) async {
     try{
@@ -60,7 +60,6 @@ class ProductsController extends GetxController{
     var data = {
       "code" : code
     };
-
     try{
       isRedeemeLoading(true); // Start Loading
       var response = await ApiRepo.apiPost('api/product/redeem', data, 'Product Redeem');
@@ -76,6 +75,26 @@ class ProductsController extends GetxController{
       log(e.toString());
     } finally{
       isRedeemeLoading(false); // Stop Loading
+    }
+  }
+
+  //return a product
+  returnProduct({productId}) async{
+    var data = {
+      "product_id": productId,
+      "user_id": read("user")["id"],
+    };
+    try{
+      isProductReturnLoading(true);// Start Loading
+      var response = await ApiRepo.apiPost('api/product/return', data, 'Return Product');
+      if(response != null && response['code'] == 201) {
+        Get.back();
+        showToast(isSuccess: true, message: "Updated");
+      }
+    }catch (e){
+      log(e.toString());
+    } finally{
+      isProductReturnLoading(false);
     }
   }
 }

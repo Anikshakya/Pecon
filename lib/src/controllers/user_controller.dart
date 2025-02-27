@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:pecon/src/api_config/api_repo.dart';
+import 'package:pecon/src/model/product_list_model.dart';
 import 'package:pecon/src/model/user_profile_model.dart';
 import 'package:pecon/src/widgets/custom_toast.dart';
 
@@ -13,6 +14,9 @@ class UserController extends GetxController {
   final RxBool isProfileLoading = false.obs;
   final RxBool isAddressLoading = false.obs;
   final RxBool isChecoutLoading = false.obs;
+  final RxBool isEarningLoading = false.obs;
+  final RxBool isVendorLoading  = false.obs;
+  final RxBool isTechLoading    = false.obs;
 
   // Logged In User Data
   var user = UserModel().obs;
@@ -20,6 +24,7 @@ class UserController extends GetxController {
   //Lists
   dynamic districtList = [];
   dynamic cityList = [];
+  dynamic earningList = [];
 
   // Get Logged In User Profile
   getUserData() async{
@@ -155,6 +160,7 @@ class UserController extends GetxController {
       };
       var response = await ApiRepo.apiPost('api/redeem-checkout-request', data, 'Logout');
       if(response != null && response['code'] == 200) {
+        await getUserData();
         Get.back();
         showToast(isSuccess: true, message: response["message"]);
       }
@@ -162,6 +168,64 @@ class UserController extends GetxController {
       log(e.toString());
     } finally{
       isChecoutLoading(false);
+    }
+  }
+
+  // Get Earning History
+  getEarningHistory() async{
+    isEarningLoading(true);
+    try{
+      var response = await ApiRepo.apiGet('api/user/redeem-information', "", 'Get Earning History');
+      if(response != null && response['code'] == 200) {
+        var allData = ProductListModel.fromJson(response);
+        earningList = allData.data!;
+      }
+    }catch (e){
+      log(e.toString());
+    }
+    finally{
+      isEarningLoading(false);
+    }
+  }
+
+  //update vendor
+  updateVendor({required shopName,required panNum,required ownerName,required displayPrice}) async{
+    var data = {
+      "shop_name": shopName,
+      "pan_number": panNum,
+      "owner_name": ownerName,
+      "display_price": displayPrice,
+    };
+    try{
+      isVendorLoading(true);// Start Loading
+      var response = await ApiRepo.apiPost('api/vendor/update', data, 'Update Vendor');
+      if(response != null && response['code'] == 201) {
+        Get.back();
+        showToast(isSuccess: true, message: "Updated");
+      }
+    }catch (e){
+      log(e.toString());
+    } finally{
+      isVendorLoading(false);
+    }
+  }
+
+  //update technician
+  updateTechnician(vendorId) async{
+    var data = {
+      "vendor_id": vendorId,
+    };
+    try{
+      isTechLoading(true);// Start Loading
+      var response = await ApiRepo.apiPost('api/technician/update', data, 'Update technician');
+      if(response != null && response['code'] == 201) {
+        Get.back();
+        showToast(isSuccess: true, message: "Updated");
+      }
+    }catch (e){
+      log(e.toString());
+    } finally{
+      isTechLoading(false);
     }
   }
 }
