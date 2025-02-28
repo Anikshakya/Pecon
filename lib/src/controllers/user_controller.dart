@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:pecon/src/api_config/api_repo.dart';
-import 'package:pecon/src/model/product_list_model.dart';
+import 'package:pecon/src/model/return_product_model.dart';
 import 'package:pecon/src/model/user_profile_model.dart';
 import 'package:pecon/src/widgets/custom_toast.dart';
 
@@ -177,7 +177,7 @@ class UserController extends GetxController {
     try{
       var response = await ApiRepo.apiGet('api/user/redeem-information', "", 'Get Earning History');
       if(response != null && response['code'] == 200) {
-        var allData = ProductListModel.fromJson(response);
+        var allData = ReturnProductModel.fromJson(response);
         earningList = allData.data;
       }
     }catch (e){

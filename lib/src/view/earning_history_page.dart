@@ -97,7 +97,7 @@ class _EarningHistoryPageState extends State<EarningHistoryPage> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(6.sp),
                               child: CustomNetworkImage(
-                                imageUrl: userCon.earningList[index].images[0].toString(), 
+                                imageUrl: "", //userCon.earningList[index].images[0].toString(), 
                                 height: 80.sp,
                                 width: 80.sp,
                                 fit: BoxFit.cover,
@@ -113,7 +113,7 @@ class _EarningHistoryPageState extends State<EarningHistoryPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 SizedBox(height: 3.h),
-                                Text(userCon.earningList[index].title.toString(), style: poppinsSemiBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
+                                Text(userCon.earningList[index].product.title.toString(), style: poppinsSemiBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
                                 SizedBox(height: 12.h),
                                 //products price and rewar points
                                 Row(
@@ -141,7 +141,7 @@ class _EarningHistoryPageState extends State<EarningHistoryPage> {
                                                   ),
                                                 ),
                                                 TextSpan(
-                                                  text: formatter.format(double.parse(userCon.earningList[index].redeem)),
+                                                  text: formatter.format(double.parse(userCon.earningList[index].redeemPoint.toString())),
                                                   style: poppinsSemiBold(color: white, size: 12.sp ),
                                                 ),
                                               ],

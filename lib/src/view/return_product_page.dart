@@ -112,7 +112,8 @@ class _ReturnProductPageState extends State<ReturnProductPage> {
                                         CustomButton(
                                           isLoading: userCon.isChecoutLoading.isTrue,
                                           onPressed: () async{
-                                            productCon.returnProduct(productId: userCon.earningList[index].id.toString());
+                                            Get.back();
+                                            // productCon.returnProduct(productId: userCon.earningList[index].id.toString());
                                           },
                                           text: "Confirm",
                                           bgColor: black,
@@ -157,7 +158,7 @@ class _ReturnProductPageState extends State<ReturnProductPage> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(6.sp),
                                 child: CustomNetworkImage(
-                                  imageUrl: userCon.earningList[index].images[0].toString(), 
+                                  imageUrl: "", //userCon.earningList[index].images[0].toString(), 
                                   height: 80.sp,
                                   width: 80.sp,
                                   fit: BoxFit.cover,
@@ -173,35 +174,35 @@ class _ReturnProductPageState extends State<ReturnProductPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SizedBox(height: 3.h),
-                                  Text(userCon.earningList[index].title.toString(), style: poppinsSemiBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
+                                  Text(userCon.earningList[index].product.title.toString(), style: poppinsSemiBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
                                   SizedBox(height: 12.h),
                                   //products price and rewar points
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withOpacity(0.5)),),
-                                      SizedBox(height: 4.h),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                                        decoration: BoxDecoration(
-                                          color: gray.withOpacity(0.2),
-                                          borderRadius: BorderRadius.circular(6.sp),
-                                        ),
-                                        child: RichText(
-                                          text: TextSpan(
-                                            style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
-                                            children: [
-                                              const TextSpan(text: "₹  "),
-                                              TextSpan(
-                                                text: formatter.format(double.parse(productCon.productList[index].price)),
-                                                style: poppinsSemiBold(color: green, size: 13.sp ),
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      )
-                                    ],
-                                  )
+                                  // Column(
+                                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                                  //   children: [
+                                  //     Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withOpacity(0.5)),),
+                                  //     SizedBox(height: 4.h),
+                                  //     Container(
+                                  //       padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                                  //       decoration: BoxDecoration(
+                                  //         color: gray.withOpacity(0.2),
+                                  //         borderRadius: BorderRadius.circular(6.sp),
+                                  //       ),
+                                  //       child: RichText(
+                                  //         text: TextSpan(
+                                  //           style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
+                                  //           children: [
+                                  //             const TextSpan(text: "₹  "),
+                                  //             TextSpan(
+                                  //               text: formatter.format(double.parse(productCon.productList[index].price)),
+                                  //               style: poppinsSemiBold(color: green, size: 13.sp ),
+                                  //             ),
+                                  //           ],
+                                  //         ),
+                                  //       )
+                                  //     )
+                                  //   ],
+                                  // )
                                 ],
                               ),
                             ),
