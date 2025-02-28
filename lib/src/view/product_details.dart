@@ -37,7 +37,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           children: [
             // Product Image Slider
             productImageSlider(),
-            SizedBox(height: 7.h),
+            SizedBox(height: 4.h),
             // Product Details
             productDetails(),
             SizedBox(height: 20.h),
@@ -59,23 +59,23 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           // Category
           Text(
             productCon.productList[widget.index].category.name.toString(),
-            style: poppinsBold(size: 13.sp,  color: black)
+            style: TextStyle(fontSize: 13.sp, color: black, letterSpacing: -0.5.sp, fontWeight: FontWeight.w900, height: 1.5),
           ),
-          SizedBox(height: 3.0.h,),
           // Product Name
           Text(
             words.isNotEmpty ? words[0].toUpperCase() : "",
-            style: poppinsBold(size: 22.sp, color: const Color.fromARGB(255, 207, 47, 36)),
+            style: TextStyle(fontSize: 24.sp, color: const Color.fromARGB(255, 207, 47, 36), letterSpacing: -1.sp, fontWeight: FontWeight.w900,height: 0),
           ),
-          SizedBox(height: 2.0.h,),
           Text(
             words.length > 1 ? words.sublist(1).join(" ") : "", // Joins all words after index 0
-            style: poppinsBold(size: 15.5.sp, color: black),
+            style: TextStyle(fontSize: 17.sp, color: black, letterSpacing: -0.5.sp, fontWeight: FontWeight.w600, height: 0),
+          ),
+          SizedBox(height: 5.h),
+          // CCT / Watt
+          Text("CCT : ${productCon.productList[widget.index].color ?? "0"}   /   WATTS : ${productCon.productList[widget.index].watt ?? "0"}", 
+            style: TextStyle(fontSize: 24.sp, color: black, letterSpacing: -1.sp, fontWeight: FontWeight.w900, height: 0),
           ),
           SizedBox(height: 10.h),
-          // CCT / Watt
-          Text("CCT : ${productCon.productList[widget.index].color ?? "0"} / WATTS : ${productCon.productList[widget.index].watt ?? "0"}W", style: poppinsBold(size: 22.sp, color: black),),
-          SizedBox(height: 18.h),
           // Price and Redeem
           Row(
             children: [
@@ -142,7 +142,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               ),
             ],
           ),
-          SizedBox(height: 10.h,),
+          SizedBox(height: 14.h,),
           Divider(
             color: gray.withOpacity(0.25),
             thickness: 0.8.sp,
