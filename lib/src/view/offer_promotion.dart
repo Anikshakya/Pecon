@@ -69,22 +69,12 @@ class _OfferPageState extends State<OfferPage> {
                 itemCount: settingCon.offersList.length,
                 itemBuilder: (context,index){
                   return Column(
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: gray.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8.sp),
-                        ),
-                        height: 220.h, 
-                        width: double.infinity,
-                        child: CustomNetworkImage(
-                          imageUrl: settingCon.offersList[index]["image"] ?? "", 
-                          height: 220.h, 
-                          width: double.infinity
-                        ),
+                      CustomNetworkImage(
+                        imageUrl: settingCon.offersList[index]["image"] ?? "",
+                        width: 335.0.w,
                       ),
-                      SizedBox(height: 6.h,),
+                      SizedBox(height: 8.h,),
                       Text(settingCon.offersList[index]["title"] ?? "", style: poppinsMedium(size: 14.sp, color: black), textAlign: TextAlign.center,)
                     ],
                   );

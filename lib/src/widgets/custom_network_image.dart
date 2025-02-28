@@ -5,16 +5,16 @@ import 'package:get/get.dart';
 
 class CustomNetworkImage extends StatelessWidget {
   final String imageUrl;
-  final double height;
-  final double width;
+  final double? height;
+  final double? width;
   final BoxFit fit;
   final double borderRadius;
 
   const CustomNetworkImage({
     super.key,
     required this.imageUrl,
-    required this.height,
-    required this.width,
+    this.height,
+    this.width,
     this.fit = BoxFit.cover,
     this.borderRadius = 8.0, // Default border radius
   });
@@ -35,26 +35,6 @@ class CustomNetworkImage extends StatelessWidget {
           width: width,
           fit: fit,
           loadingBuilder: (context, child, loadingProgress) {
-            // if (loadingProgress == null) return child;
-            
-            // double? progress;
-            // if (loadingProgress.expectedTotalBytes != null) {
-            //   progress = loadingProgress.cumulativeBytesLoaded / 
-            //             (loadingProgress.expectedTotalBytes ?? 1);
-            // }
-        
-            // return Center(
-            //   child: Container(
-            //     padding: const EdgeInsets.all(4),
-            //     height: height - (height * 55/100),
-            //     width: width - (width * 55/100),
-            //     child: CircularProgressIndicator(
-            //       value: progress,
-            //       color: black,
-            //       strokeWidth: 1.5,
-            //     ),
-            //   ),
-            // );
             if (loadingProgress == null) return child;
             return _buildPlaceholder();
           },
@@ -77,7 +57,7 @@ class CustomNetworkImage extends StatelessWidget {
       child: Icon(
         Icons.camera,
         color: black.withOpacity(0.1),
-        size: width * 0.45,
+        size: width! * 0.45,
       ),
     );
   }
