@@ -119,56 +119,55 @@ class _HomePageState extends State<HomePage> {
             color: const Color.fromARGB(255, 236, 236, 236),
             borderRadius: BorderRadius.circular(8),
           ),
-        )
-      : Visibility(
-        visible: homeCon.adSliderData.data.length != 0,
-        child: SizedBox(
-          height: 220.h,
-          child: Column(
-            children: [
-              CarouselSlider(
-                options: CarouselOptions(
-                  height: 188.h,
-                  autoPlay: true,
-                  enlargeCenterPage: true,
-                  viewportFraction: 1,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      _currentIndex = index;
-                    });
-                  },
-                ),
-                items: List.generate(homeCon.adSliderData.data.length, (index) {
-                  return Container(
-                    margin: const EdgeInsets.fromLTRB(20, 14, 20, 0),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 236, 236, 236),
-                      borderRadius: BorderRadius.circular(8),
-                      image: DecorationImage(
-                        image: NetworkImage(homeCon.adSliderData.data[index].image.toString()),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  );
-                })
+        ) 
+      : homeCon.adSliderData == null ||homeCon.adSliderData.data.length == 0
+      ? const SizedBox()
+      : SizedBox(
+        height: 220.h,
+        child: Column(
+          children: [
+            CarouselSlider(
+              options: CarouselOptions(
+                height: 188.h,
+                autoPlay: true,
+                enlargeCenterPage: true,
+                viewportFraction: 1,
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
               ),
-              SizedBox(height: 10.h,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List<Widget>.generate(homeCon.adSliderData.data.length, (index) {
-                  return Container(
-                    width: 12.w,
-                    height: 2.5.h,
-                    margin: const EdgeInsets.symmetric(horizontal: 2),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: _currentIndex == index ? black.withOpacity(0.8) : black.withOpacity(0.1),
+              items: List.generate(homeCon.adSliderData.data.length, (index) {
+                return Container(
+                  margin: const EdgeInsets.fromLTRB(20, 14, 20, 0),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 236, 236, 236),
+                    borderRadius: BorderRadius.circular(8),
+                    image: DecorationImage(
+                      image: NetworkImage(homeCon.adSliderData.data[index].image.toString()),
+                      fit: BoxFit.cover,
                     ),
-                  );
-                }),
-              ),
-            ],
-          ),
+                  ),
+                );
+              })
+            ),
+            SizedBox(height: 10.h,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List<Widget>.generate(homeCon.adSliderData.data.length, (index) {
+                return Container(
+                  width: 12.w,
+                  height: 2.5.h,
+                  margin: const EdgeInsets.symmetric(horizontal: 2),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: _currentIndex == index ? black.withOpacity(0.8) : black.withOpacity(0.1),
+                  ),
+                );
+              }),
+            ),
+          ],
         ),
       )
     );
