@@ -629,7 +629,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   SizedBox(height: 5.h),
                                   Text(
-                                    "#${index + 1}",
+                                    "${index + 1}",
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: poppinsBold(size: 14.sp, color: black),

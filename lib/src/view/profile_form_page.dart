@@ -524,7 +524,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     name: nameController.text.toString().trim(),
                     number: numController.text.toString().trim(),
                     email: emailController.text.toString().trim(),
-                    district : districtId,
+                    district : districtId == 0 ? null : districtId,
                     city : cityId,
                     gender: genderController.text.toLowerCase().toString().trim(),
                     dob: dobController.text.toString().trim(),

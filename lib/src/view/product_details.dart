@@ -117,12 +117,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             ],
           ),
           SizedBox(height: 18.h),
-          ListTile(
-            contentPadding: EdgeInsets.all(0),
-            leading: Icon(Icons.abc, color: black),
-            title: Text("askhdf kljghaskldf lkjashdfkjhlaksjdfhlkjas hdlfjkhalksjd fhlakjsdfhl kajsdhf lkjashdf lkajsd flkasjgd flksjaf"),
-            subtitle: Text("askhdf kljghaskldf lkjashdfkjhlaksjdfhlkjas hdlfjkhalksjd fhlakjsdfhl kajsdhf lkjashdf lkajsd flkasjgd flksjaf"),
-          ),
           // Price and Redeem
           Row(
             children: [

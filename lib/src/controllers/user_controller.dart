@@ -139,7 +139,7 @@ class UserController extends GetxController {
       if(response != null && response['code'] == 200) {
         if(response["data"] != null && response["data"] != []){
           for(var allData in response["data"]){
-            cityList.add({"name" : allData["name"] ?? "", "id" : allData["id"]});
+            cityList.add({"name" : allData["name"] ?? "", "id" : allData["district_id"]});
           }
         }
       }
@@ -178,7 +178,7 @@ class UserController extends GetxController {
       var response = await ApiRepo.apiGet('api/user/redeem-information', "", 'Get Earning History');
       if(response != null && response['code'] == 200) {
         var allData = ProductListModel.fromJson(response);
-        earningList = allData.data!;
+        earningList = allData.data;
       }
     }catch (e){
       log(e.toString());
