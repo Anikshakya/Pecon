@@ -160,7 +160,7 @@ class UserController extends GetxController {
       };
       var response = await ApiRepo.apiPost('api/redeem-checkout-request', data, 'Logout');
       if(response != null && response['code'] == 200) {
-        await getUserData();
+        await getUserData(); // to update points without refreshing the page
         Get.back();
         showToast(isSuccess: true, message: response["message"]);
       }

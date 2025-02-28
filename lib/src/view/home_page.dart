@@ -627,13 +627,7 @@ class _HomePageState extends State<HomePage> {
                                       fit: BoxFit.cover,
                                     ),
                                   ),
-                                  SizedBox(height: 5.h),
-                                  Text(
-                                    "${index + 1}",
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: poppinsBold(size: 14.sp, color: black),
-                                  ),
+                                  SizedBox(height: 10.h),
                                   Text(
                                     performer.user ?? "Unknown",
                                     maxLines: 1,

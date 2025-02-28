@@ -3,10 +3,12 @@ import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:pecon/src/api_config/api_repo.dart';
 import 'package:pecon/src/app_config/read_write.dart';
+import 'package:pecon/src/controllers/user_controller.dart';
 import 'package:pecon/src/model/product_list_model.dart';
 import 'package:pecon/src/widgets/custom_toast.dart';
 
 class ProductsController extends GetxController{
+  final UserController userCon = Get.put(UserController());
   // Get Controllers 
   final RxBool isLoading               = true.obs;
   final RxBool isRedeemeLoading        = false.obs;
@@ -64,6 +66,7 @@ class ProductsController extends GetxController{
       isRedeemeLoading(true); // Start Loading
       var response = await ApiRepo.apiPost('api/product/redeem', data, 'Product Redeem');
       if(response != null && response['code'] == 200) {
+        await userCon.getUserData(); // to update points without refreshing the page
         Get.back(); // Pop Dialogue
         showToast(
           isSuccess: true,
