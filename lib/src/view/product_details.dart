@@ -37,7 +37,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           children: [
             // Product Image Slider
             productImageSlider(),
-            SizedBox(height: 20.h),
+            SizedBox(height: 7.h),
             // Product Details
             productDetails(),
             SizedBox(height: 20.h),
@@ -56,66 +56,25 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Product Name
-          Text(
-            words.isNotEmpty ? words[0].toUpperCase() : "",
-            style: poppinsSemiBold(size: 20.sp, color: black),
-          ),
-          Text(
-            words.length > 1 ? words.sublist(1).join(" ") : "", // Joins all words after index 0
-            style: poppinsSemiBold(size: 18.sp, color: black),
-          ),
-          SizedBox(height: 8.h),
           // Category
           Text(
             productCon.productList[widget.index].category.name.toString(),
-            style: poppinsMedium(size: 13.sp, color: gray)
+            style: poppinsBold(size: 13.sp,  color: black)
           ),
-          SizedBox(height: 14.h),
+          SizedBox(height: 3.0.h,),
+          // Product Name
+          Text(
+            words.isNotEmpty ? words[0].toUpperCase() : "",
+            style: poppinsBold(size: 22.sp, color: const Color.fromARGB(255, 207, 47, 36)),
+          ),
+          SizedBox(height: 2.0.h,),
+          Text(
+            words.length > 1 ? words.sublist(1).join(" ") : "", // Joins all words after index 0
+            style: poppinsBold(size: 15.5.sp, color: black),
+          ),
+          SizedBox(height: 10.h),
           // CCT / Watt
-          Row(
-            children: [
-              Flexible(
-                child: RichText(
-                  text: TextSpan(
-                    style: poppinsMedium(size: 18.sp, color: black),
-                    children: [
-                      TextSpan(
-                        text: productCon.productList[widget.index].color ?? "0",
-                        style: poppinsMedium(color: primary, size: 18.sp),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              SizedBox(width: 8.w),
-
-              Text(
-                "/",
-                style: poppinsSemiBold(size: 18.sp, color: black),
-              ),
-
-              SizedBox(width: 8.w),
-
-              Flexible(
-                child: RichText(
-                  text: TextSpan(
-                    style: poppinsMedium(size: 18.sp, color: black),
-                    children: [
-                      TextSpan(
-                        text: productCon.productList[widget.index].watt ?? "0",
-                        style: poppinsMedium(color: primary, size: 18.sp),
-                      ),
-                      const TextSpan(
-                        text: " Watt",
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+          Text("CCT : ${productCon.productList[widget.index].color ?? "0"} / WATTS : ${productCon.productList[widget.index].watt ?? "0"}W", style: poppinsBold(size: 22.sp, color: black),),
           SizedBox(height: 18.h),
           // Price and Redeem
           Row(

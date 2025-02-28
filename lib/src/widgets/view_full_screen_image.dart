@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pecon/src/app_config/styles.dart';
 
 class FullScreenImagePage extends StatefulWidget {
   final String imageUrl;
@@ -49,7 +50,7 @@ class _FullScreenImagePageState extends State<FullScreenImagePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: white,
       body: Stack(
         children: [
           SizedBox(
@@ -71,13 +72,13 @@ class _FullScreenImagePageState extends State<FullScreenImagePage> {
                             ? loadingProgress.cumulativeBytesLoaded /
                                 (loadingProgress.expectedTotalBytes ?? 1)
                             : null,
-                        color: Colors.white,
+                        color: black,
                       ),
                     );
                   },
                   errorBuilder: (context, error, stackTrace) {
                     return const Center(
-                      child: Icon(Icons.broken_image, size: 50, color: Colors.white),
+                      child: Icon(Icons.broken_image, size: 50, color: black),
                     );
                   },
                 ),
@@ -90,7 +91,7 @@ class _FullScreenImagePageState extends State<FullScreenImagePage> {
             top: 40,
             right: 20,
             child: IconButton(
-              icon: const Icon(Icons.close, color: Colors.white, size: 30),
+              icon: const Icon(Icons.close, color: black, size: 30),
               onPressed: () {
                 Navigator.pop(context);
               },
