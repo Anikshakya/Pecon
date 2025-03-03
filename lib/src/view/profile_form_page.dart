@@ -57,6 +57,10 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   final TextEditingController shopNameCon  = TextEditingController();
   final TextEditingController shopPanCon  = TextEditingController();
   final TextEditingController shopOwnerCon  = TextEditingController();
+  // --- For Technician ---
+  List vendorlists = [
+    TextEditingController()
+  ];
 
   // Bank Text Editing Controllers 
   final TextEditingController accNameController  = TextEditingController();
@@ -311,7 +315,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             ),
             // ---------- Vendor ----------
             Visibility(
-              visible: userCon.user.value.data.role == "Vendor",
+              // visible: userCon.user.value.data.role == "Vendor",
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -340,7 +344,42 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     headingText: "Shop Owner Name",
                     filledColor: gray.withOpacity(0.2),
                   ),
-                  SizedBox(height: 20.h),
+                ],
+              ),
+            ),
+            //---------- Technician --------
+            Visibility(
+              // visible: userCon.user.value.data.role == "Technician",
+              visible: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 20.h,),
+                  // List of vendor Id
+                  ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
+                    separatorBuilder: (context, index) => SizedBox(height: 20.h,),
+                    shrinkWrap: true,
+                    itemCount: vendorlists.length,
+                    itemBuilder: (context, index) {
+                      return CustomTextFormHeaderField(
+                        controller: vendorlists[index],
+                        textInputAction: TextInputAction.next,
+                        headingText: "Venodr Id $index",
+                        filledColor: gray.withOpacity(0.2),
+                      );
+                    },
+                  ),
+                  SizedBox(height: 20.h,),
+                  // Add Id
+                  CustomButton(
+                    text: "Add Vendor",
+                    onPressed: (){
+                      setState(() {
+                        vendorlists.add(TextEditingController());
+                      });
+                    }
+                  )
                 ],
               ),
             ),
