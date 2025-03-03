@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pecon/src/controllers/product_controller.dart';
+import 'package:pecon/src/controllers/user_controller.dart';
 import 'package:pecon/src/view/product_details.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
 import 'package:pecon/src/widgets/custom_network_image.dart';
@@ -18,8 +19,14 @@ class ProductsPage extends StatefulWidget {
 }
 
 class _ProductsPageState extends State<ProductsPage> {
+  //get controller
   final ProductsController productCon = Get.put(ProductsController());
+  final UserController userCon = Get.put(UserController());
+  //textcontroller
+  final TextEditingController searchController = TextEditingController();
+  //number format
   final NumberFormat formatter = NumberFormat("#,##0", "en_US");
+  //store filter search id
   int? categoryId;
   int? subCategoryId;
 
@@ -30,6 +37,7 @@ class _ProductsPageState extends State<ProductsPage> {
   }
 
   initialise() async{
+    productCon.selectedCategory = "";
     productCon.getProductList();
     productCon.getSearchCategory();
   }
@@ -132,35 +140,58 @@ class _ProductsPageState extends State<ProductsPage> {
                                     //products price and rewar points
                                     Row(
                                       children: [
-                                        Visibility(
-                                          visible: productCon.productList[index].price != "0",
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withOpacity(0.5)),),
-                                              SizedBox(height: 4.h),
-                                              Container(
-                                                padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                                                decoration: BoxDecoration(
-                                                  color: gray.withOpacity(0.2),
-                                                  borderRadius: BorderRadius.circular(6.sp),
-                                                ),
-                                                child: RichText(
-                                                  text: TextSpan(
-                                                    style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
-                                                    children: [
-                                                      const TextSpan(text: "₹  "),
-                                                      TextSpan(
-                                                        text: formatter.format(double.parse(productCon.productList[index].price ?? "0")),
-                                                        style: poppinsSemiBold(color: green, size: 13.sp ),
-                                                      ),
-                                                    ],
+                                        userCon.userRole == "Customer"
+                                          ? Visibility(
+                                            visible: productCon.productList[index].price != "0",
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withOpacity(0.5)),),
+                                                SizedBox(height: 4.h),
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                                                  decoration: BoxDecoration(
+                                                    color: gray.withOpacity(0.2),
+                                                    borderRadius: BorderRadius.circular(6.sp),
                                                   ),
+                                                  child: RichText(
+                                                    text: TextSpan(
+                                                      style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
+                                                      children: [
+                                                        const TextSpan(text: "₹  "),
+                                                        TextSpan(
+                                                          text: formatter.format(double.parse(productCon.productList[index].price ?? "0")),
+                                                          style: poppinsSemiBold(color: green, size: 13.sp ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
                                                 )
-                                              )
-                                            ],
+                                              ],
+                                            ),
+                                          )
+                                          : Visibility(
+                                            visible: productCon.productList[index].category.name != "",
+                                            child: Column(
+                                              children: [
+                                                SizedBox(height: 18.h),
+                                                Container(
+                                                  constraints: BoxConstraints(
+                                                    maxWidth: 190.w,
+                                                  ),
+                                                  padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                                                  decoration: BoxDecoration(
+                                                    color: gray.withOpacity(0.2),
+                                                    borderRadius: BorderRadius.circular(6.sp),
+                                                  ),
+                                                  child: Text(
+                                                    productCon.productList[index].category.name,
+                                                    style: poppinsSemiBold(color: black.withOpacity(.5), size: 11.sp ),
+                                                  )
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
                                         const Spacer(),
                                         Column(
                                           crossAxisAlignment: CrossAxisAlignment.end,
@@ -260,9 +291,13 @@ class _ProductsPageState extends State<ProductsPage> {
                     width: 280.w,
                     height: 48.h,
                     child:  CustomTextFormField(
+                      controller: searchController,
                       headingText: "Search", 
                       prefixIcon: Icon(Icons.search, color: grey10.withOpacity(0.8),),
                       filledColor: white,
+                      onFieldSubmitted: (value) {
+                        productCon.getProductList(searchController.text,categoryId,subCategoryId);
+                      },
                     )
                   ),
                   const Spacer(),
@@ -426,8 +461,8 @@ class _ProductsPageState extends State<ProductsPage> {
                   // Submit Button
                   CustomButton(
                     onPressed: () {
-                      // Handle manual code submission
                       Get.back();
+                      productCon.getProductList(searchController.text,categoryId,subCategoryId);
                     },
                     text: "Apply",
                     bgColor: black,
@@ -452,91 +487,4 @@ class _ProductsPageState extends State<ProductsPage> {
       ),
     );
   }
-
-  List<Map<String, dynamic>> productsList = [
-    {
-      "productUrl": "https://m.media-amazon.com/images/I/61hf2tu4IvL.jpg",
-      "productName": "Wireless Earbuds",
-      "productCode": "EB1001",
-      "productMrp": "2500",
-      "cashReward": "150",
-    },
-    {
-      "productUrl": "https://m.media-amazon.com/images/I/7161CULzh+L._AC_SL1500_.jpg",
-      "productName": "Smartwatch",
-      "productCode": "SW2001",
-      "productMrp": "4500",
-      "cashReward": "250",
-    },
-    {
-      "productUrl": "https://app.infotechsnepal.com.np/wp-content/uploads/2024/12/JBL-GO-4-Speaker.jpg",
-      "productName": "Bluetooth Speaker",
-      "productCode": "BS3001",
-      "productMrp": "3200",
-      "cashReward": "200",
-    },
-    {
-      "productUrl": "https://static-01.daraz.com.np/p/e3e4c976b3758b2cfd2ec77e3b7b524a.jpg",
-      "productName": "Gaming Mouse",
-      "productCode": "GM4001",
-      "productMrp": "1800",
-      "cashReward": "120",
-    },
-    {
-      "productUrl": "https://m.media-amazon.com/images/I/71fRP7KY9hL._AC_SL1500_.jpg",
-      "productName": "Mechanical Keyboard",
-      "productCode": "MK5001",
-      "productMrp": "5500",
-      "cashReward": "300",
-    },
-    {
-      "productUrl": "https://static-01.daraz.com.np/p/b3082c8b3e176a2153814506d5052486.jpg",
-      "productName": "Laptop Stand",
-      "productCode": "LS6001",
-      "productMrp": "1300",
-      "cashReward": "80",
-    },
-    {
-      "productUrl": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6556/6556967_sd.jpg",
-      "productName": "Portable Charger",
-      "productCode": "PC7001",
-      "productMrp": "2800",
-      "cashReward": "170",
-    },
-    {
-      "productUrl": "https://static-01.daraz.com.np/p/9142ccf4acd35f0de87ca8991f5f6d11.jpg",
-      "productName": "Wireless Headphones",
-      "productCode": "WH8001",
-      "productMrp": "6200",
-      "cashReward": "350",
-    },
-    {
-      "productUrl": "https://m.media-amazon.com/images/I/71rZLuhfn8L.jpg",
-      "productName": "Tablet Stand",
-      "productCode": "TS9001",
-      "productMrp": "1600",
-      "cashReward": "90",
-    },
-    {
-      "productUrl": "https://uk.zhiyun-tech.com/cdn/shop/files/SM51_f614743f-d324-4b5b-b6a0-04012190fee4.jpg?v",
-      "productName": "Smartphone Gimbal",
-      "productCode": "SG1001",
-      "productMrp": "7000",
-      "cashReward": "400",
-    },
-    {
-      "productUrl": "https://ottlite.com/cdn/shop/files/CSN30G5W_1.jpg?v",
-      "productName": "LED Desk Lamp",
-      "productCode": "DL1101",
-      "productMrp": "2400",
-      "cashReward": "130",
-    },
-    {
-      "productUrl": "https://images.zapnito.com/users/483790/posters/02d95439-4b68-4f81-b7ca-a549d7712f79_large.jpeg",
-      "productName": "VR Headset",
-      "productCode": "VR1201",
-      "productMrp": "8500",
-      "cashReward": "500",
-    },
-  ];
 }

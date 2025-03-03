@@ -7,8 +7,6 @@ import 'package:pecon/src/controllers/product_controller.dart';
 import 'package:pecon/src/controllers/user_controller.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
-import 'package:pecon/src/widgets/custom_network_image.dart';
-
 class ReturnProductPage extends StatefulWidget {
   const ReturnProductPage({super.key});
 
@@ -110,10 +108,10 @@ class _ReturnProductPageState extends State<ReturnProductPage> {
                                       // Submit Button
                                       Obx(()=>
                                         CustomButton(
-                                          isLoading: userCon.isChecoutLoading.isTrue,
+                                          isLoading: productCon.isProductReturnLoading.isTrue,
                                           onPressed: () async{
                                             Get.back();
-                                            // productCon.returnProduct(productId: userCon.earningList[index].id.toString());
+                                            productCon.returnProduct(productId: userCon.earningList[index].productId);
                                           },
                                           text: "Confirm",
                                           bgColor: black,
@@ -140,71 +138,17 @@ class _ReturnProductPageState extends State<ReturnProductPage> {
                         );
                       },
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0.sp,vertical: 16.0.sp),
+                        padding: EdgeInsets.symmetric(horizontal: 16.0.sp,vertical: 28.0.sp),
                         color: white,
                         child: Row(
                           children: [
-                            //products image
-                            Container(
-                              decoration: BoxDecoration(
-                                color: gray.withOpacity(0.1),
-                                border: Border.all(
-                                  color: gray.withOpacity(0.25), width: 0.8.sp
-                                ),
-                                borderRadius: BorderRadius.circular(6.sp),
-                              ),
-                              height: 80.sp,
-                              width: 80.sp,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(6.sp),
-                                child: CustomNetworkImage(
-                                  imageUrl: "", //userCon.earningList[index].images[0].toString(), 
-                                  height: 80.sp,
-                                  width: 80.sp,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            const Spacer(),
+                            //products index
+                            Text("  ${index+1}.  ", style: poppinsSemiBold(size: 14.sp, color: black),),
+                            SizedBox(width: 24.w,),
                             //products name and desc
                             SizedBox(
-                              width: 244.w,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(height: 3.h),
-                                  Text(userCon.earningList[index].product.title.toString(), style: poppinsSemiBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
-                                  SizedBox(height: 12.h),
-                                  //products price and rewar points
-                                  // Column(
-                                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                                  //   children: [
-                                  //     Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withOpacity(0.5)),),
-                                  //     SizedBox(height: 4.h),
-                                  //     Container(
-                                  //       padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                                  //       decoration: BoxDecoration(
-                                  //         color: gray.withOpacity(0.2),
-                                  //         borderRadius: BorderRadius.circular(6.sp),
-                                  //       ),
-                                  //       child: RichText(
-                                  //         text: TextSpan(
-                                  //           style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
-                                  //           children: [
-                                  //             const TextSpan(text: "₹  "),
-                                  //             TextSpan(
-                                  //               text: formatter.format(double.parse(productCon.productList[index].price)),
-                                  //               style: poppinsSemiBold(color: green, size: 13.sp ),
-                                  //             ),
-                                  //           ],
-                                  //         ),
-                                  //       )
-                                  //     )
-                                  //   ],
-                                  // )
-                                ],
-                              ),
+                              width: 290.w,
+                              child: Text(userCon.earningList[index].product.title.toString(), style: poppinsSemiBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 5,),
                             ),
                           ],
                         ),

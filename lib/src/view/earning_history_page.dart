@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/user_controller.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
-import 'package:pecon/src/widgets/custom_network_image.dart';
 
 class EarningHistoryPage extends StatefulWidget {
   const EarningHistoryPage({super.key});
@@ -83,73 +82,48 @@ class _EarningHistoryPageState extends State<EarningHistoryPage> {
                       color: white,
                       child: Row(
                         children: [
-                          //products image
-                          Container(
-                            decoration: BoxDecoration(
-                              color: gray.withOpacity(0.1),
-                              border: Border.all(
-                                color: gray.withOpacity(0.25), width: 0.8.sp
-                              ),
-                              borderRadius: BorderRadius.circular(6.sp),
-                            ),
-                            height: 80.sp,
-                            width: 80.sp,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(6.sp),
-                              child: CustomNetworkImage(
-                                imageUrl: "", //userCon.earningList[index].images[0].toString(), 
-                                height: 80.sp,
-                                width: 80.sp,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
+                          //products index
+                          Text("  ${index+1}.  ", style: poppinsSemiBold(size: 14.sp, color: black),),
+                          SizedBox(width: 24.w,),
                           //products name and desc
                           SizedBox(
-                            width: 244.w,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            width: 292.w,
+                            child: Row(
                               children: [
-                                SizedBox(height: 3.h),
-                                Text(userCon.earningList[index].product.title.toString(), style: poppinsSemiBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
-                                SizedBox(height: 12.h),
+                                SizedBox(
+                                  width: 200.w,
+                                  child: Text(userCon.earningList[index].product.title.toString(), style: poppinsSemiBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 5,)),
                                 //products price and rewar points
-                                Row(
+                                const Spacer(),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    const Spacer(),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Text("Points", style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),),
-                                        SizedBox(height: 4.h),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                                          decoration: BoxDecoration(
-                                            color: green.withOpacity(0.95),
-                                            borderRadius: BorderRadius.circular(6.sp),
-                                          ),
-                                          child: RichText(
-                                            text: TextSpan(
-                                              style: poppinsSemiBold(size: 11.sp, color: black),
-                                              children: [
-                                                WidgetSpan(
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(right: 4.sp),
-                                                    child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp)
-                                                  ),
-                                                ),
-                                                TextSpan(
-                                                  text: formatter.format(double.parse(userCon.earningList[index].redeemPoint.toString())),
-                                                  style: poppinsSemiBold(color: white, size: 12.sp ),
-                                                ),
-                                              ],
+                                    Text("Points", style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),),
+                                    SizedBox(height: 4.h),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                                      decoration: BoxDecoration(
+                                        color: green.withOpacity(0.95),
+                                        borderRadius: BorderRadius.circular(6.sp),
+                                      ),
+                                      child: RichText(
+                                        text: TextSpan(
+                                          style: poppinsSemiBold(size: 11.sp, color: black),
+                                          children: [
+                                            WidgetSpan(
+                                              child: Padding(
+                                                padding: EdgeInsets.only(right: 4.sp),
+                                                child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp)
+                                              ),
                                             ),
-                                          )
-                                        )
-                                      ],
-                                    ),
+                                            TextSpan(
+                                              text: formatter.format(double.parse(userCon.earningList[index].redeemPoint.toString())),
+                                              style: poppinsSemiBold(color: white, size: 12.sp ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    )
                                   ],
                                 )
                               ],

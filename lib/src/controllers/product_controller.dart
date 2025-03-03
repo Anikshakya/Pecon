@@ -25,10 +25,13 @@ class ProductsController extends GetxController{
   List productList = [];
 
   //Get product List
-  getProductList() async {
+  getProductList([keyword,categoryId,subcategoryId]) async {
+    var data = {
+      "category_id": categoryId,
+    };
     try{
       isProductListLoading(true); // Start Loading
-      var response = await ApiRepo.apiGet('api/product/display-products', "", 'Get Product List');
+      var response = await ApiRepo.apiGet('api/product/display-products', data, 'Get Product List');
       if(response != null && response['code'] == 200) {
         var allData = ProductListModel.fromJson(response);
         productList = allData.data;
