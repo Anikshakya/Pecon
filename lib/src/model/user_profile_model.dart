@@ -46,6 +46,7 @@ class Data {
     String gender;
     String dob;
     String city;
+    String role;
     int? cityId;
     int districtId;
     String district;
@@ -66,6 +67,7 @@ class Data {
         this.cityId,
         this.city = "",
         this.address ="",
+        this.role = "",
         Bank? bank,
     }) : bank = bank ?? Bank();
 
@@ -84,6 +86,7 @@ class Data {
         cityId: json                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ["city_id"], 
         address: json["address"] ?? "",
         bank: json["bank"] != null ? Bank.fromJson(json["bank"]) : Bank(),
+        role: json["role"] ?? ""
     );
 
     Map<String, dynamic> toJson() => {
@@ -100,7 +103,8 @@ class Data {
         "address" : address,
         "bank": bank.toJson(),
         "city_id" : cityId,
-        "district_id": districtId
+        "district_id": districtId,
+        "role" : role
     };
 }
 

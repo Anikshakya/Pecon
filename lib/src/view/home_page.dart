@@ -241,7 +241,7 @@ class _HomePageState extends State<HomePage> {
                                       ? (){
                                         showToast(
                                           isSuccess: false,
-                                          message: "No enough points to redeem this prize"
+                                          message: "Your Points are insufficient to redeem this Prize."
                                         );
                                       }
                                       : (){
@@ -355,7 +355,7 @@ class _HomePageState extends State<HomePage> {
                                     ? (){
                                       showToast(
                                         isSuccess: false,
-                                        message: "No enough points to redeem this prize"
+                                        message: "Your Points are insufficient to redeem this Prize."
                                       );
                                     }
                                     : (){
@@ -763,16 +763,16 @@ class _HomePageState extends State<HomePage> {
 
   // Redeem Prize Dialogue
   redeemPrzeDialogue(redeemId){
-    // var redeemeList = [
-    //   {
-    //     "name" : "Prize"
-    //   },
-    //   {
-    //     "name" : "Cash"
-    //   },
-    // ];
+    var redeemeList = [
+      {
+        "name" : "Product"
+      },
+      {
+        "name" : "Cash"
+      },
+    ];
 
-    // var selectedItem = "";
+    var selectedItem = "";
 
     return Get.defaultDialog(
       backgroundColor: boxCol,
@@ -797,56 +797,63 @@ class _HomePageState extends State<HomePage> {
                       color: black,
                     ),
                   ),
-                  // SizedBox(height: 16.h),
-                  // Text(
-                  //   "Select Reward Type",
-                  //   style: TextStyle(
-                  //     fontSize: 12.sp,
-                  //     fontWeight: FontWeight.w400,
-                  //     color: black,
-                  //   ),
-                  // ),
-                  // SizedBox(height: 7.h),
-                  // PopupMenuButton<String>(
-                  //   onSelected: (value) {
-                  //     setState(() {
-                  //       selectedItem = value;
-                  //     });
-                  //   },
-                  //   itemBuilder: (context) => redeemeList
-                  //       .map((item) => PopupMenuItem<String>(
-                  //             value: item["name"] ?? "",
-                  //             child: SizedBox(
-                  //               width: 200.w,
-                  //               child: Text(item["name"] ?? "")
-                  //             ),
-                  //           ))
-                  //       .toList(),
-                  //   offset: Offset(4.w,0),
-                  //   position: PopupMenuPosition.under, // Ensures the menu appears below
-                  //   child: Container(
-                  //     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                  //     decoration: BoxDecoration(
-                  //       color: Colors.white.withOpacity(0.9),
-                  //       borderRadius: BorderRadius.circular(8.0),
-                  //       border: Border.all(color: Colors.transparent, width: 0),
-                  //     ),
-                  //     child: Row(
-                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //       children: [
-                  //         Text(selectedItem),
-                  //         const Icon(Icons.arrow_drop_down),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
+                  SizedBox(height: 16.h),
+                  Text(
+                    "Select Reward Type",
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                      color: black,
+                    ),
+                  ),
+                  SizedBox(height: 7.h),
+                  PopupMenuButton<String>(
+                    onSelected: (value) {
+                      setState(() {
+                        selectedItem = value;
+                      });
+                    },
+                    itemBuilder: (context) => redeemeList
+                        .map((item) => PopupMenuItem<String>(
+                              value: item["name"] ?? "",
+                              child: SizedBox(
+                                width: 200.w,
+                                child: Text(item["name"] ?? "")
+                              ),
+                            ))
+                        .toList(),
+                    offset: Offset(4.w,0),
+                    position: PopupMenuPosition.under, // Ensures the menu appears below
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(8.0),
+                        border: Border.all(color: Colors.transparent, width: 0),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(selectedItem),
+                          const Icon(Icons.arrow_drop_down),
+                        ],
+                      ),
+                    ),
+                  ),
                   SizedBox(height: 24.h),
                   // Submit Button
                   Obx(()=>
                     CustomButton(
                       isLoading: userCon.isChecoutLoading.isTrue,
                       onPressed: () async{
-                        await userCon.checkOutPrize(redeemId);
+                        if(selectedItem == ""){
+                          showToast(
+                            isSuccess: false,
+                            message: "Please select a type first."
+                          );
+                          return;
+                        }
+                        await userCon.checkOutPrize(redeemId, selectedItem);
                       },
                       text: "Redeem",
                       bgColor: black,

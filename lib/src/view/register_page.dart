@@ -29,7 +29,7 @@ class _RegisterPageState extends State<RegisterPage> {
   bool isObscure = true;
   bool isConfirmPassObscure = true;
 
-  List<String> roles = ["Shopkeeper", "Customer", "Electrician"];
+  List<String> roles = ["Vendor", "Customer", "Technician"];
   String selectedRole = "Customer";
 
   @override

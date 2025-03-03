@@ -53,6 +53,10 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   final TextEditingController genderController   = TextEditingController();
   final TextEditingController dobController      = TextEditingController();
   final TextEditingController addressController  = TextEditingController();
+  //--- For Vendor ---
+  final TextEditingController shopNameCon  = TextEditingController();
+  final TextEditingController shopPanCon  = TextEditingController();
+  final TextEditingController shopOwnerCon  = TextEditingController();
 
   // Bank Text Editing Controllers 
   final TextEditingController accNameController  = TextEditingController();
@@ -191,6 +195,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
       key: formKey,
       child: Obx(() =>
         Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //Name
             CustomTextFormHeaderField(
@@ -304,6 +309,42 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
               filledColor: gray.withOpacity(0.2),
               isDropdown: true,
             ),
+            // ---------- Vendor ----------
+            Visibility(
+              visible: userCon.user.value.data.role == "Vendor",
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 20.h),
+                  // Shope Name
+                  CustomTextFormHeaderField(
+                    controller: shopNameCon,
+                    textInputAction: TextInputAction.next,
+                    headingText: "Shop Name",
+                    filledColor: gray.withOpacity(0.2),
+                  ),
+                  SizedBox(height: 20.h),
+                  // PAN Name
+                  CustomTextFormHeaderField(
+                    controller: shopPanCon,
+                    textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.number,
+                    headingText: "Shop PAN no.",
+                    filledColor: gray.withOpacity(0.2),
+                  ),
+                  SizedBox(height: 20.h),
+                  // Owner Name
+                  CustomTextFormHeaderField(
+                    controller: shopOwnerCon,
+                    textInputAction: TextInputAction.next,
+                    headingText: "Shop Owner Name",
+                    filledColor: gray.withOpacity(0.2),
+                  ),
+                  SizedBox(height: 20.h),
+                ],
+              ),
+            ),
+
           ],
         ),
       ),

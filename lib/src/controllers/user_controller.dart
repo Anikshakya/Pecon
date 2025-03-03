@@ -152,11 +152,12 @@ class UserController extends GetxController {
   }
 
   //cehckout prize
-  checkOutPrize(redeemId) async {
+  checkOutPrize(redeemId, type) async {
     try{
       isChecoutLoading(true); // Start Loading
       var data = {
-        "redeem_information_id" : redeemId
+        "redeem_information_id" : redeemId,
+        "customer_payment_option": type.toString().toLowerCase()
       };
       var response = await ApiRepo.apiPost('api/redeem-checkout-request', data, 'Logout');
       if(response != null && response['code'] == 200) {
