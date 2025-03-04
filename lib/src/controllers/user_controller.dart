@@ -43,7 +43,7 @@ class UserController extends GetxController {
   }
 
   //update profile
-  updateProfile({name, number, email, gender, dob, city, district, address, image}) async{
+  updateProfile({name, number, email, gender, dob, city, district, address, image, shopName, panNum, ownerName, vendorId}) async{
     dynamic finaldata;
     if(image == null){
       finaldata = {
@@ -73,13 +73,45 @@ class UserController extends GetxController {
       };
     }
     var data = FormData.fromMap(finaldata);
+    var vendorData = {
+      "shop_name": shopName,
+      "pan_number": panNum,
+      "owner_name": ownerName,
+    };
+    var technicianData = {
+      "vendor_id": vendorId,
+    };
     try{
       isProfileBtnLoading(true);// Start Loading
       var response = await ApiRepo.apiPost('api/profile/update', data, 'Update Profile');
       if(response != null && response['code'] == 201) {
-        await getUserData();
-        Get.back();
-        showToast(isSuccess: true, message: "Profile Details Updated");
+        //vendor update
+        if(user.value.data.role.toLowerCase() == "vendor"){
+          var vendorResponse = await ApiRepo.apiPost('api/profile/shopkeeper/update', vendorData, 'Update Vendor');
+          if(vendorResponse != null && vendorResponse['code'] == 201) {
+            await getUserData();
+            Get.back();
+            showToast(isSuccess: true, message: "Profile Details Updated");
+          }else{
+            showToast(isSuccess: false, message: "Failed to update vendor details");
+          }
+        }
+        //technician update
+        else if(user.value.data.role == "technician"){
+          var vendorResponse = await ApiRepo.apiPost('api/profile/technician/update', technicianData, 'Update technician');
+          if(vendorResponse != null && vendorResponse['code'] == 201) {
+            await getUserData();
+            Get.back();
+            showToast(isSuccess: true, message: "Profile Details Updated");
+          }else{
+            showToast(isSuccess: false, message: "Failed to update technician details");
+          }
+        }
+        else{
+          await getUserData();
+          Get.back();
+          showToast(isSuccess: true, message: "Profile Details Updated");
+        }
       }
     }catch (e){
       log(e.toString());
@@ -190,18 +222,16 @@ class UserController extends GetxController {
   }
 
   //update vendor
-  updateVendor({required shopName,required panNum,required ownerName,required displayPrice}) async{
+  updateVendor({required shopName,required panNum,required ownerName,}) async{
     var data = {
       "shop_name": shopName,
       "pan_number": panNum,
       "owner_name": ownerName,
-      "display_price": displayPrice,
     };
     try{
       isVendorLoading(true);// Start Loading
-      var response = await ApiRepo.apiPost('api/vendor/update', data, 'Update Vendor');
+      var response = await ApiRepo.apiPost('api/profile/shopkeeper/update', data, 'Update Vendor');
       if(response != null && response['code'] == 201) {
-        Get.back();
         showToast(isSuccess: true, message: "Updated");
       }
     }catch (e){

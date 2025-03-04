@@ -308,7 +308,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
               onTap: showCupertinoDatePicker,
               readOnly: true,
               controller: dobController,
-              textInputAction: TextInputAction.done,
+              textInputAction: userCon.user.value.data.role.toLowerCase() == "customer" ? TextInputAction.done : TextInputAction.next,
               headingText: "Date of Birth",
               filledColor: gray.withOpacity(0.2),
               isDropdown: true,
@@ -326,6 +326,9 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     textInputAction: TextInputAction.next,
                     headingText: "Shop Name",
                     filledColor: gray.withOpacity(0.2),
+                    validator: (value) => value != ""
+                      ? null
+                      : "Required",
                   ),
                   SizedBox(height: 20.h),
                   // PAN Name
@@ -335,14 +338,20 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     keyboardType: TextInputType.number,
                     headingText: "Shop PAN no.",
                     filledColor: gray.withOpacity(0.2),
+                    validator: (value) => value != ""
+                      ? null
+                      : "Required",
                   ),
                   SizedBox(height: 20.h),
                   // Owner Name
                   CustomTextFormHeaderField(
                     controller: shopOwnerCon,
-                    textInputAction: TextInputAction.next,
+                    textInputAction: TextInputAction.done,
                     headingText: "Shop Owner Name",
                     filledColor: gray.withOpacity(0.2),
+                    validator: (value) => value != ""
+                      ? null
+                      : "Required",
                   ),
                 ],
               ),
@@ -363,22 +372,23 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     itemBuilder: (context, index) {
                       return CustomTextFormHeaderField(
                         controller: vendorlists[index],
-                        textInputAction: TextInputAction.next,
-                        headingText: "Venodr Id $index",
+                        textInputAction: TextInputAction.done,
+                        keyboardType: TextInputType.number,
+                        headingText: "Venodr Id",
                         filledColor: gray.withOpacity(0.2),
                       );
                     },
                   ),
-                  SizedBox(height: 20.h,),
+                  // SizedBox(height: 20.h,),
                   // Add Id
-                  CustomButton(
-                    text: "Add Vendor",
-                    onPressed: (){
-                      setState(() {
-                        vendorlists.add(TextEditingController());
-                      });
-                    }
-                  )
+                  // CustomButton(
+                  //   text: "Add Vendor",
+                  //   onPressed: (){
+                  //     setState(() {
+                  //       vendorlists.add(TextEditingController());
+                  //     });
+                  //   }
+                  // )
                 ],
               ),
             ),
@@ -609,6 +619,12 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     dob: dobController.text.toString().trim(),
                     address: addressController.text.toString().trim(),
                     image : changedProfileImage.runtimeType.toString() == 'XFile' ? changedProfileImage : null,
+                    //--shopkeeper--
+                    shopName: shopNameCon.text.toString().trim(),
+                    panNum: shopPanCon.text.toString().trim(),
+                    ownerName: shopOwnerCon.text.toString().trim(),
+                    //--technician--
+                    vendorId: vendorlists[0].text.toString().trim() == "" ? null : int.parse(vendorlists[0].text.toString().trim()),
                   );
               }
               : () async {
