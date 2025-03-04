@@ -315,7 +315,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             ),
             // ---------- Vendor ----------
             Visibility(
-              // visible: userCon.user.value.data.role == "Vendor",
+              visible: userCon.user.value.data.role.toLowerCase() == "vendor",
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -349,8 +349,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             ),
             //---------- Technician --------
             Visibility(
-              // visible: userCon.user.value.data.role == "Technician",
-              visible: true,
+              visible: userCon.user.value.data.role.toLowerCase() == "technician",
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
