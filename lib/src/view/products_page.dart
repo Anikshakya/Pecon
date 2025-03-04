@@ -38,6 +38,7 @@ class _ProductsPageState extends State<ProductsPage> {
 
   initialise() async{
     productCon.selectedCategory = "";
+    productCon.selectedSubCategory = "";
     productCon.getProductList();
     productCon.getSearchCategory();
   }
@@ -140,7 +141,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                     //products price and rewar points
                                     Row(
                                       children: [
-                                        userCon.user.value.data.role == "Customer"
+                                        userCon.user.value.data.role.toLowerCase() == "customer"
                                           ? Visibility(
                                             visible: productCon.productList[index].price != "0",
                                             child: Column(
@@ -295,8 +296,14 @@ class _ProductsPageState extends State<ProductsPage> {
                       headingText: "Search", 
                       prefixIcon: Icon(Icons.search, color: grey10.withOpacity(0.8),),
                       filledColor: white,
-                      onFieldSubmitted: (value) {
-                        productCon.getProductList(searchController.text,categoryId,subCategoryId);
+                      onFieldSubmitted: (value) async{
+                        await productCon.getProductList(searchController.text,categoryId,subCategoryId);
+                        setState(() {
+                          productCon.selectedCategory = "";
+                          productCon.selectedSubCategory = "";
+                          categoryId = null;
+                          subCategoryId = null;
+                        });
                       },
                     )
                   ),
@@ -463,6 +470,12 @@ class _ProductsPageState extends State<ProductsPage> {
                     onPressed: () {
                       Get.back();
                       productCon.getProductList(searchController.text,categoryId,subCategoryId);
+                      setState(() {
+                        productCon.selectedCategory = "";
+                        productCon.selectedSubCategory = "";
+                        categoryId = null;
+                        subCategoryId = null;
+                      });
                     },
                     text: "Apply",
                     bgColor: black,

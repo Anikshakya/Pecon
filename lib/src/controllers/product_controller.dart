@@ -28,6 +28,8 @@ class ProductsController extends GetxController{
   getProductList([keyword,categoryId,subcategoryId]) async {
     var data = {
       "category_id": categoryId,
+      "subcategory_id": subcategoryId,
+      "query": keyword == "" ? null : keyword
     };
     try{
       isProductListLoading(true); // Start Loading
