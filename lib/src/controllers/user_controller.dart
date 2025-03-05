@@ -15,7 +15,7 @@ class UserController extends GetxController {
   final RxBool isAddressLoading = false.obs;
   final RxBool isChecoutLoading = false.obs;
   final RxBool isEarningLoading = false.obs;
-  final RxBool isVendorLoading  = false.obs;
+  final RxBool isshopkeeperLoading  = false.obs;
   final RxBool isTechLoading    = false.obs;
 
   // Logged In User Data
@@ -43,7 +43,7 @@ class UserController extends GetxController {
   }
 
   //update profile
-  updateProfile({name, number, email, gender, dob, city, district, address, image, shopName, panNum, ownerName, vendorId}) async{
+  updateProfile({name, number, email, gender, dob, city, district, address, image, shopName, panNum, ownerName, shopkeeperId}) async{
     dynamic finaldata;
     if(image == null){
       finaldata = {
@@ -73,33 +73,34 @@ class UserController extends GetxController {
       };
     }
     var data = FormData.fromMap(finaldata);
-    var vendorData = {
+    var shopkeeperData = {
       "shop_name": shopName,
       "pan_number": panNum,
       "owner_name": ownerName,
+      "display_price": true
     };
     var technicianData = {
-      "vendor_id": vendorId,
+      "vendor_id": shopkeeperId,
     };
     try{
       isProfileBtnLoading(true);// Start Loading
       var response = await ApiRepo.apiPost('api/profile/update', data, 'Update Profile');
       if(response != null && response['code'] == 201) {
-        //vendor update
-        if(user.value.data.role.toLowerCase() == "vendor"){
-          var vendorResponse = await ApiRepo.apiPost('api/profile/shopkeeper/update', vendorData, 'Update Vendor');
-          if(vendorResponse != null && vendorResponse['code'] == 201) {
+        //shopkeeper update
+        if(user.value.data.role.toLowerCase() == "shopkeeper"){
+          var response = await ApiRepo.apiPost('api/profile/shopkeeper/update', shopkeeperData, 'Update shopkeeper');
+          if(response != null && response['code'] == 201) {
             await getUserData();
             Get.back();
             showToast(isSuccess: true, message: "Profile Details Updated");
           }else{
-            showToast(isSuccess: false, message: "Failed to update vendor details");
+            showToast(isSuccess: false, message: "Failed to update shopkeeper details");
           }
         }
         //technician update
         else if(user.value.data.role == "technician"){
-          var vendorResponse = await ApiRepo.apiPost('api/profile/technician/update', technicianData, 'Update technician');
-          if(vendorResponse != null && vendorResponse['code'] == 201) {
+          var response = await ApiRepo.apiPost('api/profile/technician/update', technicianData, 'Update technician');
+          if(response != null && response['code'] == 201) {
             await getUserData();
             Get.back();
             showToast(isSuccess: true, message: "Profile Details Updated");
@@ -221,30 +222,30 @@ class UserController extends GetxController {
     }
   }
 
-  //update vendor
-  updateVendor({required shopName,required panNum,required ownerName,}) async{
+  //update shopkeeper
+  updateshopkeeper({required shopName,required panNum,required ownerName,}) async{
     var data = {
       "shop_name": shopName,
       "pan_number": panNum,
       "owner_name": ownerName,
     };
     try{
-      isVendorLoading(true);// Start Loading
-      var response = await ApiRepo.apiPost('api/profile/shopkeeper/update', data, 'Update Vendor');
+      isshopkeeperLoading(true);// Start Loading
+      var response = await ApiRepo.apiPost('api/profile/shopkeeper/update', data, 'Update shopkeeper');
       if(response != null && response['code'] == 201) {
         showToast(isSuccess: true, message: "Updated");
       }
     }catch (e){
       log(e.toString());
     } finally{
-      isVendorLoading(false);
+      isshopkeeperLoading(false);
     }
   }
 
   //update technician
-  updateTechnician(vendorId) async{
+  updateTechnician(shopkeeperId) async{
     var data = {
-      "vendor_id": vendorId,
+      "shopkeeper_id": shopkeeperId,
     };
     try{
       isTechLoading(true);// Start Loading

@@ -53,12 +53,12 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   final TextEditingController genderController   = TextEditingController();
   final TextEditingController dobController      = TextEditingController();
   final TextEditingController addressController  = TextEditingController();
-  //--- For Vendor ---
+  //--- For shopkeeper ---
   final TextEditingController shopNameCon  = TextEditingController();
   final TextEditingController shopPanCon  = TextEditingController();
   final TextEditingController shopOwnerCon  = TextEditingController();
   // --- For Technician ---
-  List vendorlists = [
+  List shopkeeperlists = [
     TextEditingController()
   ];
 
@@ -313,9 +313,9 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
               filledColor: gray.withOpacity(0.2),
               isDropdown: true,
             ),
-            // ---------- Vendor ----------
+            // ---------- shopkeeper ----------
             Visibility(
-              visible: userCon.user.value.data.role.toLowerCase() == "vendor",
+              visible: userCon.user.value.data.role.toLowerCase() == "shopkeeper",
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -363,32 +363,36 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 20.h,),
-                  // List of vendor Id
+                  // List of shopkeeper Id
                   ListView.separated(
                     physics: const NeverScrollableScrollPhysics(),
                     separatorBuilder: (context, index) => SizedBox(height: 20.h,),
                     shrinkWrap: true,
-                    itemCount: vendorlists.length,
+                    itemCount: shopkeeperlists.length,
                     itemBuilder: (context, index) {
                       return CustomTextFormHeaderField(
-                        controller: vendorlists[index],
+                        controller: shopkeeperlists[index],
                         textInputAction: TextInputAction.done,
                         keyboardType: TextInputType.number,
-                        headingText: "Venodr Id",
+                        headingText: "Vendor Id",
                         filledColor: gray.withOpacity(0.2),
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        validator: (value) => value != ""
+                          ? null
+                          : "Required",
                       );
                     },
                   ),
-                  // SizedBox(height: 20.h,),
-                  // Add Id
-                  // CustomButton(
-                  //   text: "Add Vendor",
-                  //   onPressed: (){
-                  //     setState(() {
-                  //       vendorlists.add(TextEditingController());
-                  //     });
-                  //   }
-                  // )
+                 SizedBox(height: 20.h,),
+                //  Add Id
+                 CustomButton(
+                   text: "Add Vendor",
+                   onPressed: (){
+                     setState(() {
+                       shopkeeperlists.add(TextEditingController());
+                     });
+                   }
+                 )
                 ],
               ),
             ),
@@ -624,7 +628,9 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     panNum: shopPanCon.text.toString().trim(),
                     ownerName: shopOwnerCon.text.toString().trim(),
                     //--technician--
-                    vendorId: vendorlists[0].text.toString().trim() == "" ? null : int.parse(vendorlists[0].text.toString().trim()),
+                    shopkeeperId: userCon.user.value.data.role.toLowerCase() == "technician" 
+                      ? shopkeeperlists.map((e) => int.parse(e.text.toString().trim())).toList()
+                      : [],
                   );
               }
               : () async {
