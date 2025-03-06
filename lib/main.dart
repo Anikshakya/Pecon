@@ -1,4 +1,5 @@
 import 'package:get_storage/get_storage.dart';
+import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/view/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -29,6 +30,11 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
+            textSelectionTheme: TextSelectionThemeData(
+              cursorColor: primary, 
+              selectionColor: primary.withOpacity(.65), 
+              selectionHandleColor: primary, 
+            ),
           ),
           home: const SplashScreen(),
         );
