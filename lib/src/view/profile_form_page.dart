@@ -38,6 +38,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   int selectedCityIndex = 0; 
   int? districtId; 
   int? cityId;
+  bool? displayPrice;
 
   List distrctWiseCity = []; 
 
@@ -109,6 +110,12 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
         branchController.text   = userCon.user.value.data.bank.branch;
         esewaController.text    = userCon.user.value.data.bank.esewa;
         khaltiController.text   = userCon.user.value.data.bank.khalti;
+
+        //Shopkeeper data
+        displayPrice            = userCon.user.value.data.vendor!.displayPrice;
+        shopNameCon.text        = userCon.user.value.data.vendor!.vendorName;
+        shopPanCon.text         = userCon.user.value.data.vendor!.vendorPan;
+        shopOwnerCon.text       = userCon.user.value.data.vendor!.vendorEmail;
       });
     });
   }
@@ -627,6 +634,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     shopName: shopNameCon.text.toString().trim(),
                     panNum: shopPanCon.text.toString().trim(),
                     ownerName: shopOwnerCon.text.toString().trim(),
+                    displayPrice: displayPrice,
                     //--technician--
                     shopkeeperId: userCon.user.value.data.role.toLowerCase() == "technician" 
                       ? shopkeeperlists.map((e) => int.parse(e.text.toString().trim())).toList()

@@ -43,7 +43,7 @@ class UserController extends GetxController {
   }
 
   //update profile
-  updateProfile({name, number, email, gender, dob, city, district, address, image, shopName, panNum, ownerName, shopkeeperId}) async{
+  updateProfile({name, number, email, gender, dob, city, district, address, image, shopName, panNum, ownerName, shopkeeperId, displayPrice}) async{
     dynamic finaldata;
     if(image == null){
       finaldata = {
@@ -77,7 +77,7 @@ class UserController extends GetxController {
       "shop_name": shopName,
       "pan_number": panNum,
       "owner_name": ownerName,
-      "display_price": true
+      "display_price": displayPrice
     };
     var technicianData = {
       "vendor_id": shopkeeperId,

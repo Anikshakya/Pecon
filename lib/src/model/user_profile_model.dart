@@ -52,6 +52,7 @@ class Data {
     String district;
     String address;
     Bank bank;
+    Vendor? vendor;
 
     Data({
         this.id = 0,
@@ -68,6 +69,7 @@ class Data {
         this.city = "",
         this.address ="",
         this.role = "",
+        this.vendor,
         Bank? bank,
     }) : bank = bank ?? Bank();
 
@@ -86,6 +88,7 @@ class Data {
         cityId: json                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ["city_id"], 
         address: json["address"] ?? "",
         bank: json["bank"] != null ? Bank.fromJson(json["bank"]) : Bank(),
+        vendor: json["vendor"] == null ? Vendor() : Vendor.fromJson(json["vendor"]),
         role: json["role"] ?? ""
     );
 
@@ -104,7 +107,8 @@ class Data {
         "bank": bank.toJson(),
         "city_id" : cityId,
         "district_id": districtId,
-        "role" : role
+        "role" : role,
+        "vendor": vendor!.toJson(),
     };
 }
 
@@ -141,5 +145,33 @@ class Bank {
         "holder_name": holderName,
         "esewa": esewa,
         "khalti": khalti,
+    };
+}
+
+class Vendor {
+    String vendorName;
+    String vendorPan;
+    String vendorEmail;
+    bool displayPrice;
+
+    Vendor({
+        this.vendorName = "",
+        this.vendorPan = "",
+        this.vendorEmail = "",
+        this.displayPrice = false,
+    });
+
+    factory Vendor.fromJson(Map<String, dynamic> json) => Vendor(
+        vendorName: json["name"] ?? "",
+        vendorPan: json["email"] ?? "",
+        vendorEmail: json["number"] ?? "",
+        displayPrice: json["display_price"] ?? false,
+    );
+
+    Map<String, dynamic> toJson() => {
+        "name": vendorName,
+        "email": vendorPan,
+        "number": vendorEmail,
+        "display_price": displayPrice,
     };
 }
