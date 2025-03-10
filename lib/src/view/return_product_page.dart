@@ -7,6 +7,7 @@ import 'package:pecon/src/controllers/product_controller.dart';
 import 'package:pecon/src/controllers/user_controller.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
+import 'package:pecon/src/widgets/custom_text_field.dart';
 class ReturnProductPage extends StatefulWidget {
   const ReturnProductPage({super.key});
 
@@ -20,10 +21,19 @@ class _ReturnProductPageState extends State<ReturnProductPage> {
   final UserController userCon = Get.put(UserController());
   final ProductsController productCon = Get.put(ProductsController());
 
+  final TextEditingController codeCon = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     initialise();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    codeCon.dispose();
   }
 
   initialise()async{
@@ -97,11 +107,23 @@ class _ReturnProductPageState extends State<ReturnProductPage> {
                                     children: [
                                       // Title
                                       Text(
-                                        "Are you sure you want to return this product?",
+                                        "Enter the Code of the New Product to Exchange.",
                                         style: TextStyle(
                                           fontSize: 19.sp,
                                           fontWeight: FontWeight.bold,
                                           color: black,
+                                        ),
+                                      ),
+                                      SizedBox(height: 10.h,),
+                                      // Manual Code Input Field
+                                      Form(
+                                        key: formKey,
+                                        child: CustomTextFormField(
+                                          controller: codeCon,
+                                          headingText: "Ënter Code",
+                                          validator: (value) => value != ""
+                                            ? null
+                                            : "Please Enter a valid code first.",
                                         ),
                                       ),
                                       SizedBox(height: 24.h),
@@ -110,10 +132,15 @@ class _ReturnProductPageState extends State<ReturnProductPage> {
                                         CustomButton(
                                           isLoading: productCon.isProductReturnLoading.isTrue,
                                           onPressed: () async{
+                                            final isValid = formKey.currentState!.validate();
+                                            if (!isValid) return;
                                             Get.back();
-                                            productCon.returnProduct(productId: userCon.earningList[index].productId);
+                                            productCon.returnProduct(
+                                              currentCode: codeCon.text.toString().trim(),
+                                              previousCode: userCon.earningList[index].code.toString()
+                                            );
                                           },
-                                          text: "Confirm",
+                                          text: "Exchange",
                                           bgColor: black,
                                           fontColor: white,
                                         ),

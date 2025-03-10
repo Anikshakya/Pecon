@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 import 'package:pecon/src/api_config/api_repo.dart';
-import 'package:pecon/src/app_config/read_write.dart';
 import 'package:pecon/src/controllers/user_controller.dart';
 import 'package:pecon/src/model/product_list_model.dart';
 import 'package:pecon/src/widgets/custom_toast.dart';
@@ -87,10 +86,10 @@ class ProductsController extends GetxController{
   }
 
   //return a product
-  returnProduct({productId}) async{
+  returnProduct({previousCode, currentCode}) async{
     var data = {
-      "product_id": productId,
-      "user_id": read("user")["id"],
+      "previous_code": previousCode,
+      "current_code": currentCode,
     };
     try{
       isProductReturnLoading(true);// Start Loading
