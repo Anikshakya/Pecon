@@ -21,7 +21,7 @@ class _ReturnProductPageState extends State<ReturnProductPage> {
   final UserController userCon = Get.put(UserController());
   final ProductsController productCon = Get.put(ProductsController());
 
-  final TextEditingController codeCon = TextEditingController();
+  final TextEditingController remarksCon = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -33,7 +33,7 @@ class _ReturnProductPageState extends State<ReturnProductPage> {
   @override
   void dispose() {
     super.dispose();
-    codeCon.dispose();
+    remarksCon.dispose();
   }
 
   initialise()async{
@@ -44,7 +44,7 @@ class _ReturnProductPageState extends State<ReturnProductPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: white,
-      appBar: appbar(title:'Warranty Replacement'),
+      appBar: appbar(title:'Product Return'),
       body: RefreshIndicator(
         color: black,
         onRefresh: (){
@@ -107,7 +107,7 @@ class _ReturnProductPageState extends State<ReturnProductPage> {
                                     children: [
                                       // Title
                                       Text(
-                                        "Enter the Code of the New Product to Exchange.",
+                                        "Are you Sure you want to return the Product?",
                                         style: TextStyle(
                                           fontSize: 19.sp,
                                           fontWeight: FontWeight.bold,
@@ -119,8 +119,8 @@ class _ReturnProductPageState extends State<ReturnProductPage> {
                                       Form(
                                         key: formKey,
                                         child: CustomTextFormField(
-                                          controller: codeCon,
-                                          headingText: "Ënter Code",
+                                          controller: remarksCon,
+                                          headingText: "Enter Remarks",
                                           validator: (value) => value != ""
                                             ? null
                                             : "Please Enter a valid code first.",
@@ -136,11 +136,13 @@ class _ReturnProductPageState extends State<ReturnProductPage> {
                                             if (!isValid) return;
                                             Get.back();
                                             productCon.returnProduct(
-                                              currentCode: codeCon.text.toString().trim(),
+                                              remarks: remarksCon.text.toString().trim(),
                                               previousCode: userCon.earningList[index].code.toString()
                                             );
+                                            remarksCon.clear();
+                                            setState((){});
                                           },
-                                          text: "Exchange",
+                                          text: "Return",
                                           bgColor: black,
                                           fontColor: white,
                                         ),

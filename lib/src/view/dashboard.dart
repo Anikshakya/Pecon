@@ -1,7 +1,7 @@
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/app_controller.dart';
 import 'package:pecon/src/controllers/user_controller.dart';
-import 'package:pecon/src/view/accounts.dart';
+import 'package:pecon/src/view/account/accounts.dart';
 import 'package:pecon/src/view/home_page.dart';
 import 'package:pecon/src/view/products_page.dart';
 import 'package:pecon/src/view/qr_scanner.dart';

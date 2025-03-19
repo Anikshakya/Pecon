@@ -92,18 +92,38 @@ class ProductsController extends GetxController{
     }
   }
 
-  //return a product
-  returnProduct({previousCode, currentCode}) async{
+   // Replace a product
+  returnProduct({previousCode, remarks}) async{
+    var data = {
+      "code": previousCode,
+      "remarks": remarks,
+    };
+    try{
+      isProductReturnLoading(true);// Start Loading
+      var response = await ApiRepo.apiPost('api/product/return-product', data, 'Replace Product');
+      if(response != null && response['code'] == 201) {
+        Get.back();
+        showToast(isSuccess: true, message: "Product Returned Sucessfully");
+      }
+    }catch (e){
+      log(e.toString());
+    } finally{
+      isProductReturnLoading(false);
+    }
+  }
+
+  // Replace a product
+  replaceProduct({previousCode, currentCode}) async{
     var data = {
       "previous_code": previousCode,
       "current_code": currentCode,
     };
     try{
       isProductReturnLoading(true);// Start Loading
-      var response = await ApiRepo.apiPost('api/product/return', data, 'Return Product');
+      var response = await ApiRepo.apiPost('api/product/replace-product', data, 'Return Product');
       if(response != null && response['code'] == 201) {
         Get.back();
-        showToast(isSuccess: true, message: "Updated");
+        showToast(isSuccess: true, message: "Product Returned Successfully");
       }
     }catch (e){
       log(e.toString());
