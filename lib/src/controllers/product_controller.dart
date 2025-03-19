@@ -76,7 +76,7 @@ class ProductsController extends GetxController{
         Get.back(); // Pop Dialogue
         showToast(
           isSuccess: true,
-          message: response["message"] ?? "Product redeemed successfully"
+          message: "Congratulations You have earned ${response["data"]["data"]["redeem_point"]} points"
         );
         showDialog(
           context: context,
