@@ -302,7 +302,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
                   Obx(()=>
                     CustomButton(
                       onPressed: () async{
-                        await productCon.redeemePoints(code: codeCon.text);
+                        await productCon.redeemePoints(code: codeCon.text, context: context);
                       },
                       isLoading: productCon.isRedeemeLoading.isTrue,
                       text: "Submit",

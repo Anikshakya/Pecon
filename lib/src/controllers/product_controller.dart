@@ -1,9 +1,11 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecon/src/api_config/api_repo.dart';
 import 'package:pecon/src/controllers/user_controller.dart';
 import 'package:pecon/src/model/product_list_model.dart';
+import 'package:pecon/src/widgets/confetti_widget.dart';
 import 'package:pecon/src/widgets/custom_toast.dart';
 
 class ProductsController extends GetxController{
@@ -62,7 +64,7 @@ class ProductsController extends GetxController{
   }
 
   // redeeme points
-  redeemePoints ({code}) async{
+  redeemePoints ({code, context}) async{
     var data = {
       "code" : code
     };
@@ -75,6 +77,11 @@ class ProductsController extends GetxController{
         showToast(
           isSuccess: true,
           message: response["message"] ?? "Product redeemed successfully"
+        );
+        showDialog(
+          context: context,
+          barrierColor: Colors.transparent, // No background
+          builder: (context) => const ConfettiDialog(type: ConfettiType.fireworks),
         );
       }
     }catch (e){

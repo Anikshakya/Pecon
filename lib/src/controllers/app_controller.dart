@@ -5,10 +5,12 @@ import 'package:pecon/src/app_config/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:pecon/src/widgets/custom_network_image.dart';
 
 class AppController extends GetxController{
   //loadings
   final RxBool isLoading = false.obs;
+  final RxBool isBannerLoading = false.obs;
   //website link
   String webUrl = "";
   String phoneLink = "";
@@ -16,6 +18,7 @@ class AppController extends GetxController{
   //termsCondition
   String termsCondition = "";
   String privacyPolicy = "";
+  String adBanner = "";
 
 
   // terms condition/splash screen link api
@@ -37,6 +40,21 @@ class AppController extends GetxController{
     }
   }
 
+  //get ad banner
+  getAdBanner() async {
+    try{
+      isBannerLoading(true); // Start Loading
+      var response = await ApiRepo.apiGet('api/ads_banner', "", 'SettingApiAPI');
+      if(response != null && response['code'] == 200) {
+        // adBanner = response["data"];
+      }
+    }catch (e){
+      log(e.toString());
+    } finally{
+      isBannerLoading(false); // Stop Loading
+    }
+  }
+
   // Single function to show the ad dialog
   showAdDialog() {
     return Get.dialog(
@@ -49,17 +67,35 @@ class AppController extends GetxController{
             return Stack(
               alignment: Alignment.topRight,
               children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12.sp, vertical: 12.sp),
-                  child: SizedBox(
-                    height: 500.h,
-                    width: double.infinity,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        "assets/images/ad.jpg", // Ad image
-                        fit: BoxFit.cover,
-                      ),
+                Obx(()=>
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12.sp, vertical: 12.sp),
+                    child: SizedBox(
+                      height: 500.h,
+                      width: double.infinity,
+                      child: isBannerLoading.value == true 
+                        ? Container(
+                          decoration: BoxDecoration(
+                            color: gray,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        )
+                        : adBanner == ""
+                        ? ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.asset(
+                            "assets/images/ad.jpg", // Ad image
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                        : ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: CustomNetworkImage(
+                            imageUrl: adBanner, // Ad image
+                            borderRadius: 10,
+                            fit: BoxFit.cover,
+                          ),
+                        )
                     ),
                   ),
                 ),
