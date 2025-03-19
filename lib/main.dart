@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
           defaultTransition: Transition.rightToLeft,
           transitionDuration: const Duration(milliseconds: 500),
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            colorScheme: ColorScheme.fromSeed(seedColor: primary),
             useMaterial3: true,
             textSelectionTheme: TextSelectionThemeData(
               cursorColor: primary, 

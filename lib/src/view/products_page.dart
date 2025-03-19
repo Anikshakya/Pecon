@@ -171,6 +171,36 @@ class _ProductsPageState extends State<ProductsPage> {
                                               ],
                                             ),
                                           )
+                                          : userCon.user.value.data.role.toLowerCase() == "shopkeeper" && userCon.user.value.data.vendor!.displayPrice == true 
+                                          ? Visibility(
+                                            visible: productCon.productList[index].price != "0",
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withOpacity(0.5)),),
+                                                SizedBox(height: 4.h),
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                                                  decoration: BoxDecoration(
+                                                    color: gray.withOpacity(0.2),
+                                                    borderRadius: BorderRadius.circular(6.sp),
+                                                  ),
+                                                  child: RichText(
+                                                    text: TextSpan(
+                                                      style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
+                                                      children: [
+                                                        const TextSpan(text: "₹  "),
+                                                        TextSpan(
+                                                          text: formatter.format(double.parse(productCon.productList[index].price ?? "0")),
+                                                          style: poppinsSemiBold(color: green, size: 13.sp ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                )
+                                              ],
+                                            ),
+                                          )
                                           : Visibility(
                                             visible: productCon.productList[index].category.name != "",
                                             child: Column(
