@@ -57,7 +57,7 @@ class CustomNetworkImage extends StatelessWidget {
       child: Icon(
         Icons.camera,
         color: black.withOpacity(0.1),
-        size: width! * 0.45,
+        size: width == null ? 50 : width! * 0.45,
       ),
     );
   }

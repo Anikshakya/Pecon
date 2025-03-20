@@ -5,23 +5,22 @@ import 'package:intl/intl.dart';
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/product_controller.dart';
 import 'package:pecon/src/controllers/user_controller.dart';
-import 'package:pecon/src/view/account/replace_product/replace_qr_scanner.dart';
+import 'package:pecon/src/view/account/return_product/return_qr_scanner.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
-
-class ReplaceProductPage extends StatefulWidget {
-  const ReplaceProductPage({super.key});
+class ReturnProductPage extends StatefulWidget {
+  const ReturnProductPage({super.key});
 
   @override
-  State<ReplaceProductPage> createState() => _ReplaceProductPageState();
+  State<ReturnProductPage> createState() => _ReturnProductPageState();
 }
 
-class _ReplaceProductPageState extends State<ReplaceProductPage> {
+class _ReturnProductPageState extends State<ReturnProductPage> {
   final NumberFormat formatter = NumberFormat("#,##0", "en_US");
   //GetController
   final UserController userCon = Get.put(UserController());
   final ProductsController productCon = Get.put(ProductsController());
 
-  final TextEditingController codeCon = TextEditingController();
+  final TextEditingController remarksCon = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -33,7 +32,7 @@ class _ReplaceProductPageState extends State<ReplaceProductPage> {
   @override
   void dispose() {
     super.dispose();
-    codeCon.dispose();
+    remarksCon.dispose();
   }
 
   initialise()async{
@@ -44,7 +43,7 @@ class _ReplaceProductPageState extends State<ReplaceProductPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: white,
-      appBar: appbar(title:'Product Replacement'),
+      appBar: appbar(title:'Product Return'),
       body: RefreshIndicator(
         color: black,
         onRefresh: (){
@@ -91,9 +90,7 @@ class _ReplaceProductPageState extends State<ReplaceProductPage> {
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: (){
-                        Get.to(()=> ReplaceQRScannerPage(
-                          previousCode: userCon.earningList[index].code ?? 0,
-                        ));
+                        Get.to(()=> const ReturnQRScannerPage());
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 16.0.sp,vertical: 28.0.sp),

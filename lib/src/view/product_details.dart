@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/product_controller.dart';
+import 'package:pecon/src/controllers/user_controller.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
 import 'package:pecon/src/widgets/custom_markdown.dart';
 import 'package:pecon/src/widgets/custom_network_image.dart';
@@ -22,6 +23,7 @@ class ProductDetailsPage extends StatefulWidget {
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   // Get Controller
   final ProductsController productCon = Get.put(ProductsController());
+  final UserController userCon = Get.put(UserController());
 
   final NumberFormat formatter = NumberFormat("#,##0", "en_US");
   
@@ -81,36 +83,59 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           // Price and Redeem
           Row(
             children: [
-              Visibility(
-                visible: productCon.productList[widget.index].price != "0",
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withOpacity(0.5)),),
-                    SizedBox(height: 4.h),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                      decoration: BoxDecoration(
-                        color: gray.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(6.sp),
-                      ),
-                      child: RichText(
-                        text: TextSpan(
-                          style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
-                          children: [
-                            const TextSpan(text: "₹  "),
-                            TextSpan(
-                              text: formatter.format(double.parse(productCon.productList[widget.index].price ?? "0")),
-                              style: poppinsSemiBold(color: green, size: 13.sp ),
-                            ),
-                          ],
+              userCon.user.value.data.role.toLowerCase() == "shopkeeper" && userCon.user.value.data.vendor!.displayPrice == true 
+                ? Visibility(
+                  visible: productCon.productList[widget.index].price != "0",
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withOpacity(0.5)),),
+                      SizedBox(height: 4.h),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                        decoration: BoxDecoration(
+                          color: gray.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(6.sp),
                         ),
+                        child: RichText(
+                          text: TextSpan(
+                            style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
+                            children: [
+                              const TextSpan(text: "₹  "),
+                              TextSpan(
+                                text: formatter.format(double.parse(productCon.productList[widget.index].price ?? "0")),
+                                style: poppinsSemiBold(color: green, size: 13.sp ),
+                              ),
+                            ],
+                          ),
+                        )
                       )
-                    )
-                  ],
+                    ],
+                  ),
+                )
+                : Visibility(
+                  visible: productCon.productList[widget.index].category.name != "",
+                  child: Column(
+                    children: [
+                      SizedBox(height: 18.h),
+                      Container(
+                        constraints: BoxConstraints(
+                          maxWidth: 190.w,
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                        decoration: BoxDecoration(
+                          color: gray.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(6.sp),
+                        ),
+                        child: Text(
+                          productCon.productList[widget.index].category.name,
+                          style: poppinsSemiBold(color: black.withOpacity(.5), size: 11.sp ),
+                        )
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const Spacer(),
+                const Spacer(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [

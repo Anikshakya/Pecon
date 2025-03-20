@@ -8,7 +8,7 @@ import 'package:pecon/src/view/account/offer_promotion.dart';
 import 'package:pecon/src/view/account/privacy_policy.dart';
 import 'package:pecon/src/view/account/profile_form_page.dart';
 import 'package:pecon/src/view/account/replace_product/replace_product.dart';
-import 'package:pecon/src/view/account/return_product_page.dart';
+import 'package:pecon/src/view/account/return_product/return_product_page.dart';
 import 'package:pecon/src/view/account/terms_condition.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
@@ -72,15 +72,22 @@ class _AccountPageState extends State<AccountPage> {
                           Get.to(()=> const EarningHistoryPage());
                         }
                       ),
-                      _buildListTile('Product Return', Icons.arrow_back,
-                        onTap: (){
-                          Get.to(()=> const ReturnProductPage());
-                        }
-                      ),
-                      _buildListTile('Warranty Replacement', Icons.swap_horiz,
-                        onTap: (){
-                          Get.to(()=> const ReplaceProductPage());
-                        }
+                      Visibility(
+                        visible :  userCon.user.value.data.role.toLowerCase() == "shopkeeper",
+                        child: Column(
+                          children: [
+                            _buildListTile('Product Return', Icons.arrow_back,
+                              onTap: (){
+                                Get.to(()=> const ReturnProductPage());
+                              }
+                            ),
+                            _buildListTile('Warranty Replacement', Icons.swap_horiz,
+                              onTap: (){
+                                Get.to(()=> const ReplaceProductPage());
+                              }
+                            ),
+                          ],
+                        ),
                       ),
                       _buildListTile('Withdrawal Requests', Icons.request_page),
                       _buildListTile('Download Catelog', Icons.download),
