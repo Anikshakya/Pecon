@@ -46,7 +46,9 @@ class AppController extends GetxController{
       isBannerLoading(true); // Start Loading
       var response = await ApiRepo.apiGet('api/ads_banner', "", 'SettingApiAPI');
       if(response != null && response['code'] == 200) {
-        // adBanner = response["data"];
+        if(response["data"] != null && response["data"] != []){
+          adBanner = response["data"]["image"] ?? "";
+        }
       }
     }catch (e){
       log(e.toString());
