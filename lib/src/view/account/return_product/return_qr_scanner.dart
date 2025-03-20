@@ -303,7 +303,7 @@ class _ReturnQRScannerPageState extends State<ReturnQRScannerPage> {
                     borderRadius: BorderRadius.circular(8.r),
                     child: CustomTextFormField(
                       controller: remarksCon,
-                      readOnly: isReadOnly ?? false,
+                      readOnly: false,
                       headingText: "Ënter Your Remarks",
                     ),
                   ),
