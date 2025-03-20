@@ -77,7 +77,10 @@ class _EarningHistoryPageState extends State<EarningHistoryPage> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           GestureDetector(
-                            onTap: () => _pickDateRange(context),
+                            onTap: () async{
+                              await _pickDateRange(context);
+                              await userCon.getEarningHistory(startDate: formatDate(_startDate!.toLocal()), endDate: formatDate(_endDate!.toLocal()));
+                            }, 
                             child: Container(
                               padding: EdgeInsets.symmetric(horizontal: 8.0.w, vertical: 4.0.w),
                               decoration: BoxDecoration(

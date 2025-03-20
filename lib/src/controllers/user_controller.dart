@@ -206,7 +206,7 @@ class UserController extends GetxController {
   }
 
   // Get Earning History
-  getEarningHistory() async{
+  getEarningHistory({startDate, endDate}) async{
     isEarningLoading(true);
     try{
       var response = await ApiRepo.apiGet('api/user/redeem-information', "", 'Get Earning History');
