@@ -106,15 +106,8 @@ class _CataloguePageState extends State<CataloguePage> {
 
       // Request storage permission (only for Android)
       if (Platform.isAndroid) {
-        PermissionStatus status = await Permission.storage.request();
+        await Permission.storage.request();
         await Permission.manageExternalStorage.request();
-        if (!status.isGranted) {
-          showToast(message: "Storage permission denied");
-          setState(() {
-            isDownload["isDownloading"][index] = false;
-          });
-          return;
-        }
       }
 
       // Get the appropriate directory for saving the file
