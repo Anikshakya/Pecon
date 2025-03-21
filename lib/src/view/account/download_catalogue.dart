@@ -30,11 +30,14 @@ class _CataloguePageState extends State<CataloguePage> {
   }
 
   initialise()async{
-    await settingCon.getCatalogue();
-    isDownload = {
+    if(mounted) {
+      await settingCon.getCatalogue();
+      isDownload = {
         "isDownloading" : List.generate(settingCon.catalogueList.length, (index) => false),
         "percentage" : List.generate(settingCon.catalogueList.length, (index) => 0.0),
       };
+      setState(() {});
+    }
   }
 
   @override
