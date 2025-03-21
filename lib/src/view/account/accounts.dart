@@ -3,6 +3,7 @@ import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/auth_controller.dart';
 import 'package:pecon/src/controllers/user_controller.dart';
 import 'package:pecon/src/view/account/change_password.dart';
+import 'package:pecon/src/view/account/download_catalogue.dart';
 import 'package:pecon/src/view/account/earning_history_page.dart';
 import 'package:pecon/src/view/account/offer_promotion.dart';
 import 'package:pecon/src/view/account/privacy_policy.dart';
@@ -90,7 +91,11 @@ class _AccountPageState extends State<AccountPage> {
                         ),
                       ),
                       _buildListTile('Withdrawal Requests', Icons.request_page),
-                      _buildListTile('Download Catelog', Icons.download),
+                      _buildListTile('Download Catelog', Icons.download,
+                        onTap: (){
+                          Get.to(()=> const CataloguePage());
+                        }
+                      ),
                       _buildListTile('Change Password', Icons.visibility_off,
                         onTap: (){
                           Get.to(()=> const ChangePasswordPage());
