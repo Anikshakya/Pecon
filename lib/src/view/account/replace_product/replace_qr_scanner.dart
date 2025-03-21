@@ -1,30 +1,27 @@
 import 'dart:developer';
 import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/controllers/product_controller.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
-import 'package:pecon/src/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pecon/src/widgets/custom_text_field.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:scan/scan.dart';
 
 class ReplaceQRScannerPage extends StatefulWidget {
-  final String previousCode;
-  const ReplaceQRScannerPage({super.key, required this.previousCode});
+  const ReplaceQRScannerPage({super.key});
 
   @override
   State<ReplaceQRScannerPage> createState() => _ReplaceQRScannerPageState();
 }
 
 class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
-  // Get Controllers
-   final ProductsController productCon = Get.put(ProductsController());
    
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
+  String scannedQr = "N/A";
 
   @override
   void dispose() {
@@ -69,7 +66,6 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
               height: 36.h,
               child: CustomButton(
                 onPressed: () async{
-                  Get.back();
                   // Open dialog to enter QR code manually
                   scannedCodeDialogue(
                     code: null, 
@@ -92,17 +88,7 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
                   // Scan QR code from selected image in gallery
                   var scannedData = await scanFromGallery();
                   if (scannedData != null) {
-                    // Show scanned data in a popup
-                    Get.back();
-                    scannedCodeDialogue(
-                      code: scannedData,
-                      isReadOnly: true,
-                      headingText: "Replace Product",
-                      infoText: "You can Replace Product by submitting.",
-                    );
-                    Future.delayed(const Duration(milliseconds: 300), () {
-                      controller!.resumeCamera();
-                    });
+                    Get.back(result: scannedData.toString());
                   } else {
                     // Show error message if no QR code is found
                     controller!.stopCamera();  // Stop the camera after scanning
@@ -218,17 +204,7 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
       controller.stopCamera();  // Stop the camera after scanning
       String scannedData = scanData.code.toString();
       log('Scanned Data: $scannedData');
-      // Show scanned data in a popup
-      Get.back();
-      scannedCodeDialogue(
-        code: scannedData,
-        isReadOnly: true,
-        headingText: "Redeeme Points",
-        infoText: "You can redeeme points by submitting."
-      );
-      Future.delayed(const Duration(milliseconds: 300), () {
-        controller.resumeCamera();
-      });
+      Get.back(result: scannedData.toString());
     });
   }
 
@@ -246,8 +222,52 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
     );
   }
 
-  // Show manual code entry dialog
-  void scannedCodeDialogue({code, isReadOnly, headingText, infoText}) {
+
+  // Scan image from gallery and crop it
+  Future<String?> scanFromGallery() async {
+    // Pick an image from the gallery
+    final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image == null) return null;
+
+     // Crop the picked image
+    CroppedFile? croppedImage = await ImageCropper().cropImage(
+      sourcePath: image.path,
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Crop Image',
+          toolbarColor: primary,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.square,
+          lockAspectRatio: false,
+        ),
+        IOSUiSettings(
+          minimumAspectRatio: 1.0,
+        ),
+      ],
+      // aspectRatioPresets: [
+      //   CropAspectRatioPreset.square,
+      //   CropAspectRatioPreset.ratio3x2,
+      //   CropAspectRatioPreset.ratio4x3,
+      //   CropAspectRatioPreset.ratio16x9,
+      // ],
+    );
+
+    // Check if the image was cropped successfully
+    if (croppedImage == null) return null;
+
+    // Convert the CroppedFile to XFile
+    XFile croppedXFile = XFile(croppedImage.path);
+
+    // Decode the QR code from the cropped image
+    try {
+      var qrCodeData = await Scan.parse(croppedXFile.path);
+      return qrCodeData;
+    } catch (e) {
+      return null;  // Return null if no QR code is detected
+    }
+  }
+
+    void scannedCodeDialogue({code, isReadOnly, headingText, infoText}) {
     final TextEditingController codeCon = TextEditingController();
 
     Get.defaultDialog(
@@ -299,19 +319,14 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
                   ),
                   SizedBox(height: 10.h),
                   // Submit Button
-                  Obx(()=>
-                    CustomButton(
-                      isLoading: productCon.isProductReturnLoading.isTrue,
-                      onPressed: () async{
-                        productCon.replaceProduct(
-                          currentCode: codeCon.text.toString().trim(),
-                          previousCode: widget.previousCode.toString()
-                        );
-                      },
-                      text: "Replace",
-                      bgColor: black,
-                      fontColor: white,
-                    ),
+                  CustomButton(
+                    onPressed: () {
+                      Get.back();
+                      Get.back(result: codeCon.text.toString());
+                    },
+                    text: "Replace",
+                    bgColor: black,
+                    fontColor: white,
                   ),
                   SizedBox(height: 10.h),
                   // Cancel Button
@@ -331,49 +346,5 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
         },
       ),
     );
-  }
-
-  // Scan image from gallery and crop it
-  Future<String?> scanFromGallery() async {
-    // Pick an image from the gallery
-    final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (image == null) return null;
-
-     // Crop the picked image
-    CroppedFile? croppedImage = await ImageCropper().cropImage(
-      sourcePath: image.path,
-      uiSettings: [
-        AndroidUiSettings(
-          toolbarTitle: 'Crop Image',
-          toolbarColor: primary,
-          toolbarWidgetColor: Colors.white,
-          initAspectRatio: CropAspectRatioPreset.square,
-          lockAspectRatio: false,
-        ),
-        IOSUiSettings(
-          minimumAspectRatio: 1.0,
-        ),
-      ],
-      // aspectRatioPresets: [
-      //   CropAspectRatioPreset.square,
-      //   CropAspectRatioPreset.ratio3x2,
-      //   CropAspectRatioPreset.ratio4x3,
-      //   CropAspectRatioPreset.ratio16x9,
-      // ],
-    );
-
-    // Check if the image was cropped successfully
-    if (croppedImage == null) return null;
-
-    // Convert the CroppedFile to XFile
-    XFile croppedXFile = XFile(croppedImage.path);
-
-    // Decode the QR code from the cropped image
-    try {
-      var qrCodeData = await Scan.parse(croppedXFile.path);
-      return qrCodeData;
-    } catch (e) {
-      return null;  // Return null if no QR code is detected
-    }
   }
 }
