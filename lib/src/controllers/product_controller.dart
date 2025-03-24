@@ -118,7 +118,7 @@ class ProductsController extends GetxController{
       isRedeemeLoading(true); // Start Loading
       var response = await ApiRepo.apiPost('api/product/redeem', data, 'Product Redeem');
       if(response != null && response['code'] == 200) {
-        await userCon.getUserData(); // to update points without refreshing the page
+        await userCon.getUserData(true); // to update points without refreshing the page
         Get.back(); // Pop Dialogue
         showToast(
           isSuccess: true,

@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
           onRefresh: (){
             return Future.delayed(const Duration(seconds: 1),()async{// Get Athlete Details Data
               getData();
-              userCon.getUserData();
+              userCon.getUserData(true);
             });
           },
           child: SingleChildScrollView(

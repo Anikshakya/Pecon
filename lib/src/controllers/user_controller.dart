@@ -30,25 +30,32 @@ class UserController extends GetxController {
   dynamic earningList = [];
 
   // Get Logged In User Profile
-  getUserData() async{
+  getUserData([refresh]) async{
     var cacheData = read(AppConstants().userData);
     try{
       if(cacheData == "") isProfileLoading(true); // Start Loading
       var response = await ApiRepo.apiGet('api/profile', "", 'User Profile API');
       if(response != null && response['code'] == 200) {
-      if(cacheData == ""){
-        user.value = UserModel.fromJson(response);
-        write(AppConstants().userData, UserModel.fromJson(response));
-      }
+        if(refresh == true){
+          user.value = UserModel.fromJson(response);
+          write(AppConstants().userData, UserModel.fromJson(response));
+          isProfileLoading(false);
+          return;
+        }
 
-      if(cacheData != "" && jsonEncode(cacheData) != jsonEncode(response)){
-        user.value = cacheData.runtimeType.toString() == "_Map<String, dynamic>" ? UserModel.fromJson(cacheData) : cacheData;
-        write(AppConstants().userData, UserModel.fromJson(response));
-      }
+        if(cacheData == ""){
+          user.value = UserModel.fromJson(response);
+          write(AppConstants().userData, UserModel.fromJson(response));
+        }
 
-      if(cacheData != "" && jsonEncode(cacheData) == jsonEncode(response)){
-        user.value = cacheData.runtimeType.toString() == "_Map<String, dynamic>" ? UserModel.fromJson(cacheData) : cacheData;
-      }
+        if(cacheData != "" && jsonEncode(cacheData) != jsonEncode(response)){
+          user.value = cacheData.runtimeType.toString() == "_Map<String, dynamic>" ? UserModel.fromJson(cacheData) : cacheData;
+          write(AppConstants().userData, UserModel.fromJson(response));
+        }
+
+        if(cacheData != "" && jsonEncode(cacheData) == jsonEncode(response)){
+          user.value = cacheData.runtimeType.toString() == "_Map<String, dynamic>" ? UserModel.fromJson(cacheData) : cacheData;
+        }
 
       } else {
         if(cacheData != ""){
@@ -110,7 +117,7 @@ class UserController extends GetxController {
         if(user.value.data.role.toLowerCase() == "shopkeeper"){
           var response = await ApiRepo.apiPost('api/profile/shopkeeper/update', shopkeeperData, 'Update shopkeeper');
           if(response != null && response['code'] == 201) {
-            await getUserData();
+            await getUserData(true);
             Get.back();
             showToast(isSuccess: true, message: "Profile Details Updated");
           }else{
@@ -121,7 +128,7 @@ class UserController extends GetxController {
         else if(user.value.data.role == "technician"){
           var response = await ApiRepo.apiPost('api/profile/technician/update', technicianData, 'Update technician');
           if(response != null && response['code'] == 201) {
-            await getUserData();
+            await getUserData(true);
             Get.back();
             showToast(isSuccess: true, message: "Profile Details Updated");
           }else{
@@ -129,7 +136,7 @@ class UserController extends GetxController {
           }
         }
         else{
-          await getUserData();
+          await getUserData(true);
           Get.back();
           showToast(isSuccess: true, message: "Profile Details Updated");
         }
@@ -155,7 +162,7 @@ class UserController extends GetxController {
       isBankBtnLoading(true);// Start Loading
       var response = await ApiRepo.apiPost('api/profile/update-bank-details', data, 'Update Bank Details');
       if(response != null && response['code'] == 201) {
-        await getUserData();
+        await getUserData(true);
         Get.back();
         showToast(isSuccess: true, message: "Bank Details Updated");
       }
@@ -214,7 +221,7 @@ class UserController extends GetxController {
       };
       var response = await ApiRepo.apiPost('api/redeem-checkout-request', data, 'check out');
       if(response != null && response['code'] == 200) {
-        await getUserData(); // to update points without refreshing the page
+        await getUserData(true); // to update points without refreshing the page
         Get.back();
         showToast(isSuccess: true, message: response["message"]);
       }
