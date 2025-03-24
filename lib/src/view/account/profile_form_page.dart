@@ -381,7 +381,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                         controller: shopkeeperlists[index],
                         textInputAction: TextInputAction.done,
                         keyboardType: TextInputType.number,
-                        headingText: "Vendor Id",
+                        headingText: "Shopkeeper Id",
                         filledColor: gray.withOpacity(0.2),
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         validator: (value) => value != ""
@@ -393,7 +393,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                  SizedBox(height: 20.h,),
                 //  Add Id
                  CustomButton(
-                   text: "Add Vendor",
+                   text: "Add Shopkeeper",
                    onPressed: (){
                      setState(() {
                        shopkeeperlists.add(TextEditingController());
