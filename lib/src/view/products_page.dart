@@ -39,8 +39,9 @@ class _ProductsPageState extends State<ProductsPage> {
   initialise() async{
     productCon.selectedCategory = "";
     productCon.selectedSubCategory = "";
-    productCon.getProductList();
-    productCon.getSearchCategory();
+    await productCon.getProductList();
+    await productCon.getSearchCategory();
+    setState(() {});
   }
   
   @override
@@ -297,13 +298,17 @@ class _ProductsPageState extends State<ProductsPage> {
                       prefixIcon: Icon(Icons.search, color: grey10.withOpacity(0.8),),
                       filledColor: white,
                       onFieldSubmitted: (value) async{
-                        await productCon.getProductList(searchController.text,categoryId,subCategoryId);
-                        setState(() {
-                          productCon.selectedCategory = "";
-                          productCon.selectedSubCategory = "";
-                          categoryId = null;
-                          subCategoryId = null;
-                        });
+                        var success = await productCon.getProductList(searchController.text,categoryId,subCategoryId);
+                        if(success == true){
+                          setState(() {
+                            productCon.selectedCategory = "";
+                            productCon.selectedSubCategory = "";
+                            categoryId = null;
+                            subCategoryId = null;
+                          });
+                        }
+                        setState((){});
+                        
                       },
                     )
                   ),
@@ -311,8 +316,11 @@ class _ProductsPageState extends State<ProductsPage> {
                   Obx(() => GestureDetector(
                       onTap: productCon.isLoading.isTrue 
                         ? (){}
-                        :(){
-                          filterDialog();
+                        :() async{
+                          var isSucces = await filterDialog();
+                          if(isSucces == true){
+                            Future.delayed(const Duration(seconds: 2), (){setState(() {});});
+                          }
                         },
                       child: Icon(Icons.filter_alt_outlined, color: productCon.isLoading.isTrue ? black.withOpacity(0.2) : black)
                     ),
@@ -327,8 +335,8 @@ class _ProductsPageState extends State<ProductsPage> {
   }
 
   // Show manual code entry dialog
-  filterDialog() {
-    Get.defaultDialog(
+  Future filterDialog() {
+    return Get.defaultDialog(
       backgroundColor: boxCol,
       title: '',
       titlePadding: EdgeInsets.symmetric(horizontal: 20.0.w),
@@ -468,7 +476,6 @@ class _ProductsPageState extends State<ProductsPage> {
                   // Submit Button
                   CustomButton(
                     onPressed: () {
-                      Get.back();
                       productCon.getProductList(searchController.text,categoryId,subCategoryId);
                       setState(() {
                         productCon.selectedCategory = "";
@@ -476,6 +483,7 @@ class _ProductsPageState extends State<ProductsPage> {
                         categoryId = null;
                         subCategoryId = null;
                       });
+                      Get.back(result: true);
                     },
                     text: "Apply",
                     bgColor: black,

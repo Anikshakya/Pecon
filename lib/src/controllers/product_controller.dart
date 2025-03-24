@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecon/src/api_config/api_repo.dart';
+import 'package:pecon/src/app_config/constant.dart';
+import 'package:pecon/src/app_config/read_write.dart';
 import 'package:pecon/src/controllers/user_controller.dart';
 import 'package:pecon/src/model/product_list_model.dart';
 import 'package:pecon/src/widgets/confetti_widget.dart';
@@ -27,33 +30,76 @@ class ProductsController extends GetxController{
 
   //Get product List
   getProductList([keyword,categoryId,subcategoryId]) async {
+    var cacheData = read(AppConstants().productList);
     var data = {
       "category_id": categoryId,
       "subcategory_id": subcategoryId,
       "query": keyword == "" ? null : keyword
     };
     try{
-      isProductListLoading(true); // Start Loading
+      if(cacheData == "" || (keyword != null || subcategoryId != null || categoryId != null)) isProductListLoading(true); // Start Loading
       var response = await ApiRepo.apiGet('api/product/display-products', data, 'Get Product List');
       if(response != null && response['code'] == 200) {
-        var allData = ProductListModel.fromJson(response);
-        productList = allData.data;
+        if(keyword != null || subcategoryId != null || categoryId != null){
+          var allData = ProductListModel.fromJson(response);
+          productList = allData.data;
+          return true;
+        }
+
+        if(cacheData == ""){
+          var allData = ProductListModel.fromJson(response);
+          productList = allData.data;
+          write(AppConstants().productList, ProductListModel.fromJson(response));
+        }
+
+        if(cacheData != "" && jsonEncode(cacheData) != jsonEncode(response)){
+          var allData  = cacheData.runtimeType.toString() == "_Map<String, dynamic>" ? ProductListModel.fromJson(cacheData) : cacheData;
+          productList = allData.data;
+          write(AppConstants().productList, ProductListModel.fromJson(response));
+        }
+        
+        if(cacheData != "" && jsonEncode(cacheData) == jsonEncode(response)){
+          var allData  = cacheData.runtimeType.toString() == "_Map<String, dynamic>" ? ProductListModel.fromJson(cacheData) : cacheData;
+          productList = allData.data;
+        }
+      } else {
+        if(cacheData != ""){
+          var allData  = cacheData.runtimeType.toString() == "_Map<String, dynamic>" ? ProductListModel.fromJson(cacheData) : cacheData;
+          productList = allData.data;
+        }
       }
     }catch (e){
       log(e.toString());
     } finally{
-      isProductListLoading(false); // Stop Loading
+      if(cacheData == "" || (keyword != null || subcategoryId != null || categoryId != null)) isProductListLoading(false); // Stop Loading
     }
   }
 
   // Slider/AdBanner API
   getSearchCategory({number, password}) async {
+    var cacheData = read(AppConstants().searchCategory);
     try{
       isLoading(true); // Start Loading
       var response = await ApiRepo.apiGet('api/categories', "", 'Get Search Category');
       if(response != null && response['code'] == 200) {
-        if(response["data"] != null && response["data"] != []){
-          categoryList = response["data"];
+        if(cacheData == ""){
+          if(response["data"] != null && response["data"] != []){
+            categoryList = response["data"];
+          }
+          write(AppConstants().searchCategory, response["data"]);
+        }
+
+        if(cacheData != "" && jsonEncode(cacheData) != jsonEncode(response)){
+          categoryList = cacheData;
+          write(AppConstants().searchCategory, response["data"]);
+        }
+
+        if(cacheData != "" && jsonEncode(cacheData) == jsonEncode(response)){
+          categoryList = cacheData;
+        }
+      } else {
+        if(cacheData != ""){
+          categoryList = cacheData;
         }
       }
     }catch (e){
@@ -76,7 +122,8 @@ class ProductsController extends GetxController{
         Get.back(); // Pop Dialogue
         showToast(
           isSuccess: true,
-          message: "Congratulations You have earned ${response["data"]["data"]["redeem_point"]} points"
+          headingMessage: "Congratulations!",
+          message: "You have earned ${response["data"]["data"]["redeem_point"]} points"
         );
         showDialog(
           context: context,

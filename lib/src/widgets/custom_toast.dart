@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pecon/src/app_config/styles.dart';
 
-showToast({message, bool? isSuccess, bool? isEn}) {
+showToast({required String message, bool? isSuccess, bool? isEn, headingMessage}) {
   return Get.snackbar(
     "",
     "",
@@ -24,9 +24,19 @@ showToast({message, bool? isSuccess, bool? isEn}) {
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(top: isEn == true ?  4.sp : 1.5.sp),
-              child: Text(
-                message.toString(),
-                style: poppinsRegular(size: 13.sp, color: Colors.black),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if(headingMessage != null) Text(
+                    headingMessage.toString(),
+                    style: poppinsBold(size: 14.sp, color: Colors.black),
+                  ),
+                  Text(
+                    message.toString(),
+                    style: poppinsRegular(size: 13.sp, color: Colors.black),
+                  ),
+                ],
               ),
             ),
           ),

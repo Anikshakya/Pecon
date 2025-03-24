@@ -33,17 +33,17 @@ class UserController extends GetxController {
   getUserData() async{
     var cacheData = read(AppConstants().userData);
     try{
-      isProfileLoading(true); // Start Loading
+      if(cacheData == "") isProfileLoading(true); // Start Loading
       var response = await ApiRepo.apiGet('api/profile', "", 'User Profile API');
       if(response != null && response['code'] == 200) {
       if(cacheData == ""){
         user.value = UserModel.fromJson(response);
         write(AppConstants().userData, UserModel.fromJson(response));
       }
-      
+
       if(cacheData != "" && jsonEncode(cacheData) != jsonEncode(response)){
         user.value = cacheData.runtimeType.toString() == "_Map<String, dynamic>" ? UserModel.fromJson(cacheData) : cacheData;
-        write(AppConstants().homePrize,UserModel.fromJson(response));
+        write(AppConstants().userData, UserModel.fromJson(response));
       }
 
       if(cacheData != "" && jsonEncode(cacheData) == jsonEncode(response)){
@@ -56,9 +56,9 @@ class UserController extends GetxController {
         }
       }
     }catch (e){
-      isProfileLoading(false); // Stop Loading
+      if(cacheData == "") isProfileLoading(false); // Stop Loading
     } finally{
-      isProfileLoading(false); // Stop Loading
+      if(cacheData == "") isProfileLoading(false); // Stop Loading
     }
   }
 
