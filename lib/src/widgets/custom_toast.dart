@@ -34,7 +34,7 @@ showToast({required String message, bool? isSuccess, bool? isEn, headingMessage}
                   ),
                   Text(
                     message.toString(),
-                    style: poppinsRegular(size: 13.sp, color: Colors.black),
+                    style: poppinsBold(size: 13.sp, color: Colors.black),
                   ),
                 ],
               ),
