@@ -467,6 +467,9 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             keyboardType: TextInputType.number,
             headingText: "Esewa Number",
             filledColor: gray.withOpacity(0.2),
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(10),
+            ],
           ),
           SizedBox(height: 20.h),
           //khalti number
@@ -476,6 +479,9 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             keyboardType: TextInputType.number,
             headingText: "Khalti Number",
             filledColor: gray.withOpacity(0.2),
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(10),
+            ],
           ),
         ],
       ),
