@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:pecon/src/api_config/api_repo.dart';
+import 'package:pecon/src/app_config/constant.dart';
+import 'package:pecon/src/app_config/read_write.dart';
 import 'package:pecon/src/model/return_product_model.dart';
 import 'package:pecon/src/model/user_profile_model.dart';
 import 'package:pecon/src/widgets/custom_toast.dart';
@@ -28,12 +31,29 @@ class UserController extends GetxController {
 
   // Get Logged In User Profile
   getUserData() async{
+    var cacheData = read(AppConstants().userData);
     try{
       isProfileLoading(true); // Start Loading
       var response = await ApiRepo.apiGet('api/profile', "", 'User Profile API');
       if(response != null && response['code'] == 200) {
+      if(cacheData == ""){
         user.value = UserModel.fromJson(response);
-        return user;
+        write(AppConstants().userData, UserModel.fromJson(response));
+      }
+      
+      if(cacheData != "" && jsonEncode(cacheData) != jsonEncode(response)){
+        user.value = cacheData.runtimeType.toString() == "_Map<String, dynamic>" ? UserModel.fromJson(cacheData) : cacheData;
+        write(AppConstants().homePrize,UserModel.fromJson(response));
+      }
+
+      if(cacheData != "" && jsonEncode(cacheData) == jsonEncode(response)){
+        user.value = cacheData.runtimeType.toString() == "_Map<String, dynamic>" ? UserModel.fromJson(cacheData) : cacheData;
+      }
+
+      } else {
+        if(cacheData != ""){
+          user.value = cacheData.runtimeType.toString() == "_Map<String, dynamic>" ? UserModel.fromJson(cacheData) : cacheData;
+        }
       }
     }catch (e){
       isProfileLoading(false); // Stop Loading

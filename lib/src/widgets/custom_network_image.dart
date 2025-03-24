@@ -1,7 +1,8 @@
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/widgets/view_full_screen_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pecon/src/app_config/styles.dart';
+import 'package:pecon/src/widgets/view_full_screen_image.dart';
 
 class CustomNetworkImage extends StatelessWidget {
   final String imageUrl;
@@ -16,7 +17,7 @@ class CustomNetworkImage extends StatelessWidget {
     this.height,
     this.width,
     this.fit = BoxFit.cover,
-    this.borderRadius = 8.0, // Default border radius
+    this.borderRadius = 8.0,
   });
 
   @override
@@ -24,23 +25,16 @@ class CustomNetworkImage extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(borderRadius),
       child: GestureDetector(
-        onTap: (){
-          Get.to(()=> FullScreenImagePage(
-            imageUrl: imageUrl,
-          ));
+        onTap: () {
+          Get.to(() => FullScreenImagePage(imageUrl: imageUrl));
         },
-        child: Image.network(
-          imageUrl,
+        child: CachedNetworkImage(
+          imageUrl: imageUrl,
           height: height,
           width: width,
           fit: fit,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return _buildPlaceholder();
-          },
-          errorBuilder: (context, error, stackTrace) {
-            return _buildPlaceholder();
-          },
+          placeholder: (context, url) => _buildPlaceholder(),
+          errorWidget: (context, url, error) => _buildPlaceholder(),
         ),
       ),
     );

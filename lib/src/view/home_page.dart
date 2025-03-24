@@ -44,9 +44,6 @@ class _HomePageState extends State<HomePage> {
 
   // Get Initial Data
   getData() async{
-    setState(() {
-      isLoading = true;
-    });
     await appCon.getAdBanner();
     // Get AdBanner/Slider data
     await homeCon.getAdBanner();
@@ -55,7 +52,7 @@ class _HomePageState extends State<HomePage> {
     // Get Top 5 Performer
     await homeCon.getTop5Performers();
     setState(() {
-      isLoading = false;
+      
     });
   }
 
@@ -76,35 +73,21 @@ class _HomePageState extends State<HomePage> {
           },
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            child: isLoading 
-              ? SizedBox(
-                  height: 620.0.h,
-                  child: Center(
-                    child: SizedBox(
-                      height: 30.sp,
-                      width: 30.sp,
-                      child: CircularProgressIndicator(
-                        color: black,
-                        strokeWidth: 1.5.sp,
-                      ),
-                    ),
-                  ),
-                )
-              : Column(
-                children: [
-                  SizedBox(height: 10.h),
-                  userInfo(),
-                  // SizedBox(height: 20),
-                  topBanner(),
-                  SizedBox(height: 10.h),
-                  rewardsSection(),
-                  SizedBox(height: 20.h),
-                  topFivePerformersSection(),
-                  SizedBox(height: 30.h),
-                  partnerLogo(),
-                  SizedBox(height: 50.h)
-                ],
-              ),
+            child:  Column(
+              children: [
+                SizedBox(height: 10.h),
+                userInfo(),
+                // SizedBox(height: 20),
+                topBanner(),
+                SizedBox(height: 10.h),
+                rewardsSection(),
+                SizedBox(height: 20.h),
+                topFivePerformersSection(),
+                SizedBox(height: 30.h),
+                partnerLogo(),
+                SizedBox(height: 50.h)
+              ],
+            ),
           ),
         ),
       ),
