@@ -91,7 +91,7 @@ class _AccountPageState extends State<AccountPage> {
                         ),
                       ),
                       _buildListTile('Withdrawal Requests', Icons.request_page),
-                      _buildListTile('Download Catelog', Icons.download,
+                      _buildListTile('Download Catalog', Icons.download,
                         onTap: (){
                           Get.to(()=> const CataloguePage());
                         }
