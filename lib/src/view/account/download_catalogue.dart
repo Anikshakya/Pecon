@@ -120,7 +120,7 @@ class _CataloguePageState extends State<CataloguePage> {
         debugPrint("Directory created: ${directory.path}");
       }
 
-      String filePath = "${directory.path}/$fileName";
+      String filePath = "${directory.path}/$fileName.pdf";
 
       // Download file with progress update
       await Dio().download(
