@@ -44,7 +44,6 @@ class _HomePageState extends State<HomePage> {
 
   // Get Initial Data
   getData() async{
-    await appCon.getAdBanner();
     // Get AdBanner/Slider data
     await homeCon.getAdBanner();
     // Get Prize List

@@ -42,13 +42,15 @@ class SettingsController extends GetxController{
   getCatalogue() async {
     try{
       isCatalogLoading(true); // Start Loading
-      Future.delayed(const Duration(seconds: 2), () {},);
-      // var response = await ApiRepo.apiGet('api/catalog', "", 'Get Catalogue');
-      // if(response != null && response['code'] == 200) {
-      //   // if(response["data"] != null && response["data"] != []){
-      //   //   catalogueList = response["data"];
-      //   // }
-      // }
+      var response = await ApiRepo.apiGet('api/catalog', "", 'Get Catalogue');
+      if(response != null && response['code'] == 200) {
+        if(response["data"] != null && response["data"] != []){
+          catalogueList = [{
+            "name": "PEACON",
+            "url": response["data"]["image"],
+          }];
+        }
+      }
     }catch (e){
       log(e.toString());
     } finally{

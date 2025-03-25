@@ -61,10 +61,11 @@ class _CataloguePageState extends State<CataloguePage> {
         ) 
         : ListView.builder(
           itemCount: settingCon.catalogueList.length,
+          padding: EdgeInsets.only(top: 8.sp),
           itemBuilder: (context, index) {
             return ListTile(
-              title: Text(settingCon.catalogueList[index]['name']), 
-              subtitle: Text(settingCon.catalogueList[index]['url']),
+              title: Text(settingCon.catalogueList[index]['name'] + " Catalog", style: poppinsMedium(size: 16.sp, color: black),), 
+              // subtitle: Text(settingCon.catalogueList[index]['url'], style: poppinsRegular(size: 14.sp, color: black),),
               trailing:  ElevatedButton(
                 onPressed: isDownload["isDownloading"][index] == true 
                   ? (){} 
@@ -134,7 +135,7 @@ class _CataloguePageState extends State<CataloguePage> {
         },
       );
 
-      showToast(message: "Downloaded to $filePath");
+      showToast(message: "Downloaded to $filePath", isSuccess: true);
     } catch (e) {
       showToast(message: "Download failed: $e");
     } finally {
