@@ -243,7 +243,16 @@ class UserController extends GetxController {
   getEarningHistory({startDate, endDate}) async{
     isEarningLoading(true);
     try{
-      var response = await ApiRepo.apiGet('api/user/redeem-information', "", 'Get Earning History');
+      dynamic data = "";
+
+      if(startDate != null && endDate!=null){
+        data = {
+          "start_date" : startDate,
+          "end_date": endDate
+        };
+      }
+      
+      var response = await ApiRepo.apiGet('api/user/redeem-information', data, 'Get Earning History');
       if(response != null && response['code'] == 200) {
         var allData = ReturnProductModel.fromJson(response);
         earningList = allData.data;

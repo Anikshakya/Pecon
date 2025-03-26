@@ -6,6 +6,7 @@ import 'package:pecon/src/controllers/app_controller.dart';
 import 'package:pecon/src/view/dashboard.dart';
 import 'package:get/get.dart';
 import 'package:pecon/src/view/login.dart';
+import 'package:pecon/src/widgets/custom_toast.dart';
 
 class AuthController extends GetxController {
   // Get Controllers 
@@ -82,9 +83,10 @@ class AuthController extends GetxController {
     };
     try{
       isChangePasswordLoading (true);// Start Loading
-      var response = await ApiRepo.apiPost('api/change-password', data, 'Replace Product');
+      var response = await ApiRepo.apiPost('api/change-password', data, 'Change Password');
       if(response != null && response['code'] == 201) {
         Get.offAll(const LoginPage());
+        showToast(message: response['message'], isSuccess: true);
       }
     }catch (e){
       log(e.toString());
