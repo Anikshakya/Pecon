@@ -19,6 +19,7 @@ class UserController extends GetxController {
   final RxBool isCityLoading = false.obs;
   final RxBool isChecoutLoading = false.obs;
   final RxBool isEarningLoading = false.obs;
+  final RxBool isWithdrawalLoading = false.obs;
   final RxBool isshopkeeperLoading  = false.obs;
   final RxBool isTechLoading    = false.obs;
 
@@ -264,6 +265,33 @@ class UserController extends GetxController {
       isEarningLoading(false);
     }
   }
+
+  // Withdrawl Request
+  getWithDrawlRequest({startDate, endDate}) async{
+    isWithdrawalLoading(true);
+    try{
+      dynamic data = "";
+
+      if(startDate != null && endDate!=null){
+        data = {
+          "start_date" : startDate,
+          "end_date": endDate
+        };
+      }
+      
+      var response = await ApiRepo.apiGet('api/ser/redeem-checkout-request-history', data, 'WithDrawl Request');
+      if(response != null && response['code'] == 200) {
+        var allData = ReturnProductModel.fromJson(response);
+        earningList = allData.data;
+      }
+    }catch (e){
+      log(e.toString());
+    }
+    finally{
+      isWithdrawalLoading(false);
+    }
+  }
+
 
   //update shopkeeper
   updateshopkeeper({required shopName,required panNum,required ownerName,}) async{
