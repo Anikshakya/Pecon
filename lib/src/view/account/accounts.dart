@@ -9,7 +9,7 @@ import 'package:pecon/src/view/account/offer_promotion.dart';
 import 'package:pecon/src/view/account/privacy_policy.dart';
 import 'package:pecon/src/view/account/profile_form_page.dart';
 import 'package:pecon/src/view/account/replace_product/replace_product.dart';
-import 'package:pecon/src/view/account/return_product/return_product_page.dart';
+import 'package:pecon/src/view/account/return_product/return_qr_scanner.dart';
 import 'package:pecon/src/view/account/terms_condition.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
@@ -79,7 +79,7 @@ class _AccountPageState extends State<AccountPage> {
                           children: [
                             _buildListTile('Product Return', Icons.arrow_back,
                               onTap: (){
-                                Get.to(()=> const ReturnProductPage());
+                                Get.to(()=> const ReturnQRScannerPage());
                               }
                             ),
                             _buildListTile('Warranty Replacement', Icons.swap_horiz,
@@ -91,7 +91,7 @@ class _AccountPageState extends State<AccountPage> {
                         ),
                       ),
                       _buildListTile('Withdrawal Requests', Icons.request_page),
-                      _buildListTile('Download Catelog', Icons.download,
+                      _buildListTile('Download Catalog', Icons.download,
                         onTap: (){
                           Get.to(()=> const CataloguePage());
                         }

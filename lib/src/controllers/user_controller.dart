@@ -199,7 +199,7 @@ class UserController extends GetxController {
       if(response != null && response['code'] == 200) {
         if(response["data"] != null && response["data"] != []){
           for(var allData in response["data"]){
-            cityList.add({"name" : allData["name"] ?? "", "id" : allData["district_id"]});
+            cityList.add({"name" : allData["name"] ?? "", "id" : allData["id"]});
           }
         }
       }

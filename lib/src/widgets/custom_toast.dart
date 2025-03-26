@@ -12,7 +12,7 @@ showToast({required String message, bool? isSuccess, bool? isEn, headingMessage}
     borderColor: isSuccess == true ? green : red,
     borderWidth: 1,
     margin: EdgeInsets.symmetric(horizontal : 16.sp, vertical: 6.sp),
-    duration: const Duration(seconds: 3),
+    duration: Duration(milliseconds: headingMessage != null ? 5000 : 3000),
     messageText: const SizedBox.shrink(),
     titleText: Padding(
       padding: EdgeInsets.only(top: 1.sp),
@@ -34,7 +34,7 @@ showToast({required String message, bool? isSuccess, bool? isEn, headingMessage}
                   ),
                   Text(
                     message.toString(),
-                    style: poppinsRegular(size: 13.sp, color: Colors.black),
+                    style: poppinsBold(size: 13.sp, color: Colors.black),
                   ),
                 ],
               ),

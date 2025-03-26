@@ -58,8 +58,11 @@ class AppController extends GetxController{
   }
 
   // Single function to show the ad dialog
-  showAdDialog() {
-    return Get.dialog(
+  showAdDialog() async{
+    await getAdBanner();
+    return adBanner == ""
+    ? null
+    : Get.dialog(
       // Transparent background, no title, no extra padding
       Dialog(
         backgroundColor: Colors.transparent,
@@ -75,19 +78,11 @@ class AppController extends GetxController{
                     child: SizedBox(
                       height: 500.h,
                       width: double.infinity,
-                      child: isBannerLoading.value == true 
+                    child: isBannerLoading.value == true
                         ? Container(
                           decoration: BoxDecoration(
                             color: gray,
                             borderRadius: BorderRadius.circular(10),
-                          ),
-                        )
-                        : adBanner == ""
-                        ? ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.asset(
-                            "assets/images/ad.jpg", // Ad image
-                            fit: BoxFit.cover,
                           ),
                         )
                         : ClipRRect(
