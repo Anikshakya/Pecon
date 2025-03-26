@@ -177,6 +177,9 @@ class _EarningHistoryPageState extends State<EarningHistoryPage> {
                   thickness: 0.8.sp,
                   height: 0,
                 ),
+                SizedBox(
+                  height: 600.h,
+                ),
               ],
             ),
           ),

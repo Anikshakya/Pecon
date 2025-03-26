@@ -217,84 +217,86 @@ class _HomePageState extends State<HomePage> {
                             Widget itemWidget = Stack(
                               children: [
                                 // Info
-                                Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: GestureDetector(
-                                    onTap: userCon.user.value.data.redeemed < item.points
-                                      ? (){
-                                        showToast(
-                                          isSuccess: false,
-                                          message: "Your Points are insufficient to redeem this Prize."
-                                        );
-                                      }
-                                      : (){
-                                        redeemPrzeDialogue(item.id);
-                                      },
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          width: double.infinity,
-                                          padding: EdgeInsets.all(10.sp),
-                                          margin: EdgeInsets.only(top: 36.sp),
-                                          decoration: BoxDecoration(
-                                            color: white,
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(20.r),
-                                              topRight: Radius.circular(20.r),
-                                              bottomLeft: Radius.circular(8.r),
-                                              bottomRight: Radius.circular(8.r),
-                                            ),
-                                            border: Border.all(width: 0.8, color: yellow),
-                                          ),
-                                          child: Column(
-                                            children: [
-                                              SizedBox(height: 25.h),
-                                              Text(
-                                                item.title,
-                                                style: poppinsBold(size: 10.sp, color: black),
-                                                textAlign: TextAlign.center,
+                                Obx(()=>
+                                  Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: GestureDetector(
+                                      onTap: userCon.user.value.data.redeemed < item.points
+                                        ? (){
+                                          showToast(
+                                            isSuccess: false,
+                                            message: "Your Points are insufficient to redeem this Prize."
+                                          );
+                                        }
+                                        : (){
+                                          redeemPrzeDialogue(item.id);
+                                        },
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            width: double.infinity,
+                                            padding: EdgeInsets.all(10.sp),
+                                            margin: EdgeInsets.only(top: 36.sp),
+                                            decoration: BoxDecoration(
+                                              color: white,
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(20.r),
+                                                topRight: Radius.circular(20.r),
+                                                bottomLeft: Radius.circular(8.r),
+                                                bottomRight: Radius.circular(8.r),
                                               ),
-                                              SizedBox(height: 5.h),
-                                              Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 8.sp, vertical: 4.sp),
-                                                decoration: BoxDecoration(
-                                                  color: userCon.user.value.data.redeemed < item.points
-                                                      ? gray.withOpacity(0.5)
-                                                      : maroon.withOpacity(.95),
-                                                  borderRadius: BorderRadius.circular(6.sp),
+                                              border: Border.all(width: 0.8, color: yellow),
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                SizedBox(height: 25.h),
+                                                Text(
+                                                  item.title,
+                                                  style: poppinsBold(size: 10.sp, color: black),
+                                                  textAlign: TextAlign.center,
                                                 ),
-                                                child: RichText(
-                                                  text: TextSpan(
-                                                    style: poppinsSemiBold(
-                                                        size: 10.sp,
-                                                        color: userCon.user.value.data.redeemed < item.points
-                                                            ? white
-                                                            : black),
-                                                    children: [
-                                                      WidgetSpan(
-                                                        child: Padding(
-                                                          padding: EdgeInsets.only(right: 4.sp),
-                                                          child: Image.asset(
-                                                            "assets/images/golden_star.png",
-                                                            height: 14.sp,
-                                                            width: 14.sp,
+                                                SizedBox(height: 5.h),
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 8.sp, vertical: 4.sp),
+                                                  decoration: BoxDecoration(
+                                                    color: userCon.user.value.data.redeemed < item.points
+                                                        ? gray.withOpacity(0.5)
+                                                        : maroon.withOpacity(.95),
+                                                    borderRadius: BorderRadius.circular(6.sp),
+                                                  ),
+                                                  child: RichText(
+                                                    text: TextSpan(
+                                                      style: poppinsSemiBold(
+                                                          size: 10.sp,
+                                                          color: userCon.user.value.data.redeemed < item.points
+                                                              ? white
+                                                              : black),
+                                                      children: [
+                                                        WidgetSpan(
+                                                          child: Padding(
+                                                            padding: EdgeInsets.only(right: 4.sp),
+                                                            child: Image.asset(
+                                                              "assets/images/golden_star.png",
+                                                              height: 14.sp,
+                                                              width: 14.sp,
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
-                                                      TextSpan(
-                                                        text: formatter.format(int.parse("${item.points}")),
-                                                        style: poppinsSemiBold(
-                                                            color: white, size: 10.sp),
-                                                      ),
-                                                    ],
+                                                        TextSpan(
+                                                          text: formatter.format(int.parse("${item.points}")),
+                                                          style: poppinsSemiBold(
+                                                              color: white, size: 10.sp),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                              )
-                                            ],
+                                                )
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -746,14 +748,24 @@ class _HomePageState extends State<HomePage> {
 
   // Redeem Prize Dialogue
   redeemPrzeDialogue(redeemId){
-    var redeemeList = [
-      {
-        "name" : "Product"
-      },
-      {
-        "name" : "Cash"
-      },
-    ];
+    List<Map<String, String>> redeemeList;
+
+    if(userCon.user.value.data.role.toLowerCase() == "shopkeeper"){
+      redeemeList = [
+        {
+          "name" : "Cash"
+        },
+      ];
+    } else {
+      redeemeList = [
+        {
+          "name" : "Product"
+        },
+        {
+          "name" : "Cash"
+        },
+      ];
+    }
 
     var selectedItem = "";
 

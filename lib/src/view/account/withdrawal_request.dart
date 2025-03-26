@@ -40,7 +40,7 @@ class _WithdrawalRequestPageState extends State<WithdrawalRequestPage> {
       body: RefreshIndicator(
         color: black,
         onRefresh: (){
-          return Future.delayed(const Duration(seconds: 1),()async{// Get Athlete Details Data
+          return Future.delayed(const Duration(seconds: 1),()async{
             initialise();
           });
         },
@@ -193,7 +193,7 @@ class _WithdrawalRequestPageState extends State<WithdrawalRequestPage> {
                                       borderRadius: BorderRadius.circular(6.sp),
                                     ),
                                     child: Text(
-                                      "Payment Type: ${userCon.withdrawalList[index].customerPaymentOption.toString().toUpperCase()}",
+                                      "Gift Type: ${userCon.withdrawalList[index].customerPaymentOption.toString().toUpperCase()}",
                                       style: poppinsSemiBold(color: black.withOpacity(.5), size: 11.sp ),
                                     )
                                   ),
@@ -265,6 +265,9 @@ class _WithdrawalRequestPageState extends State<WithdrawalRequestPage> {
                   color: gray.withOpacity(0.25),
                   thickness: 0.8.sp,
                   height: 0,
+                ),
+                SizedBox(
+                  height: 600.h,
                 ),
               ],
             ),
