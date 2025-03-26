@@ -67,7 +67,7 @@ class _CataloguePageState extends State<CataloguePage> {
             return Row(
               children: [
                 SizedBox(
-                  width: 190.w,
+                  width: 160.w,
                   child: Text(settingCon.catalogueList[index]['name'].toString(), style: poppinsMedium(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,), 
                 ),
                 const Spacer(),
