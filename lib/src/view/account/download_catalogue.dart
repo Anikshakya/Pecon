@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/settings_controller.dart';
+import 'package:pecon/src/view/webview_pdf.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
@@ -61,36 +62,56 @@ class _CataloguePageState extends State<CataloguePage> {
         ) 
         : ListView.builder(
           itemCount: settingCon.catalogueList.length,
-          padding: EdgeInsets.only(top: 8.sp),
+          padding: EdgeInsets.only(top: 15.sp, left: 20.w, right: 20.w),
           itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(settingCon.catalogueList[index]['name'] + " Catalog", style: poppinsMedium(size: 16.sp, color: black),), 
-              // subtitle: Text(settingCon.catalogueList[index]['url'], style: poppinsRegular(size: 14.sp, color: black),),
-              trailing:  ElevatedButton(
-                onPressed: isDownload["isDownloading"][index] == true 
-                  ? (){} 
-                  : (){
-                    downloadFile(
-                      settingCon.catalogueList[index]['url'],  // Replace with actual file URL
-                      settingCon.catalogueList[index]['name'],
-                      context,
-                      index
-                    );
-                  },
-                style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 15)),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (isDownload["isDownloading"][index]) // Show progress if downloading
-                      Text(
-                        "${(isDownload["percentage"][index] * 100).toStringAsFixed(0)}%", // Display percentage
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                    if (isDownload["isDownloading"][index]) const SizedBox(width: 8), // Spacing between text & icon
-                    Icon(isDownload["isDownloading"][index] ? Icons.downloading : Icons.download),
-                  ],
+            return Row(
+              children: [
+                SizedBox(
+                  width: 190.w,
+                  child: Text(settingCon.catalogueList[index]['name'].toString(), style: poppinsMedium(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,), 
                 ),
-              ),
+                const Spacer(),
+                //view button
+                ElevatedButton(
+                  onPressed: (){
+                    Get.to(() => InAppPdfViewer(pdfUrl: settingCon.catalogueList[index]['url']));
+                  },
+                  style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 15)),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.remove_red_eye),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 10.w,),
+                //download button
+                ElevatedButton(
+                  onPressed: isDownload["isDownloading"][index] == true 
+                    ? (){} 
+                    : (){
+                      downloadFile(
+                        settingCon.catalogueList[index]['url'],  // Replace with actual file URL
+                        settingCon.catalogueList[index]['name'],
+                        context,
+                        index
+                      );
+                    },
+                  style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 15)),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (isDownload["isDownloading"][index]) // Show progress if downloading
+                        Text(
+                          "${(isDownload["percentage"][index] * 100).toStringAsFixed(0)}%", // Display percentage
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                      if (isDownload["isDownloading"][index]) const SizedBox(width: 8), // Spacing between text & icon
+                      Icon(isDownload["isDownloading"][index] ? Icons.downloading : Icons.download),
+                    ],
+                  ),
+                ), 
+              ],
             );
           },
         )

@@ -10,16 +10,7 @@ class SettingsController extends GetxController{
   final RxBool isCatalogLoading = false.obs;
   //List
   List offersList = [];
-  List catalogueList = [
-    {
-      "name": "Catalog 1",
-      "url": "https://ncert.nic.in/textbook/pdf/kebo104.pdf",
-    },
-    {
-      "name": "Catalog 2",
-      "url": "https://ncert.nic.in/textbook/pdf/kebo104.pdf",
-    },
-  ];
+  List catalogueList = [];
 
   //get offers and promotion
   getOfferPromotion() async {
@@ -45,10 +36,12 @@ class SettingsController extends GetxController{
       var response = await ApiRepo.apiGet('api/catalog', "", 'Get Catalogue');
       if(response != null && response['code'] == 200) {
         if(response["data"] != null && response["data"] != []){
-          catalogueList = [{
-            "name": "PEACON",
-            "url": response["data"]["image"],
-          }];
+          for(var allData in response["data"]){
+            catalogueList.add({
+              "name":  allData["title"] ?? "",
+              "url": allData["image"] ?? "",
+            });
+          }
         }
       }
     }catch (e){
