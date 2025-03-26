@@ -15,7 +15,8 @@ class UserController extends GetxController {
   final RxBool isProfileBtnLoading = false.obs;
   final RxBool isBankBtnLoading = false.obs;
   final RxBool isProfileLoading = false.obs;
-  final RxBool isAddressLoading = false.obs;
+  final RxBool isDistrictLoading = false.obs;
+  final RxBool isCityLoading = false.obs;
   final RxBool isChecoutLoading = false.obs;
   final RxBool isEarningLoading = false.obs;
   final RxBool isshopkeeperLoading  = false.obs;
@@ -176,7 +177,7 @@ class UserController extends GetxController {
   // Get District List
   getDistrictData() async{
     try{
-      isAddressLoading(true);
+      isDistrictLoading(true);
       districtList.clear();
       var response = await ApiRepo.apiGet('api/districts', "", 'Get Districts List');
       if(response != null && response['code'] == 200) {
@@ -188,14 +189,20 @@ class UserController extends GetxController {
       }
     }catch (e){
       log(e.toString());
+    }finally{
+      isDistrictLoading(false);
     }
   }
 
   // Get city List
-  getcityData() async{
+  getcityData(districtId) async{
+    var data = {
+      "district_id" : districtId
+    };
     try{
+      isCityLoading(true);
       cityList.clear();
-      var response = await ApiRepo.apiGet('api/city', "", 'Get city List');
+      var response = await ApiRepo.apiGet('api/city', data, 'Get city List');
       if(response != null && response['code'] == 200) {
         if(response["data"] != null && response["data"] != []){
           for(var allData in response["data"]){
@@ -207,7 +214,7 @@ class UserController extends GetxController {
       log(e.toString());
     }
     finally{
-      isAddressLoading(false);
+      isCityLoading(false);
     }
   }
 

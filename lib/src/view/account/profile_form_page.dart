@@ -40,8 +40,6 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   int? cityId;
   bool? displayPrice;
 
-  List distrctWiseCity = []; 
-
   //initial DOB
   DateTime selectedDate = DateTime.now(); 
 
@@ -83,15 +81,13 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   initialise() async{
     WidgetsBinding.instance.addPostFrameCallback((_) async{
       await userCon.getDistrictData();
-      await userCon.getcityData();
 
       setState((){
         districtId              = userCon.user.value.data.districtId;
         cityId                  = userCon.user.value.data.cityId;
         selectedDistrictIndex   = userCon.districtList.indexWhere((item) => item["name"] == userCon.user.value.data.district.toString());
         selectedGender          = gender.indexWhere((item) => item.toLowerCase() == userCon.user.value.data.gender.toLowerCase().toString());
-        distrctWiseCity         = userCon.cityList.isNotEmpty ? userCon.cityList.where((element) => element["id"] == districtId).toList() : [];
-        selectedCityIndex       = distrctWiseCity.indexWhere((item) => item["name"] == userCon.user.value.data.city.toString());
+        selectedCityIndex       = userCon.cityList.indexWhere((item) => item["name"] == userCon.user.value.data.city.toString());
         changedProfileImage     = userCon.user.value.data.profileUrl;
         // Profile Text Editing Controllers 
         nameController.text     = userCon.user.value.data.name;
@@ -256,12 +252,12 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             //District
             CustomTextFormHeaderField(
               readOnly: true,
-              onTap: userCon.isAddressLoading.isTrue ? (){} : showCupertinoDistrictPicker,
+              onTap: userCon.isDistrictLoading.isTrue ? (){} : showCupertinoDistrictPicker,
               controller: districtController,
               textInputAction: TextInputAction.next,
               headingText: "District",
               filledColor: gray.withOpacity(0.2),
-              suffixIcon: userCon.isAddressLoading.isTrue 
+              suffixIcon: userCon.isDistrictLoading.isTrue 
                 ? Container(
                   height: 48.h,
                   width: 48.h,
@@ -279,12 +275,12 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             //City Controll
             CustomTextFormHeaderField(
               readOnly: true,
-              onTap: userCon.isAddressLoading.isTrue ? (){} : showCupertinoCityPicker,
+              onTap: userCon.isDistrictLoading.isTrue ? (){} : showCupertinoCityPicker,
               controller: cityController,
               textInputAction: TextInputAction.next,
               headingText: "City",
               filledColor: gray.withOpacity(0.2),
-              suffixIcon: userCon.isAddressLoading.isTrue
+              suffixIcon: userCon.isDistrictLoading.isTrue || userCon.isCityLoading.isTrue
                 ? Container(
                   height: 48.h,
                   width: 48.h,
@@ -688,9 +684,9 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                       child: Text("Cancel", style: poppinsMedium(size: 15.sp, color: purple)),
                     ),
                     TextButton(
-                      onPressed: () {
-                        setState(() {
-                          if(userCon.districtList.isNotEmpty){
+                      onPressed: () async{
+                        if(userCon.districtList.isNotEmpty){
+                          setState(() async{
                             // Store selected district ID in text controller
                             districtController.text = userCon.districtList[selectedDistrictIndex]["name"].toString();
                             districtId = userCon.districtList[selectedDistrictIndex]["id"];
@@ -699,10 +695,14 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                             cityController.clear();
                             cityId = null;
                             selectedCityIndex = 0;
-                            distrctWiseCity = userCon.cityList.where((element) => element["id"] == districtId).toList();
-                          }
-                        });
-                        Navigator.pop(context);
+                            userCon.cityList = [];
+                            
+                            Navigator.pop(context);
+                            await userCon.getcityData(districtId);
+                          });
+                        }else{
+                          Navigator.pop(context);
+                        }
                       },
                       child: Text("Done", style: poppinsMedium(size: 15.sp, color: purple)),
                     ),
@@ -763,10 +763,10 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     TextButton(
                       onPressed: () {
                         setState(() {
-                          if(distrctWiseCity.isNotEmpty){
+                          if(userCon.cityList.isNotEmpty){
                             // Store selected district ID in text controller
-                            cityController.text = distrctWiseCity[selectedCityIndex]["name"].toString();
-                            cityId = distrctWiseCity[selectedCityIndex]["id"];
+                            cityController.text = userCon.cityList[selectedCityIndex]["name"].toString();
+                            cityId = userCon.cityList[selectedCityIndex]["id"];
                           }
                         });
                         Navigator.pop(context);
@@ -789,7 +789,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                       selectedCityIndex = index;
                     });
                   },
-                  children: distrctWiseCity
+                  children: userCon.cityList
                       .map<Widget>((city) => Center(
                             child: Text(
                               city["name"].toString(), // Ensure the name is displayed
