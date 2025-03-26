@@ -63,7 +63,7 @@ class Datum {
         id: json["id"] ?? 0,
         userId: json["user_id"] ?? 0,
         redeemInformationId: json["redeem_information_id"] ?? 0,
-        redeemPointsUsed: json["redeem_points_used"] ?? 0,
+        redeemPointsUsed: json["redeem_points_used"] == null || json["redeem_points_used"] == "" ? 0 : json["redeem_points_used"],
         status: json["status"] ?? '',
         adminId: json["admin_id"],
         remarks: json["remarks"] ?? '',
