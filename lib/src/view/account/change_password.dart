@@ -168,10 +168,15 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       Center(
         child: CustomButton(
           width: double.infinity,
-          isLoading: authCon.isRegisterLoading.value,
+          isLoading: authCon.isChangePasswordLoading.value,
           onPressed: () async {
             final isValid = formKey.currentState!.validate();
             if (!isValid) return;
+            await authCon.changePassword(
+              currentPass: oldPasswordCon.text.trim(),
+              newPass: newPasswordCon.text.trim(),
+              newPassConfirm: confirmPasswordCon.text.trim(),
+            );
           },
           text: "Change Pasword",
         ),

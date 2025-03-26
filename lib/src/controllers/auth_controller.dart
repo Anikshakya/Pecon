@@ -15,6 +15,7 @@ class AuthController extends GetxController {
   final RxBool isLoginLoading = false.obs;
   final RxBool isRegisterLoading = false.obs;
   final RxBool isLogOutLoading = false.obs;
+  final RxBool isChangePasswordLoading = false.obs;
 
   // Check User Authentication Status
   checkUserAuthStatus() async{
@@ -69,6 +70,26 @@ class AuthController extends GetxController {
       log(e.toString());
     } finally{
       isRegisterLoading(false);
+    }
+  }
+
+  // Change password
+  changePassword({currentPass, newPass, newPassConfirm}) async{
+     var data = {
+      "current_password": currentPass,
+      "new_password": newPass,
+      "new_password_confirmation": newPassConfirm
+    };
+    try{
+      isChangePasswordLoading (true);// Start Loading
+      var response = await ApiRepo.apiPost('api/change-password', data, 'Replace Product');
+      if(response != null && response['code'] == 201) {
+        Get.offAll(const LoginPage());
+      }
+    }catch (e){
+      log(e.toString());
+    } finally{
+      isChangePasswordLoading(false);
     }
   }
 

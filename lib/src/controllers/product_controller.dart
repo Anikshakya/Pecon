@@ -139,7 +139,7 @@ class ProductsController extends GetxController{
     }
   }
 
-   // Replace a product
+  // Replace a product
   returnProduct({previousCode, remarks}) async{
     var data = {
       "code": previousCode,
@@ -178,4 +178,5 @@ class ProductsController extends GetxController{
       isProductReturnLoading(false);
     }
   }
+
 }
