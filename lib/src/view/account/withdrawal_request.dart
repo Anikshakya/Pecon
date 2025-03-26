@@ -153,7 +153,34 @@ class _WithdrawalRequestPageState extends State<WithdrawalRequestPage> {
                               children: [
                                 SizedBox(height: 3.h),
                                 Text(userCon.withdrawalList[index].redeeminformation.title.toString(), style: poppinsSemiBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
-                                SizedBox(height: 12.h),
+                                SizedBox(height: 8.h),
+                                Visibility(
+                                  visible: userCon.withdrawalList[index].status!= "",
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Status: ".toUpperCase(),
+                                        style: poppinsSemiBold(color: black.withOpacity(.5), size: 11.sp ),
+                                      ),
+                                      SizedBox(width: 4.w,),
+                                      Container(
+                                        constraints: BoxConstraints(
+                                          maxWidth: 190.w,
+                                        ),
+                                        padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                                        decoration: BoxDecoration(
+                                          color: userCon.withdrawalList[index].status.toString().toLowerCase() == "rejected" ? red.withOpacity(0.9) : userCon.withdrawalList[index].status.toString().toLowerCase() == "approved" ? green.withOpacity(0.9) : primary.withOpacity(0.9),
+                                          borderRadius: BorderRadius.circular(6.sp),
+                                        ),
+                                        child: Text(
+                                          userCon.withdrawalList[index].status.toString().toUpperCase(),
+                                          style: poppinsSemiBold(color: black.withOpacity(.9), size: 12.sp ),
+                                        )
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 10.h),
                                 Visibility(
                                   visible: userCon.withdrawalList[index].customerPaymentOption != "",
                                   child: Container(
@@ -167,24 +194,6 @@ class _WithdrawalRequestPageState extends State<WithdrawalRequestPage> {
                                     ),
                                     child: Text(
                                       "Payment Type: ${userCon.withdrawalList[index].customerPaymentOption.toString().toUpperCase()}",
-                                      style: poppinsSemiBold(color: black.withOpacity(.5), size: 11.sp ),
-                                    )
-                                  ),
-                                ),
-                                SizedBox(height: 6.h),
-                                Visibility(
-                                  visible: userCon.withdrawalList[index].status!= "",
-                                  child: Container(
-                                    constraints: BoxConstraints(
-                                      maxWidth: 190.w,
-                                    ),
-                                    padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                                    decoration: BoxDecoration(
-                                      color: gray.withOpacity(0.2),
-                                      borderRadius: BorderRadius.circular(6.sp),
-                                    ),
-                                    child: Text(
-                                      "Status: ${userCon.withdrawalList[index].status.toString().toUpperCase()}",
                                       style: poppinsSemiBold(color: black.withOpacity(.5), size: 11.sp ),
                                     )
                                   ),
