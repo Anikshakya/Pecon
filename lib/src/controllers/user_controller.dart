@@ -8,6 +8,7 @@ import 'package:pecon/src/app_config/constant.dart';
 import 'package:pecon/src/app_config/read_write.dart';
 import 'package:pecon/src/model/return_product_model.dart';
 import 'package:pecon/src/model/user_profile_model.dart';
+import 'package:pecon/src/model/withdrawal_request_model.dart';
 import 'package:pecon/src/widgets/custom_toast.dart';
 
 class UserController extends GetxController {
@@ -30,6 +31,7 @@ class UserController extends GetxController {
   dynamic districtList = [];
   dynamic cityList = [];
   dynamic earningList = [];
+  dynamic withdrawalList = [];
 
   // Get Logged In User Profile
   getUserData([refresh]) async{
@@ -279,10 +281,10 @@ class UserController extends GetxController {
         };
       }
       
-      var response = await ApiRepo.apiGet('api/ser/redeem-checkout-request-history', data, 'WithDrawl Request');
+      var response = await ApiRepo.apiGet('api/user/redeem-checkout-request-history', data, 'WithDrawl Request');
       if(response != null && response['code'] == 200) {
-        var allData = ReturnProductModel.fromJson(response);
-        earningList = allData.data;
+        var allData = WithdrawalRequestModel.fromJson(response);
+        withdrawalList = allData.data;
       }
     }catch (e){
       log(e.toString());

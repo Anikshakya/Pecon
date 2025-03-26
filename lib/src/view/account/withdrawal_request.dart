@@ -59,7 +59,7 @@ class _WithdrawalRequestPageState extends State<WithdrawalRequestPage> {
                 ),
               ),
             )
-            : userCon.earningList.isEmpty
+            : userCon.withdrawalList.isEmpty
             ? SizedBox(
               height: 650.0.h,
               child: const Center(
@@ -111,7 +111,7 @@ class _WithdrawalRequestPageState extends State<WithdrawalRequestPage> {
                       thickness: 0.8.sp,
                       height: 0,
                     ),
-                  itemCount: userCon.earningList.length,
+                  itemCount: userCon.withdrawalList.length,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
@@ -130,7 +130,7 @@ class _WithdrawalRequestPageState extends State<WithdrawalRequestPage> {
                               children: [
                                 SizedBox(
                                   width: 200.w,
-                                  child: Text(userCon.earningList[index].product.title.toString(), style: poppinsSemiBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 5,)),
+                                  child: Text(userCon.withdrawalList[index].product.title.toString(), style: poppinsSemiBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 5,)),
                                 //products price and rewar points
                                 const Spacer(),
                                 Column(
@@ -155,7 +155,7 @@ class _WithdrawalRequestPageState extends State<WithdrawalRequestPage> {
                                               ),
                                             ),
                                             TextSpan(
-                                              text: formatter.format(double.parse(userCon.earningList[index].redeemPoint.toString())),
+                                              text: formatter.format(double.parse(userCon.withdrawalList[index].redeemPoint.toString())),
                                               style: poppinsSemiBold(color: white, size: 12.sp ),
                                             ),
                                           ],
