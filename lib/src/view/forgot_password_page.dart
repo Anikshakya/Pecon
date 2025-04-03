@@ -82,7 +82,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     );
   }
 
-  // Login Button
+  // Submit Button
   _submitButton() {
     return Obx(()=>
       Center(

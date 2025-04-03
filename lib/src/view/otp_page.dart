@@ -1,6 +1,5 @@
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/auth_controller.dart';
-import 'package:pecon/src/view/register_page.dart';
 import 'package:pecon/src/view/reset_password_page.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
 import 'package:pecon/src/widgets/custom_text_field.dart';
@@ -24,9 +23,6 @@ class _OTPPageState extends State<OTPPage> {
 
   // Text Editing Controllers
   final TextEditingController optCon = TextEditingController();
-
-  // Bool helper
-  bool isObscure = true;
 
 @override
   Widget build(BuildContext context) {
@@ -71,7 +67,7 @@ class _OTPPageState extends State<OTPPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Mobile No.
+          // OTP
           CustomTextFormField(
             controller: optCon,
             textInputAction: TextInputAction.next,
@@ -86,7 +82,7 @@ class _OTPPageState extends State<OTPPage> {
     );
   }
 
-  // Login Button
+  // OTP Button
   _otpButton() {
     return Obx(()=>
       Center(
@@ -103,36 +99,6 @@ class _OTPPageState extends State<OTPPage> {
           text: "Verify",
         ),
       ),
-    );
-  }
-
-  // Forgot Password
-  Widget _forgotPassword() {
-    return TextButton(
-      onPressed: () {},
-      child: Text('Forgot password?', style: poppinsMedium(size: 13.sp, color: purple),),
-    );
-  }
-
-  // Register Button
-  Widget _submitButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "Don't have an account?  ",
-          style: poppinsRegular(size: 14.sp, color: Colors.black),
-        ),
-        InkWell(
-          onTap: () {
-            Get.to(() => const RegisterPage());
-          },
-          child: Text(
-            'Register here',
-            style: poppinsRegular(size: 14.sp, color: purple),
-          ),
-        ),
-      ],
     );
   }
 }
