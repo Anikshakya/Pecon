@@ -20,6 +20,7 @@ class CustomTextFormField extends StatelessWidget {
   final bool? isRequired ;
   final bool? isOptional ;
   final bool? isDropdown;
+  final bool? capitalText;
   final bool readOnly;
   final TextInputAction textInputAction;
   final TextInputType keyboardType;
@@ -83,7 +84,7 @@ class CustomTextFormField extends StatelessWidget {
     this.focusNode,
     required this.headingText, 
     this.isRequired, 
-    this.isDropdown, this.isOptional, this.infoText, this.infoTextStyle, this.maxLength,
+    this.isDropdown, this.isOptional, this.infoText, this.infoTextStyle, this.maxLength, this.capitalText,
   });
 
   @override
@@ -165,6 +166,7 @@ class CustomTextFormField extends StatelessWidget {
             cursorColor: cursorColor,
             maxLines: maxLines ?? 1,
             maxLength: maxLength,
+            textCapitalization: capitalText == true ?  TextCapitalization.characters : TextCapitalization.none,
             decoration: InputDecoration(
               errorMaxLines: 3,
               labelText: labelText,

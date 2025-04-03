@@ -259,7 +259,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
       content: StatefulBuilder(
         builder: (context, setState) {
           if(isReadOnly == true){
-            codeCon.text = code.toString();
+            codeCon.text = code.toString().toUpperCase();
           }
           return SizedBox(
             height: 230.h,
@@ -295,6 +295,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
                       controller: codeCon,
                       readOnly: isReadOnly ?? false,
                       headingText: "Ënter Code",
+                      capitalText: true,
                     ),
                   ),
                   SizedBox(height: 10.h),

@@ -112,7 +112,7 @@ class ProductsController extends GetxController{
   // redeeme points
   redeemePoints ({code, context}) async{
     var data = {
-      "code" : code
+      "code" : code.toString().toUpperCase()
     };
     try{
       isRedeemeLoading(true); // Start Loading
@@ -142,7 +142,7 @@ class ProductsController extends GetxController{
   // Replace a product
   returnProduct({previousCode, remarks}) async{
     var data = {
-      "code": previousCode,
+      "code": previousCode.toString().toUpperCase(),
       "remarks": remarks,
     };
     try{
@@ -162,8 +162,8 @@ class ProductsController extends GetxController{
   // Replace a product
   replaceProduct({previousCode, currentCode}) async{
     var data = {
-      "previous_code": previousCode,
-      "current_code": currentCode,
+      "previous_code": previousCode.toString().toUpperCase(),
+      "current_code": currentCode.toString().toUpperCase(),
     };
     try{
       isProductReturnLoading(true);// Start Loading
