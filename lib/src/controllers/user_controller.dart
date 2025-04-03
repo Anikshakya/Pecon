@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:pecon/src/api_config/api_repo.dart';
 import 'package:pecon/src/app_config/constant.dart';
@@ -32,6 +33,22 @@ class UserController extends GetxController {
   dynamic cityList = [];
   dynamic earningList = [];
   dynamic withdrawalList = [];
+
+  //shopkeeper id
+  // List of text controllers for ID fields
+  RxList<TextEditingController> shopkeeperIdControllers = <TextEditingController>[].obs;
+  
+  // List to store matched names
+  RxList<String> shopkeeperNames = <String>[].obs;
+  
+  // List to control visibility of name displays
+  RxList<bool> showNameDisplays = <bool>[].obs;
+  
+  // Shopkeeper ID to Name mapping
+  RxMap<String, String> shopkeeperIdNameMap = <String, String>{}.obs;
+  
+  // Loading state
+  var isshopkeeperIdLoading = false.obs;
 
   // Get Logged In User Profile
   getUserData([refresh]) async{
@@ -333,4 +350,72 @@ class UserController extends GetxController {
       isTechLoading(false);
     }
   }
+
+ // Fetch shopkeeper list from API
+  Future<void> getShopkeeperList() async {
+    try {
+      isshopkeeperIdLoading(true);
+      shopkeeperIdNameMap.clear();
+      
+      var response = await ApiRepo.apiGet(
+        'api/profile/vendors/records', 
+        "", 
+        'Get Vendor List'
+      );
+      
+      if (response != null && response['code'] == 200) {
+        if (response['data'] != null && response['data'] is List) {
+          for (var allData in response["data"]) {
+            String id = allData["id"]?.toString() ?? "";
+            String name = allData["shop_name"]?.toString() ?? "";
+            if (id.isNotEmpty) {
+              shopkeeperIdNameMap[id] = name;
+            }
+          }
+          log("Loaded ${shopkeeperIdNameMap.length} shopkeepers");
+        }
+      }
+    } catch (e) {
+      log("Error fetching shopkeepers: ${e.toString()}");
+    } finally {
+      isshopkeeperIdLoading(false);
+    }
+  }
+
+  void addShopkeeperField() {
+    shopkeeperIdControllers.add(TextEditingController());
+    shopkeeperNames.add('');
+    showNameDisplays.add(false);
+    log("Added field, total: ${shopkeeperIdControllers.length}");
+  }
+
+  void removeShopkeeperField(int index) {
+    if (index < shopkeeperIdControllers.length) {
+      shopkeeperIdControllers[index].dispose();
+      shopkeeperIdControllers.removeAt(index);
+      shopkeeperNames.removeAt(index);
+      showNameDisplays.removeAt(index);
+    }
+  }
+  
+  void filterShopkeepersById(String id, int index) {
+    final trimmedId = id.trim();
+    
+    if (trimmedId.isEmpty) {
+      shopkeeperNames[index] = '';
+      showNameDisplays[index] = false;
+      return;
+    }
+
+    if (shopkeeperIdNameMap.containsKey(trimmedId)) {
+      shopkeeperNames[index] = shopkeeperIdNameMap[trimmedId]!;
+      showNameDisplays[index] = true;
+    } else {
+      shopkeeperNames[index] = 'No shopkeeper found with this ID';
+      showNameDisplays[index] = true;
+    }
+    
+    log("Filtered ID $trimmedId: ${shopkeeperNames[index]}");
+  }
+
 }
