@@ -17,6 +17,9 @@ class AuthController extends GetxController {
   final RxBool isRegisterLoading = false.obs;
   final RxBool isLogOutLoading = false.obs;
   final RxBool isChangePasswordLoading = false.obs;
+  final RxBool isForgotPassLoading = false.obs;
+  final RxBool isOPTLoading = false.obs;
+  final RxBool isResetPassLoading = false.obs;
 
   // Check User Authentication Status
   checkUserAuthStatus() async{
@@ -94,6 +97,66 @@ class AuthController extends GetxController {
       isChangePasswordLoading(false);
     }
   }
+
+  // Forgot password
+  forgotPassword({mobileNo}) async{
+     var data = {
+      "monile_no": mobileNo,
+    };
+    try{
+      isForgotPassLoading (true);// Start Loading
+      var response = await ApiRepo.apiPost('api/change-password', data, 'Change Password');
+      if(response != null && response['code'] == 201) {
+        Get.offAll(const LoginPage());
+        showToast(message: response['message'], isSuccess: true);
+      }
+    }catch (e){
+      log(e.toString());
+    } finally{
+      isForgotPassLoading(false);
+    }
+  }
+
+  // OTP
+  resetPassword({otp}) async{
+     var data = {
+      "otp": otp,
+    };
+    try{
+      isOPTLoading (true);// Start Loading
+      var response = await ApiRepo.apiPost('api/change-password', data, 'Change Password');
+      if(response != null && response['code'] == 201) {
+        Get.offAll(const LoginPage());
+        showToast(message: response['message'], isSuccess: true);
+      }
+    }catch (e){
+      log(e.toString());
+    } finally{
+      isOPTLoading(false);
+    }
+  }
+
+  // Reset Password
+  verifyOTP({pass, confirmPass}) async{
+     var data = {
+      "passowrd": pass,
+      "confirm_password": confirmPass,
+    };
+    try{
+      isResetPassLoading (true);// Start Loading
+      var response = await ApiRepo.apiPost('api/change-password', data, 'Change Password');
+      if(response != null && response['code'] == 201) {
+        Get.offAll(const LoginPage());
+        showToast(message: response['message'], isSuccess: true);
+      }
+    }catch (e){
+      log(e.toString());
+    } finally{
+      isResetPassLoading(false);
+    }
+  }
+
+
 
   // Logout API
   logout() async {
