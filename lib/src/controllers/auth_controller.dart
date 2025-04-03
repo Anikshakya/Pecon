@@ -6,6 +6,8 @@ import 'package:pecon/src/controllers/app_controller.dart';
 import 'package:pecon/src/view/dashboard.dart';
 import 'package:get/get.dart';
 import 'package:pecon/src/view/login.dart';
+import 'package:pecon/src/view/otp_page.dart';
+import 'package:pecon/src/view/reset_password_page.dart';
 import 'package:pecon/src/widgets/custom_toast.dart';
 
 class AuthController extends GetxController {
@@ -101,13 +103,15 @@ class AuthController extends GetxController {
   // Forgot password
   forgotPassword({mobileNo}) async{
      var data = {
-      "monile_no": mobileNo,
+      "number": mobileNo,
     };
     try{
       isForgotPassLoading (true);// Start Loading
-      var response = await ApiRepo.apiPost('api/change-password', data, 'Change Password');
+      var response = await ApiRepo.apiPost('api/send-otp', data, 'Send OTP');
       if(response != null && response['code'] == 201) {
-        Get.offAll(const LoginPage());
+        Get.to(()=> OTPPage(
+          number: mobileNo,
+        ));
         showToast(message: response['message'], isSuccess: true);
       }
     }catch (e){
@@ -118,15 +122,18 @@ class AuthController extends GetxController {
   }
 
   // OTP
-  resetPassword({otp}) async{
+  verifyOTP({otp, number}) async{
      var data = {
-      "otp": otp,
+      "otp_token": otp,
+      "number" : number
     };
     try{
       isOPTLoading (true);// Start Loading
-      var response = await ApiRepo.apiPost('api/change-password', data, 'Change Password');
+      var response = await ApiRepo.apiPost('api/verify-otp', data, 'Verify OTP');
       if(response != null && response['code'] == 201) {
-        Get.offAll(const LoginPage());
+        Get.to(()=> ResetPassword(
+          number: number,
+        ));
         showToast(message: response['message'], isSuccess: true);
       }
     }catch (e){
@@ -137,14 +144,14 @@ class AuthController extends GetxController {
   }
 
   // Reset Password
-  verifyOTP({pass, confirmPass}) async{
+  resetPassword({number, confirmPass}) async{
      var data = {
-      "passowrd": pass,
+      "number": number,
       "confirm_password": confirmPass,
     };
     try{
       isResetPassLoading (true);// Start Loading
-      var response = await ApiRepo.apiPost('api/change-password', data, 'Change Password');
+      var response = await ApiRepo.apiPost('api/reset-password', data, 'Reset Password');
       if(response != null && response['code'] == 201) {
         Get.offAll(const LoginPage());
         showToast(message: response['message'], isSuccess: true);

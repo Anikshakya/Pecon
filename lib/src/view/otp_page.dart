@@ -1,6 +1,5 @@
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/auth_controller.dart';
-import 'package:pecon/src/view/reset_password_page.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
 import 'package:pecon/src/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pecon/src/widgets/partner_logo.dart';
 
 class OTPPage extends StatefulWidget {
-  const OTPPage({super.key});
+  final String number; 
+  const OTPPage({super.key, required this.number});
 
   @override
   State<OTPPage> createState() => _OTPPageState();
@@ -88,13 +88,17 @@ class _OTPPageState extends State<OTPPage> {
       Center(
         child: CustomButton(
           width: double.infinity,
-          isLoading: authCon.isLoginLoading.value,
+          isLoading: authCon.isOPTLoading.value,
           onPressed: () async {
       
             final isValid = formKey.currentState!.validate();
             if (!isValid) return;
 
-            Get.to(()=> const ResetPassword());
+            await authCon.verifyOTP(
+              otp: optCon.text.trim(),
+              number: widget.number
+            );
+            
           },
           text: "Verify",
         ),

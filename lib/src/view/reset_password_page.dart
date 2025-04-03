@@ -1,6 +1,5 @@
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/auth_controller.dart';
-import 'package:pecon/src/view/login.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
 import 'package:pecon/src/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,8 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ResetPassword extends StatefulWidget {
-  const ResetPassword({super.key});
+  final String number;
+  const ResetPassword({super.key, required this.number});
 
   @override
   State<ResetPassword> createState() => _ResetPasswordState();
@@ -136,12 +136,14 @@ class _ResetPasswordState extends State<ResetPassword> {
       Center(
         child: CustomButton(
           width: double.infinity,
-          isLoading: authCon.isRegisterLoading.value,
+          isLoading: authCon.isResetPassLoading.value,
           onPressed: () async {
             final isValid = formKey.currentState!.validate();
             if (!isValid) return;
-            
-            Get.offAll(()=> const LoginPage());
+            await authCon.resetPassword(
+              confirmPass: confirmPasswordController.text.trim(),
+              number: widget.number,
+            );
           },
           text: "Reset Password",
         ),
