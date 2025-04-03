@@ -1,7 +1,7 @@
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/auth_controller.dart';
-import 'package:pecon/src/view/forgot_password_page.dart';
 import 'package:pecon/src/view/register_page.dart';
+import 'package:pecon/src/view/reset_password_page.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
 import 'package:pecon/src/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
@@ -9,22 +9,21 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pecon/src/widgets/partner_logo.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class OTPPage extends StatefulWidget {
+  const OTPPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<OTPPage> createState() => _OTPPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _OTPPageState extends State<OTPPage> {
   // Get Controllers
   final AuthController authCon = Get.put(AuthController());
 
   final formKey = GlobalKey<FormState>();
 
   // Text Editing Controllers
-  final TextEditingController mobileNoController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController optCon = TextEditingController();
 
   // Bool helper
   bool isObscure = true;
@@ -50,12 +49,9 @@ class _LoginPageState extends State<LoginPage> {
                     child: Image.asset("assets/images/peacon_logo.png", height: 50.h)
                   ),
                   SizedBox(height: 70.h),
-                  _loginForm(),
-                  _forgotPassword(),
+                  _otpForm(),
                   SizedBox(height: 26.h),
-                  _loginButton(),
-                  SizedBox(height: 24.h),
-                  _registerButton(),
+                  _otpButton(),
                   SizedBox(height: 134.h),
                   partnerLogo(),
                 ],
@@ -68,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   // Login Form Section
-  Widget _loginForm() {
+  Widget _otpForm() {
     return Form(
       key: formKey,
       child: Column(
@@ -77,43 +73,21 @@ class _LoginPageState extends State<LoginPage> {
         children: [
           // Mobile No.
           CustomTextFormField(
-            controller: mobileNoController,
+            controller: optCon,
             textInputAction: TextInputAction.next,
             keyboardType: TextInputType.number,
-            headingText: "Mobile No.",
+            headingText: "OTP",
             validator: (value) => value != null && value.length == 10
                 ? null
-                : "Enter a valid 10-digit mobile number",
+                : "Enter a valid OTP",
           ),
-          SizedBox(height: 20.h),
-          // Password
-          CustomTextFormField(
-            controller: passwordController,
-            obscureText: isObscure,
-            headingText: "Password",
-            suffixIcon: IconButton(
-              onPressed: () {
-                setState(() {
-                  isObscure = !isObscure;
-                });
-              },
-              icon: Icon(
-                isObscure ? Icons.visibility : Icons.visibility_off,
-                size: 20.sp,
-                color: gray,
-              ),
-            ),
-            validator: (password) => password != null && password.length >= 6
-                ? null
-                : "Password must be at least 6 characters",
-          )
         ],
       ),
     );
   }
 
   // Login Button
-  _loginButton() {
+  _otpButton() {
     return Obx(()=>
       Center(
         child: CustomButton(
@@ -123,13 +97,10 @@ class _LoginPageState extends State<LoginPage> {
       
             final isValid = formKey.currentState!.validate();
             if (!isValid) return;
-      
-            await authCon.login(
-              number: mobileNoController.text.toString().trim(),
-              password: passwordController.text.toString().trim(),
-            );
+
+            Get.to(()=> const ResetPassword());
           },
-          text: "Log In",
+          text: "Verify",
         ),
       ),
     );
@@ -138,15 +109,13 @@ class _LoginPageState extends State<LoginPage> {
   // Forgot Password
   Widget _forgotPassword() {
     return TextButton(
-      onPressed: () {
-        Get.to(()=> const ForgotPasswordPage());
-      },
+      onPressed: () {},
       child: Text('Forgot password?', style: poppinsMedium(size: 13.sp, color: purple),),
     );
   }
 
   // Register Button
-  Widget _registerButton() {
+  Widget _submitButton() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
