@@ -56,10 +56,6 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   final TextEditingController shopNameCon  = TextEditingController();
   final TextEditingController shopPanCon  = TextEditingController();
   final TextEditingController shopOwnerCon  = TextEditingController();
-  // --- For Technician ---
-  List shopkeeperlists = [
-    TextEditingController()
-  ];
 
   // Bank Text Editing Controllers 
   final TextEditingController accNameController  = TextEditingController();
@@ -81,6 +77,10 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   initialise() async{
     WidgetsBinding.instance.addPostFrameCallback((_) async{
       await userCon.getDistrictData();
+      if(userCon.user.value.data.role.toLowerCase() == "technician"){
+        userCon.addShopkeeperField();
+        await userCon.getShopkeeperList();
+      }
 
       setState((){
         districtId              = userCon.user.value.data.districtId;
@@ -365,41 +365,81 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 20.h,),
-                  // List of shopkeeper Id
-                  ListView.separated(
+                  const SizedBox(height: 20),
+                  // List of shopkeeper Id fields
+                  Obx(() => ListView.separated(
                     physics: const NeverScrollableScrollPhysics(),
-                    separatorBuilder: (context, index) => SizedBox(height: 20.h,),
+                    separatorBuilder: (context, index) => SizedBox(height: 15.h),
                     shrinkWrap: true,
-                    itemCount: shopkeeperlists.length,
+                    itemCount: userCon.shopkeeperIdControllers.length,
                     itemBuilder: (context, index) {
-                      return CustomTextFormHeaderField(
-                        controller: shopkeeperlists[index],
-                        textInputAction: TextInputAction.done,
-                        keyboardType: TextInputType.number,
-                        headingText: "Shopkeeper Id",
-                        filledColor: gray.withOpacity(0.2),
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                        validator: (value) => value != ""
-                          ? null
-                          : "Required",
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: CustomTextFormHeaderField(
+                                  headingText: "Shopkeeper Id ${index + 1}",
+                                  controller: userCon.shopkeeperIdControllers[index],
+                                  textInputAction: TextInputAction.done,
+                                  keyboardType: TextInputType.number,
+                                  filled: true,
+                                  filledColor: Colors.grey.withOpacity(0.2),
+                                  suffixIcon: userCon.isshopkeeperIdLoading.isTrue 
+                                    ? Container(
+                                        padding: const EdgeInsets.all(14),
+                                        child: const Center(
+                                          child: CircularProgressIndicator(
+                                            color: Colors.grey,
+                                            strokeWidth: 1.5,
+                                          ),
+                                        ),
+                                      )
+                                    : null,
+                                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                  onChanged: (value) {
+                                    userCon.filterShopkeepersById(value, index);
+                                  },
+                                ),
+                              ),
+                              if (index > 0) // Show remove button for all except first field
+                                IconButton(
+                                  icon: const Icon(Icons.remove_circle, color: Colors.red),
+                                  onPressed: () => userCon.removeShopkeeperField(index),
+                                ),
+                            ],
+                          ),
+                          Obx(() => userCon.showNameDisplays[index]
+                            ? Padding(
+                                padding: const EdgeInsets.only(top: 8, left: 8),
+                                child: Text(
+                                  userCon.shopkeeperNames[index],
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: userCon.shopkeeperNames[index].startsWith('No shopkeeper') 
+                                      ? Colors.red 
+                                      : Colors.green,
+                                  ),
+                                ),
+                              )
+                            : const SizedBox.shrink()
+                          ),
+                        ],
                       );
                     },
-                  ),
-                 SizedBox(height: 20.h,),
-                //  Add Id
-                 CustomButton(
+                  )),
+                  const SizedBox(height: 20),
+                  // Add Id button
+                  CustomButton(
                    text: "Add Shopkeeper",
-                   onPressed: (){
-                     setState(() {
-                       shopkeeperlists.add(TextEditingController());
-                     });
-                   }
-                 )
+                    onPressed: () {
+                      userCon.addShopkeeperField();
+                    },
+                  )
                 ],
               ),
             ),
-
           ],
         ),
       ),
@@ -639,7 +679,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     displayPrice: displayPrice,
                     //--technician--
                     shopkeeperId: userCon.user.value.data.role.toLowerCase() == "technician" 
-                      ? shopkeeperlists.map((e) => int.parse(e.text.toString().trim())).toList()
+                      ? userCon.shopkeeperIdControllers.map((e) => int.parse(e.text.toString().trim())).toList()
                       : [],
                   );
               }
