@@ -153,12 +153,14 @@ class Vendor {
     String vendorPan;
     String vendorEmail;
     bool displayPrice;
+    int isVerifiedAccount;
 
     Vendor({
         this.vendorName = "",
         this.vendorPan = "",
         this.vendorEmail = "",
         this.displayPrice = false,
+        this.isVerifiedAccount = 0,
     });
 
     factory Vendor.fromJson(Map<String, dynamic> json) => Vendor(
@@ -166,6 +168,7 @@ class Vendor {
         vendorPan: json["email"] ?? "",
         vendorEmail: json["number"] ?? "",
         displayPrice: json["display_price"] ?? false,
+        isVerifiedAccount: json["is_verified_account"] ?? 0,
     );
 
     Map<String, dynamic> toJson() => {
@@ -173,5 +176,6 @@ class Vendor {
         "email": vendorPan,
         "number": vendorEmail,
         "display_price": displayPrice,
+        "is_verified_account": isVerifiedAccount,
     };
 }
