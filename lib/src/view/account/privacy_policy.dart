@@ -6,7 +6,6 @@ import 'package:pecon/src/controllers/app_controller.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
 import 'package:pecon/src/widgets/custom_markdown.dart';
 import 'package:pecon/src/widgets/custom_network_image.dart';
-import 'package:pecon/src/widgets/view_full_screen_image.dart';
 
 class PrivacyPolicy extends StatelessWidget {
   PrivacyPolicy({super.key});
@@ -27,17 +26,10 @@ class PrivacyPolicy extends StatelessWidget {
             imageBuilder: (uri, title, alt) {
               var imageList = [];
               imageList.add(uri.toString());
-              return InkWell(
-                onTap: () {
-                  Get.to(() => FullScreenImagePage(imageUrl: imageList[imageList.indexOf(uri.toString())]),
-                    transition: Transition.downToUp
-                  );
-                },
-                child: CustomNetworkImage(
-                  imageUrl: uri.toString(),
-                  height: 442.0.h,
-                  width: double.infinity,
-                ),
+              return CustomNetworkImage(
+                imageUrl: uri.toString(),
+                height: 442.0.h,
+                width: double.infinity,
               );
             },
           ),

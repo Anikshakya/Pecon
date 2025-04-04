@@ -9,7 +9,6 @@ import 'package:pecon/src/controllers/user_controller.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
 import 'package:pecon/src/widgets/custom_markdown.dart';
 import 'package:pecon/src/widgets/custom_network_image.dart';
-import 'package:pecon/src/widgets/view_full_screen_image.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final int index;
@@ -186,17 +185,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             imageBuilder: (uri, title, alt) {
               var imageList = [];
               imageList.add(uri.toString());
-              return InkWell(
-                onTap: () {
-                  Get.to(() => FullScreenImagePage(imageUrl: imageList[imageList.indexOf(uri.toString())]),
-                    transition: Transition.downToUp
-                  );
-                },
-                child: CustomNetworkImage(
-                  imageUrl: uri.toString(),
-                  height: 442.0.h,
-                  width: double.infinity,
-                ),
+              return CustomNetworkImage(
+                imageUrl: uri.toString(),
+                height: 442.0.h,
+                width: double.infinity,
               );
             },
           )
@@ -214,31 +206,21 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         children: [
           CarouselSlider(
             items: (productCon.productList[widget.index].images as List<dynamic>?)
-                ?.cast<String>() // Ensure it's List<String>
-                .map<Widget>((url) => GestureDetector(
-                      onTap: () {
-                        Get.to(() => FullScreenImagePage(imageUrl: url));
-                      },
-                      child: Container(
-                        height: 300.h,
-                        width: double.infinity,
-                        color: gray.withOpacity(0.1),
-                        child:CustomNetworkImage(
-                          imageUrl: url,
-                          height: 300.h,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                        ),
-                      ),
-                    ))
-                .toList() ?? [
-                  Container(
+              ?.cast<String>()
+              .map<Widget>((url) => CustomNetworkImage(
+                    imageUrl: url,
                     height: 300.h,
                     width: double.infinity,
-                    color: gray.withOpacity(0.1),
-                    child: const Center(child: Icon(Icons.image, size: 50)), // Proper fallback
-                  )
-                ], // Fallback widget
+                    fit: BoxFit.cover,
+                  ))
+              .toList() ?? [
+            Container(
+              height: 300.h,
+              width: double.infinity,
+              color: const Color(0xFFECECEC),
+              child: const Center(child: Icon(Icons.image, size: 50)),
+            )
+          ],// Fallback widget
             options: CarouselOptions(
               height: 300.h,
               viewportFraction: 1.0,
