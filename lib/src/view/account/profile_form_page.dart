@@ -686,7 +686,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     displayPrice: displayPrice,
                     //--technician--
                     shopkeeperId: userCon.user.value.data.role.toLowerCase() == "technician" 
-                      ? userCon.shopkeeperIdControllers.map((e) => int.parse(e.text.toString().trim())).toList()
+                      ? userCon.shopkeeperIdControllers.map((e) => e.text.toString().trim()).toList()
                       : [],
                   );
               }

@@ -148,7 +148,7 @@ class UserController extends GetxController {
         //technician update
         else if(user.value.data.role == "technician"){
           var response = await ApiRepo.apiPost('api/profile/technician/update', technicianData, 'Update technician');
-          if(response != null && response['code'] == 201) {
+          if(response != null && response['status'] == true) {
             await getUserData(true);
             Get.back();
             showToast(isSuccess: true, message: "Profile Details Updated");
