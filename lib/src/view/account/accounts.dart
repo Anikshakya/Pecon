@@ -46,7 +46,7 @@ class _AccountPageState extends State<AccountPage> {
   // Get Initial Data
   getData() async{
     // Get Logged In User data
-    await userCon.getUserData(true);
+    await userCon.getUserData();
     setState(() {
       
     });
