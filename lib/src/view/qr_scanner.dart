@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/product_controller.dart';
+import 'package:pecon/src/utils/app_utils.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
 import 'package:pecon/src/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
@@ -296,6 +297,9 @@ class _QRScannerPageState extends State<QRScannerPage> {
                       readOnly: isReadOnly ?? false,
                       headingText: "Ënter Code",
                       capitalText: true,
+                      inputFormatters: [
+                        ToUpperCaseTextFormatter(),
+                      ],
                     ),
                   ),
                   SizedBox(height: 10.h),

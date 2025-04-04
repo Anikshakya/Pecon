@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:pecon/src/app_config/styles.dart';
+import 'package:pecon/src/utils/app_utils.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -315,6 +316,9 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
                       controller: codeCon,
                       readOnly: isReadOnly ?? false,
                       headingText: "Ënter Code",
+                      inputFormatters: [
+                        ToUpperCaseTextFormatter(),
+                      ],
                     ),
                   ),
                   SizedBox(height: 10.h),

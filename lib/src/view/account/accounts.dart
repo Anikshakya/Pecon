@@ -32,161 +32,190 @@ class _AccountPageState extends State<AccountPage> {
   final AuthController authCon = Get.put(AuthController());
   // Formate Number to US standard
   final NumberFormat formatter = NumberFormat("#,##0", "en_US");
+
+  @override
+  void initState() {
+    super.initState();
+    if(mounted){
+      WidgetsBinding.instance.addPostFrameCallback((_) async{
+        await getData();
+      });
+    }
+  }
+
+  // Get Initial Data
+  getData() async{
+    // Get Logged In User data
+    await userCon.getUserData(true);
+    setState(() {
+      
+    });
+  }
   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: customAppbar(),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: SafeArea(
-          bottom: false,
-          child: Obx(()=>
-            Column(
-              children: [
-                // Profile Header
-                SizedBox(height: 10.0.h,),
-                userInfo(),
-                SizedBox(height: 20.h),
-                
-                // Action Buttons
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.sp),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _buildActionButton(Icons.favorite, 'My Benefits', maroon, (){}),
-                      _buildActionButton(Icons.notifications, 'Notifications', Colors.orange, (){}),
-                      _buildActionButton(Icons.arrow_forward, 'Profile', green, (){Get.to(() => const ProfileFormPage());}),
-                    ],
+      body: RefreshIndicator(
+        color: black,
+        onRefresh: (){
+          return Future.delayed(const Duration(seconds: 1),()async{
+            userCon.getUserData(true);
+          });
+        },
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: SafeArea(
+            bottom: false,
+            child: Obx(()=>
+              Column(
+                children: [
+                  // Profile Header
+                  SizedBox(height: 10.0.h,),
+                  userInfo(),
+                  SizedBox(height: 20.h),
+                  
+                  // Action Buttons
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.sp),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _buildActionButton(Icons.favorite, 'My Benefits', maroon, (){}),
+                        _buildActionButton(Icons.notifications, 'Notifications', Colors.orange, (){}),
+                        _buildActionButton(Icons.arrow_forward, 'Profile', green, (){Get.to(() => const ProfileFormPage());}),
+                      ],
+                    ),
                   ),
-                ),
-                
-                
-                // Account Options List
-                Padding(
-                  padding: EdgeInsets.all(16.0.sp),
-                  child: Column(
-                    children: [
-                      _buildListTile('My Earnings', Icons.account_balance_wallet,
-                        onTap: (){
-                          Get.to(()=> const EarningHistoryPage());
-                        }
-                      ),
-                      Visibility(
-                        visible :   userCon.user.value.data.role.toLowerCase() == "shopkeeper" && userCon.user.value.data.vendor!.isVerifiedAccount == 1,
-                        child: Column(
-                          children: [
-                            _buildListTile('Product Return', Icons.arrow_back,
-                              onTap: (){
-                                Get.to(()=> const ReturnQRScannerPage());
-                              }
-                            ),
-                            _buildListTile('Warranty Replacement', Icons.swap_horiz,
-                              onTap: (){
-                                Get.to(()=> const ReplaceProductPage());
-                              }
-                            ),
-                          ],
+                  
+                  
+                  // Account Options List
+                  Padding(
+                    padding: EdgeInsets.all(16.0.sp),
+                    child: Column(
+                      children: [
+                        _buildListTile('My Earnings', Icons.account_balance_wallet,
+                          onTap: (){
+                            Get.to(()=> const EarningHistoryPage());
+                          }
                         ),
-                      ),
-                      _buildListTile(
-                        'Withdrawal Requests',
-                        Icons.request_page,
-                        onTap: (){
-                          Get.to(()=> const WithdrawalRequestPage());
-                        }
-                      ),
-                      _buildListTile('Download Catalog', Icons.download,
-                        onTap: (){
-                          Get.to(()=> const CataloguePage());
-                        }
-                      ),
-                      _buildListTile('Change Password', Icons.visibility_off,
-                        onTap: (){
-                          Get.to(()=> const ChangePasswordPage());
-                        }
-                      ),
-                      _buildListTile('Offers And Promotions', Icons.local_offer,
-                        onTap: (){
-                          Get.to(()=> const OfferPage());
-                        }
-                      ),
-                      _buildListTile('Privacy Policy', Icons.lock,
-                        onTap: (){
-                          Get.to(()=> PrivacyPolicy());
-                        }
-                      ),
-                      _buildListTile('Terms And Conditions', Icons.description,
-                        onTap: (){
-                          Get.to(()=> TermsAndConditions());
-                        }
-                      ),
-                      _buildListTile(
-                        onTap: () async{
-                          Get.defaultDialog(
-                            backgroundColor: boxCol,
-                            title: '',
-                            titlePadding: EdgeInsets.symmetric(horizontal: 20.0.w),
-                            contentPadding: EdgeInsets.symmetric(horizontal: 20.0.w),
-                            content: StatefulBuilder(
-                              builder: (context, setState) {
-                                return SizedBox(
-                                  width: double.infinity,
-                                  child: SingleChildScrollView(
-                                    physics: const BouncingScrollPhysics(),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        // Title
-                                        Text(
-                                          "Do you want To Logout?",
-                                          style: poppinsSemiBold(size: 16.sp, color: black)
-                                        ),
-                                        
-                                        SizedBox(height: 24.h),
-                                        // Submit Button
-                                        Obx(()=>
-                                          CustomButton(
-                                            isLoading: authCon.isLogOutLoading.isTrue,
-                                            onPressed: () async{
-                                              await authCon.logout();
-                                            },
-                                            text: "Logout",
-                                            bgColor: black,
-                                            fontColor: white,
-                                          ),
-                                        ),
-                                        SizedBox(height: 10.h),
-                                        // Cancel Button
-                                        CustomButton(
-                                          onPressed: () {
-                                            // Handle manual code submission
-                                            Get.back();
-                                          },
-                                          text: "Cancel",
-                                          bgColor: Colors.transparent,
-                                          fontColor: black,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
+                        Obx(()=>
+                          Visibility(
+                            visible :   userCon.user.value.data.role.toLowerCase() == "shopkeeper" && userCon.user.value.data.vendor!.isVerifiedAccount == 1,
+                            child: Column(
+                              children: [
+                                _buildListTile('Product Return', Icons.arrow_back,
+                                  onTap: (){
+                                    Get.to(()=> const ReturnQRScannerPage());
+                                  }
+                                ),
+                                _buildListTile('Warranty Replacement', Icons.swap_horiz,
+                                  onTap: (){
+                                    Get.to(()=> const ReplaceProductPage());
+                                  }
+                                ),
+                              ],
                             ),
-                          );
-                        },
-                        'Log Out', Icons.exit_to_app, 
-                        isDestructive: true
-                      ),
-                      _buildListTile('Delete Account', Icons.delete, isDestructive: true),
-                    ],
+                          ),
+                        ),
+                        _buildListTile(
+                          'Withdrawal Requests',
+                          Icons.request_page,
+                          onTap: (){
+                            Get.to(()=> const WithdrawalRequestPage());
+                          }
+                        ),
+                        _buildListTile('Download Catalog', Icons.download,
+                          onTap: (){
+                            Get.to(()=> const CataloguePage());
+                          }
+                        ),
+                        _buildListTile('Change Password', Icons.visibility_off,
+                          onTap: (){
+                            Get.to(()=> const ChangePasswordPage());
+                          }
+                        ),
+                        _buildListTile('Offers And Promotions', Icons.local_offer,
+                          onTap: (){
+                            Get.to(()=> const OfferPage());
+                          }
+                        ),
+                        _buildListTile('Privacy Policy', Icons.lock,
+                          onTap: (){
+                            Get.to(()=> PrivacyPolicy());
+                          }
+                        ),
+                        _buildListTile('Terms And Conditions', Icons.description,
+                          onTap: (){
+                            Get.to(()=> TermsAndConditions());
+                          }
+                        ),
+                        _buildListTile(
+                          onTap: () async{
+                            Get.defaultDialog(
+                              backgroundColor: boxCol,
+                              title: '',
+                              titlePadding: EdgeInsets.symmetric(horizontal: 20.0.w),
+                              contentPadding: EdgeInsets.symmetric(horizontal: 20.0.w),
+                              content: StatefulBuilder(
+                                builder: (context, setState) {
+                                  return SizedBox(
+                                    width: double.infinity,
+                                    child: SingleChildScrollView(
+                                      physics: const BouncingScrollPhysics(),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          // Title
+                                          Text(
+                                            "Do you want To Logout?",
+                                            style: poppinsSemiBold(size: 16.sp, color: black)
+                                          ),
+                                          
+                                          SizedBox(height: 24.h),
+                                          // Submit Button
+                                          Obx(()=>
+                                            CustomButton(
+                                              isLoading: authCon.isLogOutLoading.isTrue,
+                                              onPressed: () async{
+                                                await authCon.logout();
+                                              },
+                                              text: "Logout",
+                                              bgColor: black,
+                                              fontColor: white,
+                                            ),
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          // Cancel Button
+                                          CustomButton(
+                                            onPressed: () {
+                                              // Handle manual code submission
+                                              Get.back();
+                                            },
+                                            text: "Cancel",
+                                            bgColor: Colors.transparent,
+                                            fontColor: black,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                          'Log Out', Icons.exit_to_app, 
+                          isDestructive: true
+                        ),
+                        _buildListTile('Delete Account', Icons.delete, isDestructive: true),
+                      ],
+                    ),
                   ),
-                ),
-            
-                SizedBox(height: 30.h),
-              ],
+              
+                  SizedBox(height: 30.h),
+                ],
+              ),
             ),
           ),
         ),

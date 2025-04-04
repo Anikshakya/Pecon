@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AppUtils {
@@ -7,5 +8,19 @@ class AppUtils {
     } else {
       return true;
     }
+  }
+}
+
+class ToUpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    String upperText = newValue.text.toUpperCase();
+    return newValue.copyWith(
+      text: upperText,
+      selection: newValue.selection,
+    );
   }
 }
