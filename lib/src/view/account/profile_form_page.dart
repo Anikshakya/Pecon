@@ -414,7 +414,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                             ? Padding(
                                 padding: const EdgeInsets.only(top: 8, left: 8),
                                 child: Text(
-                                  userCon.shopkeeperNames[index],
+                                  userCon.shopkeeperNames[index] == "" ? "N/A" : userCon.shopkeeperNames[index],
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: userCon.shopkeeperNames[index].startsWith('No shopkeeper') 

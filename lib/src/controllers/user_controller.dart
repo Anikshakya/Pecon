@@ -366,7 +366,7 @@ class UserController extends GetxController {
       if (response != null && response['code'] == 200) {
         if (response['data'] != null && response['data'] is List) {
           for (var allData in response["data"]) {
-            String id = allData["id"]?.toString() ?? "";
+            String id = allData["user_id"]?.toString() ?? "";
             String name = allData["shop_name"]?.toString() ?? "";
             if (id.isNotEmpty) {
               shopkeeperIdNameMap[id] = name;
