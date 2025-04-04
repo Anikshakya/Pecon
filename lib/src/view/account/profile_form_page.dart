@@ -273,28 +273,35 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             ),
             SizedBox(height: 20.h),
             //City Controll
-            CustomTextFormHeaderField(
-              readOnly: true,
-              onTap: userCon.isDistrictLoading.isTrue ? (){} : showCupertinoCityPicker,
-              controller: cityController,
-              textInputAction: TextInputAction.next,
-              headingText: "City",
-              filledColor: gray.withOpacity(0.2),
-              suffixIcon: userCon.isDistrictLoading.isTrue || userCon.isCityLoading.isTrue
-                ? Container(
-                  height: 48.h,
-                  width: 48.h,
-                  padding: EdgeInsets.all(14.sp),
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: grey1,
-                      strokeWidth: 1.5.sp,
-                    ),
+            Visibility(
+              visible: districtController.text.isNotEmpty,
+              child: Column(
+                children: [
+                  CustomTextFormHeaderField(
+                    readOnly: true,
+                    onTap: userCon.isDistrictLoading.isTrue ? (){} : showCupertinoCityPicker,
+                    controller: cityController,
+                    textInputAction: TextInputAction.next,
+                    headingText: "City",
+                    filledColor: gray.withOpacity(0.2),
+                    suffixIcon: userCon.isDistrictLoading.isTrue || userCon.isCityLoading.isTrue
+                      ? Container(
+                        height: 48.h,
+                        width: 48.h,
+                        padding: EdgeInsets.all(14.sp),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: grey1,
+                            strokeWidth: 1.5.sp,
+                          ),
+                        ),
+                      )
+                      : const Icon(Icons.arrow_drop_down, color: grey1,),
                   ),
-                )
-                : const Icon(Icons.arrow_drop_down, color: grey1,),
+                  SizedBox(height: 20.h),
+                ],
+              ),
             ),
-            SizedBox(height: 20.h),
             //Gender
             CustomTextFormHeaderField(
               onTap: showCupertinoGenderPicker,
