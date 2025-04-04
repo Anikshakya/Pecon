@@ -54,7 +54,7 @@ class UserController extends GetxController {
   getUserData([refresh]) async{
     var cacheData = read(AppConstants().userData);
     try{
-      if(cacheData == "") isProfileLoading(true); // Start Loading
+      if(cacheData == "" || refresh == true) isProfileLoading(true); // Start Loading
       var response = await ApiRepo.apiGet('api/profile', "", 'User Profile API');
       if(response != null && response['code'] == 200) {
         if(refresh == true){
