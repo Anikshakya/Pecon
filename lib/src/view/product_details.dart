@@ -72,11 +72,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           SizedBox(height: 2.0.h,),
           Text(
             words.length > 1 ? words.sublist(1).join(" ") : "", // Joins all words after index 0
-            style: TextStyle(fontSize: 17.sp, color: black, letterSpacing: -0.5.sp, fontWeight: FontWeight.w600, height: 0),
+            style: TextStyle(fontSize: 22.sp, color: black, letterSpacing: -0.5.sp, fontWeight: FontWeight.w600, height: 0),
           ),
           SizedBox(height: 12.h),
           // CCT / Watt
-          Text("CCT : ${productCon.productList[widget.index].color ?? "0"}   /   WATTS : ${productCon.productList[widget.index].watt ?? "0"}", 
+          Text("${productCon.productList[widget.index].color ?? "0"}   /   ${productCon.productList[widget.index].watt ?? "0"}", 
             style: TextStyle(fontSize: 24.sp, color: black, letterSpacing: -1.sp, fontWeight: FontWeight.w900, height: 0),
           ),
           SizedBox(height: 14.h),
@@ -220,17 +220,25 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         Get.to(() => FullScreenImagePage(imageUrl: url));
                       },
                       child: Container(
-                        color: const Color.fromARGB(255, 236, 236, 236),
-                        child: Image.network(
-                          url,
+                        height: 300.h,
+                        width: double.infinity,
+                        color: gray.withOpacity(0.1),
+                        child:CustomNetworkImage(
+                          imageUrl: url,
+                          height: 300.h,
                           fit: BoxFit.cover,
                           width: double.infinity,
-                          errorBuilder: (context, error, stackTrace) => 
-                            const Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                         ),
                       ),
                     ))
-                .toList() ?? [const SizedBox()], // Fallback widget
+                .toList() ?? [
+                  Container(
+                    height: 300.h,
+                    width: double.infinity,
+                    color: gray.withOpacity(0.1),
+                    child: const Center(child: Icon(Icons.image, size: 50)), // Proper fallback
+                  )
+                ], // Fallback widget
             options: CarouselOptions(
               height: 300.h,
               viewportFraction: 1.0,
