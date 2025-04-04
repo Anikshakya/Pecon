@@ -66,17 +66,17 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           // Product Name
           Text(
             words.isNotEmpty ? words[0].toUpperCase() : "",
-            style: TextStyle(fontSize: 24.sp, color: const Color.fromARGB(255, 207, 47, 36), letterSpacing: -1.sp, fontWeight: FontWeight.w900,height: 0),
+            style: TextStyle(fontSize: 28.sp, color: const Color.fromARGB(255, 207, 47, 36), letterSpacing: -1.sp, fontWeight: FontWeight.w900,height: 0),
           ),
           SizedBox(height: 2.0.h,),
           Text(
             words.length > 1 ? words.sublist(1).join(" ") : "", // Joins all words after index 0
             style: TextStyle(fontSize: 22.sp, color: black, letterSpacing: -0.5.sp, fontWeight: FontWeight.w600, height: 0),
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: 8.h),
           // CCT / Watt
           Text("${productCon.productList[widget.index].color ?? "0"}   /   ${productCon.productList[widget.index].watt ?? "0"}", 
-            style: TextStyle(fontSize: 24.sp, color: black, letterSpacing: -1.sp, fontWeight: FontWeight.w900, height: 0),
+            style: TextStyle(fontSize: 18.sp, color: black, letterSpacing: -1.sp, fontWeight: FontWeight.w900, height: 0),
           ),
           SizedBox(height: 14.h),
           // Price and Redeem
