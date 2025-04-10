@@ -91,7 +91,7 @@ class _ReplaceProductPageState extends State<ReplaceProductPage> {
               CustomButton(
                 isLoading: productCon.isProductReturnLoading.isTrue,
                 onPressed: () async{
-                  productCon.replaceProduct(
+                  await productCon.replaceProduct(
                     previousCode: previousCodeCon.text.trim(),
                     currentCode: currentCodeCon.text.trim(),
                   );

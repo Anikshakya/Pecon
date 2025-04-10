@@ -168,7 +168,7 @@ class ProductsController extends GetxController{
     try{
       isProductReturnLoading(true);// Start Loading
       var response = await ApiRepo.apiPost('api/product/replace-product', data, 'Return Product');
-      if(response != null && response['code'] == 201) {
+      if(response != null && response['code'] == 200) {
         Get.back();
         showToast(isSuccess: true, message: "Product Returned Successfully");
       }

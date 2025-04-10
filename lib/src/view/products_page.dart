@@ -298,7 +298,7 @@ class _ProductsPageState extends State<ProductsPage> {
                       headingText: "Search", 
                       prefixIcon: Icon(Icons.search, color: grey10.withOpacity(0.8),),
                       filledColor: white,
-                      onChanged : (value){
+                      onChanged : (value)async{
                         var success = await productCon.getProductList(searchController.text,categoryId,subCategoryId);
                         if(success == true){
                           setState(() {
@@ -309,7 +309,7 @@ class _ProductsPageState extends State<ProductsPage> {
                           });
                         }
                         setState((){});
-                      }
+                      },
                       onFieldSubmitted: (value) async{
                         var success = await productCon.getProductList(searchController.text,categoryId,subCategoryId);
                         if(success == true){

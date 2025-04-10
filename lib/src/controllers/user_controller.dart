@@ -148,7 +148,7 @@ class UserController extends GetxController {
         //technician update
         else if(user.value.data.role == "technician"){
           var response = await ApiRepo.apiPost('api/profile/technician/update', technicianData, 'Update technician');
-          if(response != null && response['code'] == 201) {
+          if(response != null && response['status'] == 200) {
             await getUserData(true);
             Get.back();
             showToast(isSuccess: true, message: "Profile Details Updated");
@@ -366,7 +366,7 @@ class UserController extends GetxController {
       if (response != null && response['code'] == 200) {
         if (response['data'] != null && response['data'] is List) {
           for (var allData in response["data"]) {
-            String id = allData["id"]?.toString() ?? "";
+            String id = allData["user_id"]?.toString() ?? "";
             String name = allData["shop_name"]?.toString() ?? "";
             if (id.isNotEmpty) {
               shopkeeperIdNameMap[id] = name;
