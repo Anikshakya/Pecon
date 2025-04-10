@@ -152,6 +152,9 @@ class _ProductsPageState extends State<ProductsPage> {
                                                 Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withOpacity(0.5)),),
                                                 SizedBox(height: 4.h),
                                                 Container(
+                                                  constraints: BoxConstraints(
+                                                    maxWidth: 90.w,
+                                                  ),
                                                   padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
                                                   decoration: BoxDecoration(
                                                     color: gray.withOpacity(0.2),
@@ -180,7 +183,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                                 SizedBox(height: 18.h),
                                                 Container(
                                                   constraints: BoxConstraints(
-                                                    maxWidth: 190.w,
+                                                    maxWidth: 90.w,
                                                   ),
                                                   padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
                                                   decoration: BoxDecoration(
@@ -201,29 +204,74 @@ class _ProductsPageState extends State<ProductsPage> {
                                           children: [
                                             Text("Points", style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),),
                                             SizedBox(height: 4.h),
-                                            Container(
-                                              padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                                              decoration: BoxDecoration(
-                                                color: green.withOpacity(0.95),
-                                                borderRadius: BorderRadius.circular(6.sp),
-                                              ),
-                                              child: RichText(
-                                                text: TextSpan(
-                                                  style: poppinsSemiBold(size: 11.sp, color: black),
-                                                  children: [
-                                                    WidgetSpan(
-                                                      child: Padding(
-                                                        padding: EdgeInsets.only(right: 4.sp),
-                                                        child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp)
-                                                      ),
+                                            Row(
+                                              children: [
+                                                Visibility(
+                                                  visible: productCon.productList[index].color != "",
+                                                  child: Container(
+                                                    constraints: BoxConstraints(
+                                                      maxWidth: 50.w,
                                                     ),
-                                                    TextSpan(
-                                                      text: formatter.format(double.parse(productCon.productList[index].redeem ?? "0")),
-                                                      style: poppinsSemiBold(color: white, size: 12.sp ),
+                                                    padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.5.sp),
+                                                    decoration: BoxDecoration(
+                                                      color: black.withOpacity(0.8),
+                                                      borderRadius: BorderRadius.circular(6.sp),
                                                     ),
-                                                  ],
+                                                    child: Text("${productCon.productList[index].color}", 
+                                                      style: poppinsSemiBold(color: white, size: 10.sp ),
+                                                      overflow: TextOverflow.ellipsis,
+                                                      maxLines: 2,
+                                                    ),
+                                                  ),
                                                 ),
-                                              )
+                                                SizedBox(width: 4.w),
+                                                Visibility(
+                                                  visible: productCon.productList[index].watt != "",
+                                                  child: Container(
+                                                    constraints: BoxConstraints(
+                                                      maxWidth: 50.w,
+                                                    ),
+                                                    padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.5.sp),
+                                                    decoration: BoxDecoration(
+                                                      color: black.withOpacity(0.8),
+                                                      borderRadius: BorderRadius.circular(6.sp),
+                                                    ),
+                                                    child: Text("${productCon.productList[index].watt ?? "0"}", 
+                                                      style: poppinsSemiBold(color: white, size: 10.sp ),
+                                                      overflow: TextOverflow.ellipsis,
+                                                      maxLines: 2,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(width: 4.w),
+                                                Container(
+                                                  constraints: BoxConstraints(
+                                                    maxWidth: 50.w,
+                                                  ),
+                                                  padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                                                  decoration: BoxDecoration(
+                                                    color: green.withOpacity(0.95),
+                                                    borderRadius: BorderRadius.circular(6.sp),
+                                                  ),
+                                                  child: RichText(
+                                                    text: TextSpan(
+                                                      style: poppinsSemiBold(size: 11.sp, color: black),
+                                                      children: [
+                                                        WidgetSpan(
+                                                          child: Padding(
+                                                            padding: EdgeInsets.only(right: 4.sp),
+                                                            child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp)
+                                                          ),
+                                                        ),
+                                                        TextSpan(
+                                                          text: formatter.format(double.parse(productCon.productList[index].redeem ?? "0")),
+                                                          style: poppinsSemiBold(color: white, size: 12.sp ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                ),
+                                              ],
                                             )
                                           ],
                                         ),
