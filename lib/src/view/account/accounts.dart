@@ -115,6 +115,11 @@ class _AccountPageState extends State<AccountPage> {
                                     Get.to(()=> const ReplaceProductPage());
                                   }
                                 ),
+                                _buildListTile('Offers And Promotions', Icons.local_offer,
+                                  onTap: (){
+                                    Get.to(()=> const OfferPage());
+                                  }
+                                ),
                               ],
                             ),
                           ),
@@ -134,11 +139,6 @@ class _AccountPageState extends State<AccountPage> {
                         _buildListTile('Change Password', Icons.visibility_off,
                           onTap: (){
                             Get.to(()=> const ChangePasswordPage());
-                          }
-                        ),
-                        _buildListTile('Offers And Promotions', Icons.local_offer,
-                          onTap: (){
-                            Get.to(()=> const OfferPage());
                           }
                         ),
                         _buildListTile('Privacy Policy', Icons.lock,
