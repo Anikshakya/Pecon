@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "69600728067",
+    "firebase_url": "https://pecon-b28ff-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "pecon-b28ff",
+    "storage_bucket": "pecon-b28ff.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69600728067:android:f14eec7fe92a2722bdaa36",
+        "android_client_info": {
+          "package_name": "com.jujutech.np.pecon"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaJDwS5UCwcpk6vt3gxQEDWz68llaNmvg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
