@@ -13,8 +13,8 @@ class NotificationController extends GetxController{
   getNotificationList() async {
     try{
       isLoading(true); // Start Loading
-      var response = await ApiRepo.apiGet('notifications', "", 'Notification List Api');
-      if(response != null && response['code'] == 200) {
+      var response = await ApiRepo.apiGet('api/notifications', "", 'Notification List Api');
+      if(response != null && response['success'] == true) {
         notificationList = response["data"] ?? [];
       }
     }catch (e){
