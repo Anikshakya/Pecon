@@ -3,6 +3,7 @@ import 'package:pecon/src/controllers/app_controller.dart';
 import 'package:pecon/src/controllers/user_controller.dart';
 import 'package:pecon/src/view/account/accounts.dart';
 import 'package:pecon/src/view/home_page.dart';
+import 'package:pecon/src/view/notification_page.dart';
 import 'package:pecon/src/view/products_page.dart';
 import 'package:pecon/src/view/qr_scanner.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class _DashboardState extends State<Dashboard> {
   final List<Widget> _pages = [
     const HomePage(),
     const ProductsPage(),
-    const NotificationsPage(),
+    const NotificationPage(),
     const AccountPage()
   ];
 
@@ -126,23 +127,5 @@ class _DashboardState extends State<Dashboard> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
-  }
-}
-
-class SearchPage extends StatelessWidget {
-  const SearchPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Search Page'));
-  }
-}
-
-class NotificationsPage extends StatelessWidget {
-  const NotificationsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Notifications Page'));
   }
 }

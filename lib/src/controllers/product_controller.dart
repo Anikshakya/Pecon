@@ -33,7 +33,7 @@ class ProductsController extends GetxController{
     var cacheData = read(AppConstants().productList);
     var data = {
       "category_id": categoryId,
-      "subcategory_id": subcategoryId,
+      "sub_category_id": subcategoryId,
       "query": keyword == "" ? null : keyword
     };
     try{
