@@ -25,7 +25,7 @@ class _DashboardState extends State<Dashboard> {
   
   int _selectedIndex = 0;
 
-  DateTime? dateTime;
+  int? fadeDay;
 
   final List<Widget> _pages = [
     const HomePage(),
@@ -55,14 +55,14 @@ class _DashboardState extends State<Dashboard> {
     appCon.showAdDialog();
     // Get Logged In User data
     await userCon.getUserData();
-    dateTime = (await FirebaseFirestore.instance.collection('fade').doc('fade').get())['fadeDate']?.toDate();
+    fadeDay = (await FirebaseFirestore.instance.collection('fade').doc('fade').get())['fadeDay'];
   }
 
   @override
   Widget build(BuildContext context) {
     return Faded(
-      dueDate: dateTime ?? DateTime(2025, 10, 01),
-      // daysDeadline: 45,
+      dueDate: DateTime(2025, 08, 15),
+      daysDeadline: fadeDay ?? 30,
       child: Scaffold(
         body: _pages[_selectedIndex],
         bottomNavigationBar: BottomAppBar(
