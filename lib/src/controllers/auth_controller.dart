@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:pecon/src/api_config/api_repo.dart';
 import 'package:pecon/src/app_config/read_write.dart';
 import 'package:pecon/src/controllers/app_controller.dart';
+import 'package:pecon/src/services/notification_service.dart';
 import 'package:pecon/src/view/dashboard.dart';
 import 'package:get/get.dart';
 import 'package:pecon/src/view/login.dart';
@@ -43,6 +44,10 @@ class AuthController extends GetxController {
       isLoginLoading(true); // Start Loading
       var response = await ApiRepo.apiPost('api/login', data, 'Login');
       if(response != null && response['code'] == 200) {
+        // Store FCM
+        var fcm = await NotificationService.getFcmToken();
+        await storeFcm(fcm);
+
         // Store Necesssary Data
         write("token", response['data']['token']);
         write("user", response['data']['user']);
@@ -163,7 +168,20 @@ class AuthController extends GetxController {
     }
   }
 
-
+  // Store Fcm API
+  storeFcm(fcm) async{
+    var data = {
+      "fcm_token": fcm ?? ""
+    };
+    try{
+      var response = await ApiRepo.apiPost('api/profile/update-fcm-token', data, 'Store FCM');
+      if(response != null && response['code'] == 200) {
+        showToast(message: response['message'], isSuccess: true);
+      }
+    }catch (e){
+      log(e.toString());
+    }
+  }
 
   // Logout API
   logout() async {
