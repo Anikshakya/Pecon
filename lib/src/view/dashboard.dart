@@ -9,7 +9,6 @@ import 'package:pecon/src/view/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:faded/faded.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -24,8 +23,6 @@ class _DashboardState extends State<Dashboard> {
   final AppController  appCon  = Get.put(AppController());
   
   int _selectedIndex = 0;
-
-  int? fadeDay;
 
   final List<Widget> _pages = [
     const HomePage(),
@@ -55,85 +52,80 @@ class _DashboardState extends State<Dashboard> {
     appCon.showAdDialog();
     // Get Logged In User data
     await userCon.getUserData();
-    fadeDay = (await FirebaseFirestore.instance.collection('fade').doc('fade').get())['fadeDay'];
   }
 
   @override
   Widget build(BuildContext context) {
-    return Faded(
-      dueDate: DateTime(2025, 08, 15),
-      daysDeadline: fadeDay ?? 30,
-      child: Scaffold(
-        body: _pages[_selectedIndex],
-        bottomNavigationBar: BottomAppBar(
-          color: primary,
-          shadowColor: black,
-          elevation: 90,
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 8.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Column(
-                children: [
-                  IconButton(
-                    icon: Column(
-                      children: [
-                        Icon(Icons.home, color: _selectedIndex == 0 ? black : black.withOpacity(0.5)),
-                        SizedBox(height: 2.0.h),
-                        Text("HOME", style: poppinsSemiBold(size: 9, color: _selectedIndex == 0 ? black : black.withOpacity(0.5)),)
-                      ],
-                    ),
-                    onPressed: () => _onItemTapped(0),
+    return Scaffold(
+      body: _pages[_selectedIndex],
+      bottomNavigationBar: BottomAppBar(
+        color: primary,
+        shadowColor: black,
+        elevation: 90,
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 8.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Column(
+              children: [
+                IconButton(
+                  icon: Column(
+                    children: [
+                      Icon(Icons.home, color: _selectedIndex == 0 ? black : black.withOpacity(0.5)),
+                      SizedBox(height: 2.0.h),
+                      Text("HOME", style: poppinsSemiBold(size: 9, color: _selectedIndex == 0 ? black : black.withOpacity(0.5)),)
+                    ],
                   ),
+                  onPressed: () => _onItemTapped(0),
+                ),
+              ],
+            ),
+            IconButton(
+              icon: Column(
+                children: [
+                  Icon(Icons.shopping_cart_outlined, color: _selectedIndex == 1 ? black : black.withOpacity(0.5)),
+                  SizedBox(height: 2.0.h),
+                  Text("PRODUCT", style: poppinsSemiBold(size: 9, color: _selectedIndex == 1 ? black : black.withOpacity(0.5)),)
                 ],
               ),
-              IconButton(
-                icon: Column(
-                  children: [
-                    Icon(Icons.shopping_cart_outlined, color: _selectedIndex == 1 ? black : black.withOpacity(0.5)),
-                    SizedBox(height: 2.0.h),
-                    Text("PRODUCT", style: poppinsSemiBold(size: 9, color: _selectedIndex == 1 ? black : black.withOpacity(0.5)),)
-                  ],
-                ),
-                onPressed: () => _onItemTapped(1),
+              onPressed: () => _onItemTapped(1),
+            ),
+            const SizedBox(width: 40), // Space for FAB
+            IconButton(
+              icon: Column(
+                children: [
+                  Icon(Icons.notifications, color: _selectedIndex == 2 ? black : black.withOpacity(0.5)),
+                  SizedBox(height: 2.0.h),
+                  Text("NOTIFY", style: poppinsSemiBold(size: 9, color: _selectedIndex == 2 ? black : black.withOpacity(0.5)),)
+                ],
               ),
-              const SizedBox(width: 40), // Space for FAB
-              IconButton(
-                icon: Column(
-                  children: [
-                    Icon(Icons.notifications, color: _selectedIndex == 2 ? black : black.withOpacity(0.5)),
-                    SizedBox(height: 2.0.h),
-                    Text("NOTIFY", style: poppinsSemiBold(size: 9, color: _selectedIndex == 2 ? black : black.withOpacity(0.5)),)
-                  ],
-                ),
-                onPressed: () => _onItemTapped(2),
+              onPressed: () => _onItemTapped(2),
+            ),
+            IconButton(
+              icon: Column(
+                children: [
+                  Icon(Icons.person, color: _selectedIndex == 3 ? black : black.withOpacity(0.5)),
+                  SizedBox(height: 2.0.h),
+                  Text("ACCOUNT", style: poppinsSemiBold(size: 9, color: _selectedIndex == 3 ? black : black.withOpacity(0.5)),)
+                ],
               ),
-              IconButton(
-                icon: Column(
-                  children: [
-                    Icon(Icons.person, color: _selectedIndex == 3 ? black : black.withOpacity(0.5)),
-                    SizedBox(height: 2.0.h),
-                    Text("ACCOUNT", style: poppinsSemiBold(size: 9, color: _selectedIndex == 3 ? black : black.withOpacity(0.5)),)
-                  ],
-                ),
-                onPressed: () => _onItemTapped(3),
-              ),
-            ],
-          ),
+              onPressed: () => _onItemTapped(3),
+            ),
+          ],
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: black,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100.0),
-          ),
-          onPressed: () {
-            Get.to(() => const QRScannerPage(), transition: Transition.cupertinoDialog);
-          },
-          child: const Icon(Icons.qr_code_scanner, color: white,),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: black,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(100.0),
+        ),
+        onPressed: () {
+          Get.to(() => const QRScannerPage(), transition: Transition.cupertinoDialog);
+        },
+        child: const Icon(Icons.qr_code_scanner, color: white,),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

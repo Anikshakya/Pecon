@@ -44,12 +44,12 @@ class AuthController extends GetxController {
       isLoginLoading(true); // Start Loading
       var response = await ApiRepo.apiPost('api/login', data, 'Login');
       if(response != null && response['code'] == 200) {
+        write("token", response['data']['token']);
         // Store FCM
         var fcm = await NotificationService.getFcmToken();
         await storeFcm(fcm);
 
         // Store Necesssary Data
-        write("token", response['data']['token']);
         write("user", response['data']['user']);
 
         isLoginLoading(false); // Stop Loading
