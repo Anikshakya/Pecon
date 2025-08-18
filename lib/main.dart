@@ -42,7 +42,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    NotificationService.getPushedNotification(context);
+    NotificationService.handlePushNotifications(context);
     super.initState();
   }
   
