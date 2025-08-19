@@ -1,6 +1,6 @@
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/auth_controller.dart';
-import 'package:pecon/src/view/forgot_password_page.dart';
+import 'package:pecon/src/widgets/custom_toast.dart';
 import 'package:pecon/src/view/register_page.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
 import 'package:pecon/src/widgets/custom_text_field.dart';
@@ -139,7 +139,11 @@ class _LoginPageState extends State<LoginPage> {
   Widget _forgotPassword() {
     return TextButton(
       onPressed: () {
-        Get.to(()=> const ForgotPasswordPage());
+        showToast(
+          isSuccess : false,
+          message: "Please Contact Nearest Dealer."
+        );
+        // Get.to(()=> const ForgotPasswordPage());
       },
       child: Text('Forgot password?', style: poppinsMedium(size: 13.sp, color: purple),),
     );
