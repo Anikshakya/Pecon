@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/notification_controller.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
+import 'package:pecon/src/widgets/custom_network_image.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
@@ -82,19 +83,42 @@ class _NotificationPageState extends State<NotificationPage> {
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 16.0.sp,vertical: 16.0.sp),
                         color: white,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Row(
                           children: [
-                            //notification title
-                            Text(notificationCon.notificationList[index]["title"] ?? "", style: poppinsSemiBold(size: 16.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
-                            SizedBox(height: 6.0.h,),
-                            //notification desc
-                            Text(notificationCon.notificationList[index]["description"] ?? "", style: poppinsRegular(size: 14.sp, color: black.withOpacity(0.7)),overflow: TextOverflow.ellipsis, maxLines: 2,),
-                            Row(
-                              children: [
-                                const Spacer(),
-                                Text(notificationCon.notificationList[index]["created_at"] ?? "", style: poppinsRegular(size: 10.sp, color: black.withOpacity(0.7)),overflow: TextOverflow.ellipsis, maxLines: 2,),
-                              ],
+                            Container(
+                              height: 70.0.sp,
+                              width: 70.0.sp,
+                              decoration: BoxDecoration(
+                                color: gray.withOpacity(0.1),
+                                border: Border.all(
+                                  color: gray.withOpacity(0.25), width: 0.8.sp
+                                ),
+                                borderRadius: BorderRadius.circular(8.sp),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0.r),
+                                child: CustomNetworkImage(
+                                  imageUrl: notificationCon.notificationList[index]["image"] ?? "",
+                                  height: 70.0.sp,
+                                  width: 70.0.sp,
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            SizedBox(
+                              width: 260.0.w,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  //notification title
+                                  Text(notificationCon.notificationList[index]["title"] ?? "", style: poppinsSemiBold(size: 16.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
+                                  SizedBox(height: 4.0.h,),
+                                  //notification desc
+                                  Text(notificationCon.notificationList[index]["description"] ?? "", style: poppinsRegular(size: 14.sp, color: black.withOpacity(0.7)),overflow: TextOverflow.ellipsis, maxLines: 2,),
+                                  SizedBox(height: 10.0.h,),
+                                  Text(notificationCon.notificationList[index]["created_at"] ?? "", style: poppinsRegular(size: 10.sp, color: black.withOpacity(0.7)),overflow: TextOverflow.ellipsis, maxLines: 2,),
+                                ],
+                              ),
                             ),
                           ],
                         ),
