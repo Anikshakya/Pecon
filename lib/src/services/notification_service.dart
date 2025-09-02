@@ -203,6 +203,8 @@ class NotificationService {
 
   /// Navigate to Dashboard with index
   static void _navigateToDashboard(index) {
-    Get.offAll(() => Dashboard(initialIndex: index ?? 2,));
+    Future.delayed(const Duration(seconds: 5), () {
+      Get.offAll(() => Dashboard(initialIndex: index ?? 2,));
+    });
   }
 }
