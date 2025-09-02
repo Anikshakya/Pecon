@@ -12,6 +12,7 @@ import 'package:pecon/src/view/account/replace_product/replace_product.dart';
 import 'package:pecon/src/view/account/return_product/return_qr_scanner.dart';
 import 'package:pecon/src/view/account/terms_condition.dart';
 import 'package:pecon/src/view/account/withdrawal_request.dart';
+import 'package:pecon/src/view/dashboard.dart';
 import 'package:pecon/src/widgets/custom_appbar.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
 import 'package:pecon/src/widgets/custom_network_image.dart';
@@ -83,7 +84,7 @@ class _AccountPageState extends State<AccountPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         _buildActionButton(Icons.favorite, 'My Benefits', maroon, (){}),
-                        _buildActionButton(Icons.notifications, 'Notifications', Colors.orange, (){}),
+                        _buildActionButton(Icons.notifications, 'Notifications', Colors.orange, (){Get.offAll(() => const Dashboard(initialIndex: 2,));}),
                         _buildActionButton(Icons.arrow_forward, 'Profile', green, (){Get.to(() => const ProfileFormPage());}),
                       ],
                     ),
@@ -209,10 +210,16 @@ class _AccountPageState extends State<AccountPage> {
                           isDestructive: true
                         ),
                         _buildListTile('Delete Account', Icons.delete, isDestructive: true),
+                        SizedBox(height: 30.h),
+                        Center(
+                          child: Text(
+                            "Version 4.0.0",
+                            style: poppinsRegular(size: 12.sp, color: black.withOpacity(0.5)),
+                          ),
+                        ),
                       ],
                     ),
                   ),
-              
                   SizedBox(height: 30.h),
                 ],
               ),

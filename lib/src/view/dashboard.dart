@@ -11,7 +11,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+  final int? initialIndex;
+  const Dashboard({super.key, this.initialIndex});
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -42,7 +43,12 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     if(mounted){
       WidgetsBinding.instance.addPostFrameCallback((_) async{
-        await getData();
+        setState(() {
+         _selectedIndex = widget.initialIndex ?? 0;
+        });
+        if(widget.initialIndex != 2){
+          await getData();
+        }
       });
     }
   }

@@ -40,7 +40,7 @@ customAppbar(){
 }
 
 //normal appbar
-appbar({String? title}){
+appbar({String? title, bool showArrow = true}){
   return PreferredSize(
     preferredSize: Size(double.infinity, 62.0.h),
     child: Container(
@@ -54,11 +54,14 @@ appbar({String? title}){
             // Logo
             Row(
               children: [
-                GestureDetector(
-                  onTap: (){
-                    Get.back();
-                  },
-                  child: const Icon(Icons.arrow_back, color: black,)
+                Visibility(
+                  visible: showArrow == true,
+                  child: GestureDetector(
+                    onTap: (){
+                      Get.back();
+                    },
+                    child: const Icon(Icons.arrow_back, color: black,)
+                  ),
                 ),
                 SizedBox(width: 24.w,),
                 Text(title ?? "", style: poppinsSemiBold(size: 16.sp, color: black),),
