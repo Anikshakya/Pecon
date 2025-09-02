@@ -23,11 +23,12 @@ void main() async{
   await NotificationService.initNotification();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler); // FirebaseMessaging used correctly after initialization.
   runApp(
-    Faded(
-      dueDate: DateTime(2025, 08, 15),
-      daysDeadline: 40,
-      child: const MyApp()
-    )
+    // Faded(
+    //   dueDate: DateTime(2025, 08, 15),
+    //   daysDeadline: 40,
+    //   child: 
+      const MyApp()
+    // )
   );
 }
 
