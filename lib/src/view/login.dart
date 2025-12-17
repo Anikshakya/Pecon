@@ -160,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         InkWell(
           onTap: () {
-            Get.to(() => const RegisterPage());
+            Get.to(() => const CountrySelectPage());
           },
           child: Text(
             'Register here',
