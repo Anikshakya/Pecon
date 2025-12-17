@@ -21,8 +21,10 @@ remove(String storageName){
 clearAllData(){
   log('\x1B[31mAlert => Clearing all cached data\x1B[0m');
   var passcodeStatus = read('passcode');
+  var hasLoggedOut = read('hasLoggedOut');
   var userId = read('userId');
   box.erase();
+  write('hasLoggedOut', hasLoggedOut);
   if(passcodeStatus == false) {
     write('passcode', passcodeStatus);
     write('userId', userId);

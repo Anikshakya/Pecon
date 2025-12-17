@@ -11,6 +11,8 @@ import 'package:pecon/src/view/otp_page.dart';
 import 'package:pecon/src/view/reset_password_page.dart';
 import 'package:pecon/src/widgets/custom_toast.dart';
 
+import '../view/country_select_page.dart';
+
 class AuthController extends GetxController {
   // Get Controllers 
   AppController appCon = Get.put(AppController());
@@ -29,8 +31,10 @@ class AuthController extends GetxController {
     var token = await read("token");
     if(token != null && token != ""){
       Get.offAll(()=> const Dashboard());
+    } else if (read('hasLoggedOut') == true){
+      Get.offAll(() => const LoginPage());
     } else {
-      Get.offAll(()=> const LoginPage());
+      Get.offAll(()=> const CountrySelectPage());
     }
   }
 
@@ -190,6 +194,7 @@ class AuthController extends GetxController {
       var response = await ApiRepo.apiPost('api/logout', "", 'Logout');
       if(response != null && response['code'] == 200) {
         isLogOutLoading(false); // Stop Loading
+        write('hasLoggedOut', true);
         // Remove All stored 
         clearAllData();
         Get.offAll(()=>const LoginPage());
