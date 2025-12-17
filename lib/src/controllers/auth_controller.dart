@@ -9,9 +9,8 @@ import 'package:get/get.dart';
 import 'package:pecon/src/view/login.dart';
 import 'package:pecon/src/view/otp_page.dart';
 import 'package:pecon/src/view/reset_password_page.dart';
+import 'package:pecon/src/view/role_selection_page.dart';
 import 'package:pecon/src/widgets/custom_toast.dart';
-
-import '../view/country_select_page.dart';
 
 class AuthController extends GetxController {
   // Get Controllers 
@@ -34,7 +33,7 @@ class AuthController extends GetxController {
     } else if (read('hasLoggedOut') == true){
       Get.offAll(() => const LoginPage());
     } else {
-      Get.offAll(()=> const CountrySelectPage());
+      Get.offAll(()=> const RoleSelectionPage());
     }
   }
 

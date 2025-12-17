@@ -1,7 +1,7 @@
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/auth_controller.dart';
+import 'package:pecon/src/view/role_selection_page.dart';
 import 'package:pecon/src/widgets/custom_toast.dart';
-import 'package:pecon/src/view/register_page.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
 import 'package:pecon/src/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
@@ -160,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         InkWell(
           onTap: () {
-            Get.to(() => const CountrySelectPage());
+            Get.to(() => const RoleSelectionPage());
           },
           child: Text(
             'Register here',

@@ -2,14 +2,14 @@ import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/auth_controller.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
 import 'package:pecon/src/widgets/custom_text_field.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RegisterPage extends StatefulWidget {
   final bool isNepal;
-  const RegisterPage({super.key, required this.isNepal});
+  final String role;
+  const RegisterPage({super.key, required this.isNepal, required this.role});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -98,7 +98,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     mobile != null && mobile.length == 10
                         ? null
                         : "Enter a valid 10-digit mobile number",
-            suffixIcon: Padding(
+            prefixIcon: Padding(
               padding: EdgeInsets.symmetric(horizontal: 12.w),
               child: Center(
                 widthFactor: 1,
@@ -168,70 +168,70 @@ class _RegisterPageState extends State<RegisterPage> {
           SizedBox(height: 20.h),
 
           // Role Selection
-          GestureDetector(
-            onTap: () {
-              int selectedIndex = roles.indexOf(selectedRole); // Store initial selection
-              showCupertinoModalPopup(
-                context: context,
-                builder: (BuildContext context) {
-                  return Container(
-                    height: 240.h,
-                    color: Colors.white,
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          height: 40,
-                          color: Colors.grey[200],
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context), // Cancel
-                                child: Text("Cancel", style: poppinsMedium(size:15.sp, color: purple),),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    selectedRole = roles[selectedIndex]; // Update role
-                                  });
-                                  Navigator.pop(context);
-                                },
-                                child: Text("Done", style: poppinsMedium(size:15.sp, color: purple),),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 200.h,
-                          child: CupertinoPicker(
-                            backgroundColor: Colors.white,
-                            itemExtent: 40.h,
-                            scrollController: FixedExtentScrollController(
-                              initialItem: selectedIndex,
-                            ),
-                            onSelectedItemChanged: (index) {
-                              selectedIndex = index; // Temporarily store selection
-                            },
-                            children: roles.map((role) => Center(child: Text(role, style: TextStyle(fontSize: 18.sp),))).toList(),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              );
-            },
-            child: AbsorbPointer(
-              child: CustomTextFormField(
-                headingText: "Select Role",
-                controller: TextEditingController(text: selectedRole),
-                validator: (value) =>
-                    value != null && value.isNotEmpty ? null : "Please select a role",
-                suffixIcon: const Icon(Icons.arrow_drop_down, color: gray),
-              ),
-            ),
-          ),
+          // GestureDetector(
+          //   onTap: () {
+          //     int selectedIndex = roles.indexOf(selectedRole); // Store initial selection
+          //     showCupertinoModalPopup(
+          //       context: context,
+          //       builder: (BuildContext context) {
+          //         return Container(
+          //           height: 240.h,
+          //           color: Colors.white,
+          //           child: Column(
+          //             children: [
+          //               Container(
+          //                 padding: const EdgeInsets.symmetric(horizontal: 16),
+          //                 height: 40,
+          //                 color: Colors.grey[200],
+          //                 child: Row(
+          //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //                   children: [
+          //                     TextButton(
+          //                       onPressed: () => Navigator.pop(context), // Cancel
+          //                       child: Text("Cancel", style: poppinsMedium(size:15.sp, color: purple),),
+          //                     ),
+          //                     TextButton(
+          //                       onPressed: () {
+          //                         setState(() {
+          //                           selectedRole = roles[selectedIndex]; // Update role
+          //                         });
+          //                         Navigator.pop(context);
+          //                       },
+          //                       child: Text("Done", style: poppinsMedium(size:15.sp, color: purple),),
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ),
+          //               SizedBox(
+          //                 height: 200.h,
+          //                 child: CupertinoPicker(
+          //                   backgroundColor: Colors.white,
+          //                   itemExtent: 40.h,
+          //                   scrollController: FixedExtentScrollController(
+          //                     initialItem: selectedIndex,
+          //                   ),
+          //                   onSelectedItemChanged: (index) {
+          //                     selectedIndex = index; // Temporarily store selection
+          //                   },
+          //                   children: roles.map((role) => Center(child: Text(role, style: TextStyle(fontSize: 18.sp),))).toList(),
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //         );
+          //       },
+          //     );
+          //   },
+          //   child: AbsorbPointer(
+          //     child: CustomTextFormField(
+          //       headingText: "Select Role",
+          //       controller: TextEditingController(text: selectedRole),
+          //       validator: (value) =>
+          //           value != null && value.isNotEmpty ? null : "Please select a role",
+          //       suffixIcon: const Icon(Icons.arrow_drop_down, color: gray),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -250,9 +250,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
             await authCon.register(
               name: nameCon.text.toString().trim(),
-              number: mobileController.text.toString().trim(),
+              number: mobileController.text.toString().trim(), // widget.isNepal == true ? "+ ${mobileController.text.toString().trim()}" : "+91 ${mobileController.text.toString().trim()}",
               password: confirmPasswordController.text.toString().trim(),
-              role: selectedRole.toString().trim()
+              role: widget.role.toString(), // selectedRole.toString().trim()
             );
           },
           text: "Register",

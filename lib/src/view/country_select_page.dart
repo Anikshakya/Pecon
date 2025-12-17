@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/view/auth/register_page.dart';
+import 'package:pecon/src/view/register_page.dart';
+import 'package:pecon/src/widgets/custom_button.dart';
 
 class CountrySelectPage extends StatefulWidget {
-  const CountrySelectPage({super.key});
+  final String role;
+  const CountrySelectPage({super.key, required this.role});
 
   @override
   State<CountrySelectPage> createState() => _CountrySelectPageState();
@@ -66,21 +68,11 @@ class _CountrySelectPageState extends State<CountrySelectPage> {
 
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 14.h),
-                  backgroundColor: purple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
+              child: CustomButton(
                 onPressed: () {
-                  Get.to(() => RegisterPage(isNepal: isNepal));
+                  Get.to(() => RegisterPage(isNepal: isNepal, role : widget.role));
                 },
-                child: Text(
-                  "Continue",
-                  style: poppinsMedium(size: 16.sp, color: white),
-                ),
+                text: "Continue",
               ),
             ),
 

@@ -1,10 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:video_player/video_player.dart';
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/app_controller.dart';
 import 'package:pecon/src/controllers/auth_controller.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:pecon/src/widgets/partner_logo.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,42 +13,59 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  // Get Controllers
   final AuthController authCon = Get.put(AuthController());
   final AppController appCon = Get.put(AppController());
 
+  late VideoPlayerController _videoController;
+  bool _calledNext = false;
+
   @override
   void initState() {
-    Future.delayed(const Duration(milliseconds: 1500), () async{
-      //get splahs api link/ terms and conditions
-      await appCon.getSettingApi();
-      // Route Acc To Auth Status
-      await authCon.checkUserAuthStatus();
-    });
     super.initState();
+
+    _videoController = VideoPlayerController.asset(
+      'assets/video/splash_video.mp4',
+    )..initialize().then((_) {
+        setState(() {});
+        _videoController.play();
+      });
+
+    _videoController.addListener(_videoListener);
+  }
+
+  void _videoListener() async {
+    if (_videoController.value.position >=
+            _videoController.value.duration &&
+        !_calledNext) {
+      _calledNext = true;
+
+      await appCon.getSettingApi();
+      await authCon.checkUserAuthStatus();
+    }
+  }
+
+  @override
+  void dispose() {
+    _videoController.removeListener(_videoListener);
+    _videoController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: primary,
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        width: double.infinity,
-        child: Stack(
-          children: [
-            Center(
-              child: Image.asset("assets/images/peacon_logo.png", height: 50.h),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: EdgeInsets.only(bottom: 43.0.sp),
-                child: partnerLogo()
-              ),
-            )
-          ],
-        ),
+      backgroundColor: black,
+      body: Stack(
+        children: [
+          Center(
+            child: _videoController.value.isInitialized
+                ? AspectRatio(
+                    aspectRatio: _videoController.value.aspectRatio,
+                    child: VideoPlayer(_videoController),
+                  )
+                : const SizedBox(),
+          ),
+        ],
       ),
     );
   }
