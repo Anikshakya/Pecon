@@ -8,7 +8,8 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+  final bool isNepal;
+  const RegisterPage({super.key, required this.isNepal});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -92,10 +93,23 @@ class _RegisterPageState extends State<RegisterPage> {
             textInputAction: TextInputAction.next,
             keyboardType: TextInputType.phone,
             headingText: "Mobile No.",
-            validator: (mobile) => mobile != null && mobile.length == 10
-                ? null
-                : "Enter a valid 10-digit mobile number",
+            validator:
+                (mobile) =>
+                    mobile != null && mobile.length == 10
+                        ? null
+                        : "Enter a valid 10-digit mobile number",
+            suffixIcon: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12.w),
+              child: Center(
+                widthFactor: 1,
+                child: Text(
+                  widget.isNepal == true ? "+977" : "+91",
+                  style: poppinsMedium(size: 14.sp, color: black),
+                ),
+              ),
+            ),
           ),
+
           SizedBox(height: 20.h),
 
           // Name
