@@ -27,7 +27,9 @@ class _SplashScreenState extends State<SplashScreen> {
       'assets/video/splash_video.mp4',
     )..initialize().then((_) {
         setState(() {});
-        _videoController.play();
+        _videoController
+          ..setVolume(1.0)
+          ..play();
       });
 
     _videoController.addListener(_videoListener);
