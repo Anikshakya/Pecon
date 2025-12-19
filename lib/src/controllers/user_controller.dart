@@ -30,6 +30,7 @@ class UserController extends GetxController {
 
   //Lists
   dynamic districtList = [];
+  dynamic districtCityList = [];
   dynamic cityList = [];
   dynamic earningList = [];
   dynamic withdrawalList = [];
@@ -195,17 +196,13 @@ class UserController extends GetxController {
   }
 
   // Get District List
-  getDistrictData() async{
+  getDistrictCityData() async{
     try{
       isDistrictLoading(true);
       districtList.clear();
       var response = await ApiRepo.apiGet('api/districts', "", 'Get Districts List');
       if(response != null && response['code'] == 200) {
-        if(response["data"] != null && response["data"] != []){
-          for(var allData in response["data"]){
-            districtList.add({"name" : allData["name"] ?? "", "id" : allData["id"]});
-          }
-        }
+        districtCityList = response;
       }
     }catch (e){
       log(e.toString());
@@ -416,6 +413,28 @@ class UserController extends GetxController {
     }
     
     log("Filtered ID $trimmedId: ${shopkeeperNames[index]}");
+  }
+
+  // Get CountryWise District Data
+  getDistrictData({required bool isNepal}) async {
+    try {
+      isDistrictLoading(true);
+      districtList.clear();
+      var response =
+          await ApiRepo.apiGet(isNepal ? 'api/nepal' : 'api/india', "", 'Get Districts List');
+      if (response != null && response['code'] == 200) {
+        if (response["data"] != null && response["data"] != []) {
+          for (var allData in response["data"]) {
+            districtList
+                .add({"name": allData["name"] ?? "", "id": allData["id"]});
+          }
+        }
+      }
+    } catch (e) {
+      log(e.toString());
+    } finally {
+      isDistrictLoading(false);
+    }
   }
 
 }
