@@ -66,12 +66,14 @@ class AuthController extends GetxController {
   }
 
   // Register API
-  register({name, number, password, role}) async {
+  register({name, number, password, role, district, city}) async {
     var data = {
       "name": name,
       "number": number,
       "password": password,
-      "role": role.toString().toLowerCase()
+      "role": role.toString().toLowerCase(),
+      "district_id" : district,
+      "city_id": city,
     };
     try{
       isRegisterLoading(true); // Start Loading

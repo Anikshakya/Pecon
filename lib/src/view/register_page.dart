@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../controllers/user_controller.dart';
+
 class RegisterPage extends StatefulWidget {
   final bool isNepal;
   final String role;
@@ -18,20 +20,28 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   // Get Controllers
   final AuthController authCon = Get.put(AuthController());
+  final UserController userCon = Get.put(UserController());
 
   final formKey = GlobalKey<FormState>();
 
-  // Text Controllers
+    // Text Controllers
   final TextEditingController mobileController          = TextEditingController();
   final TextEditingController nameCon                   = TextEditingController();
   final TextEditingController passwordController        = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController districtController        = TextEditingController();
+  final TextEditingController cityController            = TextEditingController();
 
   bool isObscure = true;
   bool isConfirmPassObscure = true;
 
   List<String> roles = ["Shopkeeper", "Customer", "Technician"];
   String selectedRole = "Customer";
+
+  int selectedDistrictIndex = 0;
+  int selectedCityIndex = 0;
+  int? districtId;
+  int? cityId;
 
   @override
   Widget build(BuildContext context) {
@@ -119,6 +129,60 @@ class _RegisterPageState extends State<RegisterPage> {
             headingText: "Name",
           ),
           SizedBox(height: 20.h),
+          SizedBox(height: 20.h),
+          //District
+          CustomTextFormHeaderField(
+            readOnly: true,
+            onTap: userCon.isDistrictLoading.isTrue ? (){} : (){showDistrictBottomSheet();},
+            controller: districtController,
+            textInputAction: TextInputAction.next,
+            headingText: "District",
+            filledColor: gray.withOpacity(0.2),
+            suffixIcon: userCon.isDistrictLoading.isTrue 
+              ? Container(
+                height: 48.h,
+                width: 48.h,
+                padding: EdgeInsets.all(14.sp),
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: grey1,
+                    strokeWidth: 1.5.sp,
+                  ),
+                ),
+              )
+              : const Icon(Icons.arrow_drop_down, color: grey1,),
+          ),
+          SizedBox(height: 20.h),
+          //City Controll
+          Visibility(
+            visible: districtController.text.isNotEmpty,
+            child: Column(
+              children: [
+                CustomTextFormHeaderField(
+                  readOnly: true,
+                  onTap: userCon.isDistrictLoading.isTrue ? (){} : showCupertinoCityPicker,
+                  controller: cityController,
+                  textInputAction: TextInputAction.next,
+                  headingText: "City",
+                  filledColor: gray.withOpacity(0.2),
+                  suffixIcon: userCon.isDistrictLoading.isTrue || userCon.isCityLoading.isTrue
+                    ? Container(
+                      height: 48.h,
+                      width: 48.h,
+                      padding: EdgeInsets.all(14.sp),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: grey1,
+                          strokeWidth: 1.5.sp,
+                        ),
+                      ),
+                    )
+                    : const Icon(Icons.arrow_drop_down, color: grey1,),
+                ),
+                SizedBox(height: 20.h),
+              ],
+            ),
+          ),
 
           // Password
           CustomTextFormField(
@@ -253,11 +317,218 @@ class _RegisterPageState extends State<RegisterPage> {
               number: mobileController.text.toString().trim(), // widget.isNepal == true ? "+ ${mobileController.text.toString().trim()}" : "+91 ${mobileController.text.toString().trim()}",
               password: confirmPasswordController.text.toString().trim(),
               role: widget.role.toString(), // selectedRole.toString().trim()
+              district: districtId == 0 ? null : districtId,
+              city: cityId,
             );
           },
           text: "Register",
         ),
       ),
+    );
+  }
+
+  //show district bottomsheet
+  showDistrictBottomSheet() {
+    String searchQuery = '';
+    List<dynamic> filteredDistricts = List.from(userCon.districtList);
+    
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.6,
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              child: Column(
+                children: [
+                  // Header with title and close button
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Select District',
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.close, size: 24.sp),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 12.h),
+                  
+                  // Modern search field
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.grey[50],
+                      border: Border.all(color: Colors.grey[200]!),
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search district...',
+                        hintStyle: TextStyle(color: Colors.grey[500]),
+                        prefixIcon: Icon(Icons.search, color: Colors.grey[500]),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 14.h,
+                          horizontal: 16.w,
+                        ),
+                      ),
+                      style: TextStyle(fontSize: 16.sp),
+                      onChanged: (value) {
+                        setModalState(() {
+                          searchQuery = value.toLowerCase();
+                          filteredDistricts = userCon.districtList.where((district) {
+                            return district["name"].toString().toLowerCase().contains(searchQuery);
+                          }).toList();
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  
+                  // Modern list with subtle dividers
+                  Expanded(
+                    child: filteredDistricts.isEmpty
+                        ? Center(
+                            child: Text(
+                              "No districts found",
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          )
+                        : ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: filteredDistricts.length,
+                            itemBuilder: (context, index) {
+                              final district = filteredDistricts[index];
+                              return Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(12),
+                                  onTap: () async {
+                                    setState(() {
+                                      districtController.text = district["name"].toString();
+                                      districtId = district["id"];
+                                      
+                                      cityController.clear();
+                                      cityId = null;
+                                      selectedCityIndex = 0;
+                                      userCon.cityList = [];
+                                    });
+                                    
+                                    Navigator.pop(context);
+                                    await userCon.getcityData(districtId);
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 12.h,
+                                      horizontal: 20.w,
+                                    ),
+                                    child: Text(
+                                      district["name"].toString(),
+                                      style: TextStyle(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  // Show City Picker
+  showCupertinoCityPicker() {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 240.h,
+          color: Colors.white,
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16.sp),
+                height: 40.h,
+                color: Colors.grey[200],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context), // Cancel
+                      child: Text("Cancel", style: poppinsMedium(size: 15.sp, color: purple)),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          if(userCon.cityList.isNotEmpty){
+                            // Store selected district ID in text controller
+                            cityController.text = userCon.cityList[selectedCityIndex]["name"].toString();
+                            cityId = userCon.cityList[selectedCityIndex]["id"];
+                          }
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: Text("Done", style: poppinsMedium(size: 15.sp, color: purple)),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 200.h,
+                child: CupertinoPicker(
+                  backgroundColor: Colors.white,
+                  itemExtent: 40.h,
+                  scrollController: FixedExtentScrollController(
+                    initialItem: selectedCityIndex,
+                  ),
+                  onSelectedItemChanged: (index) {
+                    setState(() {
+                      selectedCityIndex = index;
+                    });
+                  },
+                  children: userCon.cityList
+                      .map<Widget>((city) => Center(
+                            child: Text(
+                              city["name"].toString(), // Ensure the name is displayed
+                              style: TextStyle(fontSize: 18.sp),
+                            ),
+                          ))
+                      .toList(),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
