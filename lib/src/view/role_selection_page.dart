@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/view/country_select_page.dart';
+import 'package:pecon/src/view/register_termscondition.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
 
 class RoleSelectionPage extends StatefulWidget {
@@ -49,7 +49,7 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                 onPressed:  selectedRole.isEmpty
                     ? () {}
                     : () {
-                        Get.to(()=> CountrySelectPage(role: selectedRole,));
+                        Get.to(()=> RegisterTermsAndConditions(role: selectedRole,));
                       },
                 text: "Continue",
               ),
