@@ -1,55 +1,48 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/auth_controller.dart';
-import 'package:pecon/src/controllers/user_controller.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
 import 'package:pecon/src/widgets/custom_text_field.dart';
-import 'package:pecon/src/widgets/custom_textfieldheader.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../controllers/user_controller.dart';
 
 class RegisterPage extends StatefulWidget {
   final bool isNepal;
   final String role;
-
-  const RegisterPage({
-    super.key,
-    required this.isNepal,
-    required this.role,
-  });
+  const RegisterPage({super.key, required this.isNepal, required this.role});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  // Controllers
+  // Get Controllers
   final AuthController authCon = Get.put(AuthController());
   final UserController userCon = Get.put(UserController());
 
   final formKey = GlobalKey<FormState>();
 
-  // Text Controllers
-  final TextEditingController mobileController = TextEditingController();
-  final TextEditingController nameCon = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
-  final TextEditingController districtController = TextEditingController();
-  final TextEditingController cityController = TextEditingController();
+    // Text Controllers
+  final TextEditingController mobileController          = TextEditingController();
+  final TextEditingController nameCon                   = TextEditingController();
+  final TextEditingController passwordController        = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController districtController        = TextEditingController();
+  final TextEditingController cityController            = TextEditingController();
 
   bool isObscure = true;
   bool isConfirmPassObscure = true;
 
+  List<String> roles = ["Shopkeeper", "Customer", "Technician"];
+  String selectedRole = "Customer";
+
+  int selectedDistrictIndex = 0;
+  int selectedCityIndex = 0;
   int? districtId;
   int? cityId;
-
-  int selectedCityIndex = 0;
-
-  /// ✅ LOCAL CITY LIST (FILTERED FROM DISTRICT)
-  List<dynamic> filteredCityList = [];
 
   @override
   void initState() {
@@ -58,7 +51,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   initialize() async{
-    await userCon.getDistrictCityData();
+    await userCon.getDistrictData(isNepal: widget.isNepal);
   }
 
   @override
@@ -66,11 +59,11 @@ class _RegisterPageState extends State<RegisterPage> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: primary,
         appBar: AppBar(
-          backgroundColor: primary,
           elevation: 0,
+          backgroundColor: primary,
         ),
+        backgroundColor: primary,
         extendBodyBehindAppBar: true,
         body: Center(
           child: SingleChildScrollView(
@@ -78,6 +71,7 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Padding(
               padding: EdgeInsets.all(30.sp),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _registerHeading(),
@@ -85,6 +79,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   _registerForm(),
                   SizedBox(height: 50.h),
                   _registerButton(),
+                  const SizedBox(height: 16.0),
                 ],
               ),
             ),
@@ -94,45 +89,46 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget _registerHeading() {
+  _registerHeading() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "Register",
-          style: poppinsBold(size: 20.sp, color: black),
-        ),
+        Text("Register", style: poppinsBold(size: 20.sp, color: black),),
         SizedBox(height: 10.h),
-        Text(
-          "Create a new account by filling up the form below.",
-          style: poppinsMedium(size: 14.sp, color: black),
-        ),
+        Text("Create a new account by filling up the form below.", style: poppinsMedium(size: 14.sp, color: black),),
       ],
     );
   }
 
+  // Registration Form
   Widget _registerForm() {
     return Form(
       key: formKey,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Mobile
+          // Mobile Number
           CustomTextFormField(
             controller: mobileController,
-            keyboardType: TextInputType.phone,
             textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.phone,
             headingText: "Mobile No.",
+            validator:
+                (mobile) =>
+                    mobile != null && mobile.length == 10
+                        ? null
+                        : "Enter a valid 10-digit mobile number",
             prefixIcon: Padding(
               padding: EdgeInsets.symmetric(horizontal: 12.w),
               child: Center(
+                widthFactor: 1,
                 child: Text(
-                  widget.isNepal ? "+977" : "+91",
+                  widget.isNepal == true ? "+977" : "+91",
                   style: poppinsMedium(size: 14.sp, color: black),
                 ),
               ),
             ),
-            validator: (v) =>
-                v != null && v.length == 10 ? null : "Invalid mobile number",
           ),
 
           SizedBox(height: 20.h),
@@ -143,33 +139,62 @@ class _RegisterPageState extends State<RegisterPage> {
             textInputAction: TextInputAction.next,
             headingText: "Name",
           ),
-
           SizedBox(height: 20.h),
-
-          // District
-          CustomTextFormHeaderField(
-            readOnly: true,
-            controller: districtController,
-            headingText: "District",
-            filledColor: gray.withOpacity(0.2),
-            suffixIcon: const Icon(Icons.arrow_drop_down, color: grey1),
-            onTap: showDistrictBottomSheet,
-          ),
-
-          SizedBox(height: 20.h),
-
-          // City
-          if (districtController.text.isNotEmpty)
-            CustomTextFormHeaderField(
+          //District
+          Obx(()=>
+            CustomTextFormField(
               readOnly: true,
-              controller: cityController,
-              headingText: "City",
-              filledColor: gray.withOpacity(0.2),
-              suffixIcon: const Icon(Icons.arrow_drop_down, color: grey1),
-              onTap: filteredCityList.isEmpty ? null : showCupertinoCityPicker,
+              onTap: userCon.isDistrictLoading.isTrue ? (){} : (){showDistrictBottomSheet();},
+              controller: districtController,
+              textInputAction: TextInputAction.next,
+              headingText: "District",
+              suffixIcon: userCon.isDistrictLoading.isTrue 
+                ? Container(
+                  height: 48.h,
+                  width: 48.h,
+                  padding: EdgeInsets.all(14.sp),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: grey1,
+                      strokeWidth: 1.5.sp,
+                    ),
+                  ),
+                )
+                : const Icon(Icons.arrow_drop_down, color: grey1,),
             ),
-
+          ),
           SizedBox(height: 20.h),
+          //City Controll
+          Obx(()=>
+            Visibility(
+              visible: districtController.text.isNotEmpty,
+              child: Column(
+                children: [
+                  CustomTextFormField(
+                    readOnly: true,
+                    onTap: userCon.isDistrictLoading.isTrue ? (){} : showCupertinoCityPicker,
+                    controller: cityController,
+                    textInputAction: TextInputAction.next,
+                    headingText: "City",
+                    suffixIcon: userCon.isDistrictLoading.isTrue || userCon.isCityLoading.isTrue
+                      ? Container(
+                        height: 48.h,
+                        width: 48.h,
+                        padding: EdgeInsets.all(14.sp),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: grey1,
+                            strokeWidth: 1.5.sp,
+                          ),
+                        ),
+                      )
+                      : const Icon(Icons.arrow_drop_down, color: grey1,),
+                  ),
+                  SizedBox(height: 20.h),
+                ],
+              ),
+            ),
+          ),
 
           // Password
           CustomTextFormField(
@@ -177,16 +202,21 @@ class _RegisterPageState extends State<RegisterPage> {
             obscureText: isObscure,
             headingText: "Password",
             suffixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  isObscure = !isObscure;
+                });
+              },
               icon: Icon(
                 isObscure ? Icons.visibility : Icons.visibility_off,
+                size: 20.sp,
                 color: gray,
               ),
-              onPressed: () => setState(() => isObscure = !isObscure),
             ),
-            validator: (v) =>
-                v != null && v.length >= 6 ? null : "Min 6 characters",
+            validator: (password) => password != null && password.length >= 6
+                ? null
+                : "Password must be at least 6 characters",
           ),
-
           SizedBox(height: 20.h),
 
           // Confirm Password
@@ -195,46 +225,125 @@ class _RegisterPageState extends State<RegisterPage> {
             obscureText: isConfirmPassObscure,
             headingText: "Confirm Password",
             suffixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  isConfirmPassObscure = !isConfirmPassObscure;
+                });
+              },
               icon: Icon(
                 isConfirmPassObscure ? Icons.visibility : Icons.visibility_off,
+                size: 20.sp,
                 color: gray,
               ),
-              onPressed: () =>
-                  setState(() => isConfirmPassObscure = !isConfirmPassObscure),
             ),
-            validator: (v) =>
-                v == passwordController.text ? null : "Passwords do not match",
+            validator: (confirmPassword) =>
+                confirmPassword != null && confirmPassword == passwordController.text
+                    ? null
+                    : "Passwords do not match",
           ),
+          SizedBox(height: 20.h),
+
+          // Role Selection
+          // GestureDetector(
+          //   onTap: () {
+          //     int selectedIndex = roles.indexOf(selectedRole); // Store initial selection
+          //     showCupertinoModalPopup(
+          //       context: context,
+          //       builder: (BuildContext context) {
+          //         return Container(
+          //           height: 240.h,
+          //           color: Colors.white,
+          //           child: Column(
+          //             children: [
+          //               Container(
+          //                 padding: const EdgeInsets.symmetric(horizontal: 16),
+          //                 height: 40,
+          //                 color: Colors.grey[200],
+          //                 child: Row(
+          //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //                   children: [
+          //                     TextButton(
+          //                       onPressed: () => Navigator.pop(context), // Cancel
+          //                       child: Text("Cancel", style: poppinsMedium(size:15.sp, color: purple),),
+          //                     ),
+          //                     TextButton(
+          //                       onPressed: () {
+          //                         setState(() {
+          //                           selectedRole = roles[selectedIndex]; // Update role
+          //                         });
+          //                         Navigator.pop(context);
+          //                       },
+          //                       child: Text("Done", style: poppinsMedium(size:15.sp, color: purple),),
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ),
+          //               SizedBox(
+          //                 height: 200.h,
+          //                 child: CupertinoPicker(
+          //                   backgroundColor: Colors.white,
+          //                   itemExtent: 40.h,
+          //                   scrollController: FixedExtentScrollController(
+          //                     initialItem: selectedIndex,
+          //                   ),
+          //                   onSelectedItemChanged: (index) {
+          //                     selectedIndex = index; // Temporarily store selection
+          //                   },
+          //                   children: roles.map((role) => Center(child: Text(role, style: TextStyle(fontSize: 18.sp),))).toList(),
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //         );
+          //       },
+          //     );
+          //   },
+          //   child: AbsorbPointer(
+          //     child: CustomTextFormField(
+          //       headingText: "Select Role",
+          //       controller: TextEditingController(text: selectedRole),
+          //       validator: (value) =>
+          //           value != null && value.isNotEmpty ? null : "Please select a role",
+          //       suffixIcon: const Icon(Icons.arrow_drop_down, color: gray),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
   }
 
+  // Register Button
   Widget _registerButton() {
-    return Obx(
-      () => CustomButton(
-        width: double.infinity,
-        isLoading: authCon.isRegisterLoading.value,
-        text: "Register",
-        onPressed: () async {
-          if (!formKey.currentState!.validate()) return;
+    return Obx(()=>
+      Center(
+        child: CustomButton(
+          width: double.infinity,
+          isLoading: authCon.isRegisterLoading.value,
+          onPressed: () async {
+            final isValid = formKey.currentState!.validate();
+            if (!isValid) return;
 
-          await authCon.register(
-            name: nameCon.text.trim(),
-            number: mobileController.text.trim(),
-            password: confirmPasswordController.text.trim(),
-            role: widget.role,
-            district: districtId,
-            city: cityId,
-          );
-        },
+            await authCon.register(
+              name: nameCon.text.toString().trim(),
+              number: mobileController.text.toString().trim(), // widget.isNepal == true ? "+ ${mobileController.text.toString().trim()}" : "+91 ${mobileController.text.toString().trim()}",
+              password: confirmPasswordController.text.toString().trim(),
+              role: widget.role.toString(), // selectedRole.toString().trim()
+              district: districtId == 0 ? null : districtId,
+              city: cityId,
+            );
+          },
+          text: "Register",
+        ),
       ),
     );
   }
 
-  // ---------------- DISTRICT BOTTOM SHEET ----------------
-
-  void showDistrictBottomSheet() {
+  //show district bottomsheet
+  showDistrictBottomSheet() {
+    String searchQuery = '';
+    List<dynamic> filteredDistricts = List.from(userCon.districtList);
+    
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -242,30 +351,126 @@ class _RegisterPageState extends State<RegisterPage> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (_) {
-        return ListView.builder(
-          padding: EdgeInsets.all(16.sp),
-          itemCount: userCon.districtList.length,
-          itemBuilder: (_, index) {
-            final district = userCon.districtList[index];
-            return ListTile(
-              title: Text(district["name"]),
-              onTap: () {
-                setState(() {
-                  districtController.text = district["name"];
-                  districtId = district["id"];
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.6,
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              child: Column(
+                children: [
+                  // Header with title and close button
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Select District',
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.close, size: 24.sp),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 12.h),
+                  
+                  // Modern search field
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.grey[50],
+                      border: Border.all(color: Colors.grey[200]!),
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search district...',
+                        hintStyle: TextStyle(color: Colors.grey[500]),
+                        prefixIcon: Icon(Icons.search, color: Colors.grey[500]),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 14.h,
+                          horizontal: 16.w,
+                        ),
+                      ),
+                      style: TextStyle(fontSize: 16.sp),
+                      onChanged: (value) {
+                        setModalState(() {
+                          searchQuery = value.toLowerCase();
+                          filteredDistricts = userCon.districtList.where((district) {
+                            return district["name"].toString().toLowerCase().contains(searchQuery);
+                          }).toList();
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  
+                  // Modern list with subtle dividers
+                  Expanded(
+                    child: filteredDistricts.isEmpty
+                        ? Center(
+                            child: Text(
+                              "No districts found",
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          )
+                        : ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: filteredDistricts.length,
+                            itemBuilder: (context, index) {
+                              final district = filteredDistricts[index];
+                              return Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(12),
+                                  onTap: () {
+                                    setState(() {
+                                      districtController.text = district["name"].toString();
+                                      districtId = district["id"];
 
-                  // RESET CITY
-                  cityController.clear();
-                  cityId = null;
-                  selectedCityIndex = 0;
+                                      // 👇 Load cities directly from selected district
+                                      userCon.cityList = district["cities"] ?? [];
 
-                  // FILTER CITIES FROM DISTRICT
-                  filteredCityList = List.from(district["cities"] ?? []);
-                });
+                                      cityController.clear();
+                                      cityId = null;
+                                      selectedCityIndex = 0;
+                                    });
 
-                Navigator.pop(context);
-              },
+                                    Get.back();
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 12.h,
+                                      horizontal: 20.w,
+                                    ),
+                                    child: Text(
+                                      district["name"].toString(),
+                                      style: TextStyle(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+                ],
+              ),
             );
           },
         );
@@ -273,61 +478,63 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  // ---------------- CITY PICKER ----------------
-
-  void showCupertinoCityPicker() {
+  // Show City Picker
+  showCupertinoCityPicker() {
     showCupertinoModalPopup(
       context: context,
-      builder: (_) {
+      builder: (BuildContext context) {
         return Container(
           height: 240.h,
           color: Colors.white,
           child: Column(
             children: [
               Container(
-                height: 40.h,
                 padding: EdgeInsets.symmetric(horizontal: 16.sp),
+                height: 40.h,
                 color: Colors.grey[200],
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text(
-                        "Cancel",
-                        style: poppinsMedium(size: 15.sp, color: purple),
-                      ),
+                      onPressed: () => Navigator.pop(context), // Cancel
+                      child: Text("Cancel", style: poppinsMedium(size: 15.sp, color: purple)),
                     ),
                     TextButton(
                       onPressed: () {
                         setState(() {
-                          final city = filteredCityList[selectedCityIndex];
-                          cityController.text = city["name"];
-                          cityId = city["id"];
+                          if(userCon.cityList.isNotEmpty){
+                            // Store selected district ID in text controller
+                            cityController.text = userCon.cityList[selectedCityIndex]["name"].toString();
+                            cityId = userCon.cityList[selectedCityIndex]["id"];
+                          }
                         });
                         Navigator.pop(context);
                       },
-                      child: Text(
-                        "Done",
-                        style: poppinsMedium(size: 15.sp, color: purple),
-                      ),
+                      child: Text("Done", style: poppinsMedium(size: 15.sp, color: purple)),
                     ),
                   ],
                 ),
               ),
-              Expanded(
+              SizedBox(
+                height: 200.h,
                 child: CupertinoPicker(
+                  backgroundColor: Colors.white,
                   itemExtent: 40.h,
-                  onSelectedItemChanged: (i) => selectedCityIndex = i,
-                  children: filteredCityList
-                      .map<Widget>(
-                        (c) => Center(
-                          child: Text(
-                            c["name"],
-                            style: TextStyle(fontSize: 18.sp),
-                          ),
-                        ),
-                      )
+                  scrollController: FixedExtentScrollController(
+                    initialItem: selectedCityIndex,
+                  ),
+                  onSelectedItemChanged: (index) {
+                    setState(() {
+                      selectedCityIndex = index;
+                    });
+                  },
+                  children: userCon.cityList
+                      .map<Widget>((city) => Center(
+                            child: Text(
+                              city["name"].toString(), // Ensure the name is displayed
+                              style: TextStyle(fontSize: 18.sp),
+                            ),
+                          ))
                       .toList(),
                 ),
               ),

@@ -76,7 +76,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
 
   initialise() async{
     WidgetsBinding.instance.addPostFrameCallback((_) async{
-      await userCon.getDistrictCityData();
+      await userCon.getDistrict();
       if(userCon.user.value.data.role.toLowerCase() == "technician"){
         userCon.addShopkeeperField();
         await userCon.getShopkeeperList();

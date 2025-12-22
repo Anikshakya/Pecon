@@ -196,13 +196,13 @@ class UserController extends GetxController {
   }
 
   // Get District List
-  getDistrictCityData() async{
+  getDistrict() async{
     try{
       isDistrictLoading(true);
       districtList.clear();
       var response = await ApiRepo.apiGet('api/districts', "", 'Get Districts List');
       if(response != null && response['code'] == 200) {
-        districtCityList = response;
+        districtList = response;
       }
     }catch (e){
       log(e.toString());
@@ -416,17 +416,24 @@ class UserController extends GetxController {
   }
 
   // Get CountryWise District Data
-  getDistrictData({required bool isNepal}) async {
+  Future<void> getDistrictData({required bool isNepal}) async {
     try {
       isDistrictLoading(true);
       districtList.clear();
-      var response =
-          await ApiRepo.apiGet(isNepal ? 'api/nepal' : 'api/india', "", 'Get Districts List');
+
+      final response = await ApiRepo.apiGet(
+        isNepal ? 'api/nepal' : 'api/india',
+        "",
+        'Get Districts List',
+      );
+
       if (response != null && response['code'] == 200) {
-        if (response["data"] != null && response["data"] != []) {
-          for (var allData in response["data"]) {
-            districtList
-                .add({"name": allData["name"] ?? "", "id": allData["id"]});
+        final data = response['data'];
+
+        if (data is List && data.isNotEmpty) {
+          final districts = data[0]['districts'];
+          if (districts is List) {
+            districtList = districts;
           }
         }
       }
@@ -436,5 +443,4 @@ class UserController extends GetxController {
       isDistrictLoading(false);
     }
   }
-
 }
