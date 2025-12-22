@@ -27,64 +27,71 @@ class _RegisterTermsAndConditionsState extends State<RegisterTermsAndConditions>
     return Scaffold(
       backgroundColor: white,
       appBar: appbar(title: "Terms and Conditions"),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 24.sp),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomMarkdownWidget(
-                data: appCon.termsCondition,
-                imageBuilder: (uri, title, alt) {
-                  return CustomNetworkImage(
-                    imageUrl: uri.toString(),
-                    height: 442.0.h,
-                    width: double.infinity,
-                  );
-                },
-              ),
-
-              20.verticalSpace,
-
-              /// ✅ Accept Terms Checkbox
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Checkbox(
-                    value: isAccepted,
-                    onChanged: (value) {
-                      setState(() {
-                        isAccepted = value ?? false;
-                      });
-                    },
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 12.sp),
-                      child: Text(
-                        "I have read and agree to the Terms and Conditions",
-                        style: TextStyle(fontSize: 14.sp),
+      body: Scrollbar(
+        trackVisibility: true,
+        thumbVisibility: true,
+        interactive: true,
+        radius: Radius.circular(8.sp),
+        thickness: 10.0.sp,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 24.sp),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomMarkdownWidget(
+                  data: appCon.termsCondition,
+                  imageBuilder: (uri, title, alt) {
+                    return CustomNetworkImage(
+                      imageUrl: uri.toString(),
+                      height: 442.0.h,
+                      width: double.infinity,
+                    );
+                  },
+                ),
+        
+                20.verticalSpace,
+        
+                /// ✅ Accept Terms Checkbox
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Checkbox(
+                      value: isAccepted,
+                      onChanged: (value) {
+                        setState(() {
+                          isAccepted = value ?? false;
+                        });
+                      },
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 12.sp),
+                        child: Text(
+                          "I have read and agree to the Terms and Conditions",
+                          style: TextStyle(fontSize: 14.sp),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-
-              24.verticalSpace,
-
-              /// ✅ Register Button
-              CustomButton(
-                width: double.infinity,
-                isDisabled: !isAccepted, 
-                onPressed: isAccepted
-                    ? () {
-                        Get.to(() => CountrySelectPage(role: widget.role));
-                      }
-                    : () {},
-                text: "Register",
-              ),
-            ],
+                  ],
+                ),
+        
+                24.verticalSpace,
+        
+                /// ✅ Register Button
+                CustomButton(
+                  width: double.infinity,
+                  isDisabled: !isAccepted, 
+                  onPressed: isAccepted
+                      ? () {
+                          Get.to(() => CountrySelectPage(role: widget.role));
+                        }
+                      : () {},
+                  text: "Register",
+                ),
+              ],
+            ),
           ),
         ),
       ),
