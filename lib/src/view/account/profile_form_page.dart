@@ -76,7 +76,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
 
   initialise() async{
     WidgetsBinding.instance.addPostFrameCallback((_) async{
-      await userCon.getDistrict();
+      await userCon.getDistrictData(isNepal: true);
       if(userCon.user.value.data.role.toLowerCase() == "technician"){
         userCon.addShopkeeperField();
         await userCon.getShopkeeperList();
@@ -250,6 +250,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             ),
             SizedBox(height: 20.h),
             //District
+          Obx(()=>
             CustomTextFormHeaderField(
               readOnly: true,
               onTap: userCon.isDistrictLoading.isTrue ? (){} : (){showDistrictBottomSheet();},
@@ -271,8 +272,10 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                 )
                 : const Icon(Icons.arrow_drop_down, color: grey1,),
             ),
-            SizedBox(height: 20.h),
-            //City Controll
+          ),
+          SizedBox(height: 20.h),
+          //City Controll
+          Obx(()=>
             Visibility(
               visible: districtController.text.isNotEmpty,
               child: Column(
@@ -302,6 +305,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                 ],
               ),
             ),
+          ),
             //Gender
             CustomTextFormHeaderField(
               onTap: showCupertinoGenderPicker,
@@ -805,19 +809,20 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                                 color: Colors.transparent,
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(12),
-                                  onTap: () async {
+                                  onTap: () {
                                     setState(() {
                                       districtController.text = district["name"].toString();
                                       districtId = district["id"];
-                                      
+
+                                      // 👇 Load cities directly from selected district
+                                      userCon.cityList = district["cities"] ?? [];
+
                                       cityController.clear();
                                       cityId = null;
                                       selectedCityIndex = 0;
-                                      userCon.cityList = [];
                                     });
-                                    
-                                    Navigator.pop(context);
-                                    await userCon.getcityData(districtId);
+
+                                    Get.back();
                                   },
                                   child: Container(
                                     padding: EdgeInsets.symmetric(
@@ -847,7 +852,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
     );
   }
 
-  //gender picker
+  // Show City Picker
   showCupertinoCityPicker() {
     showCupertinoModalPopup(
       context: context,

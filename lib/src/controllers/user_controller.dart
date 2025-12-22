@@ -195,46 +195,6 @@ class UserController extends GetxController {
     }
   }
 
-  // Get District List
-  getDistrict() async{
-    try{
-      isDistrictLoading(true);
-      districtList.clear();
-      var response = await ApiRepo.apiGet('api/districts', "", 'Get Districts List');
-      if(response != null && response['code'] == 200) {
-        districtList = response;
-      }
-    }catch (e){
-      log(e.toString());
-    }finally{
-      isDistrictLoading(false);
-    }
-  }
-
-  // Get city List
-  getcityData(districtId) async{
-    var data = {
-      "district_id" : districtId
-    };
-    try{
-      isCityLoading(true);
-      cityList.clear();
-      var response = await ApiRepo.apiGet('api/city', data, 'Get city List');
-      if(response != null && response['code'] == 200) {
-        if(response["data"] != null && response["data"] != []){
-          for(var allData in response["data"]){
-            cityList.add({"name" : allData["name"] ?? "", "id" : allData["id"]});
-          }
-        }
-      }
-    }catch (e){
-      log(e.toString());
-    }
-    finally{
-      isCityLoading(false);
-    }
-  }
-
   //cehckout prize
   checkOutPrize(redeemId, type) async {
     try{
