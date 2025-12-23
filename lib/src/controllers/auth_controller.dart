@@ -5,7 +5,8 @@ import 'package:pecon/src/app_config/read_write.dart';
 import 'package:pecon/src/controllers/app_controller.dart';
 import 'package:pecon/src/services/notification_service.dart';
 import 'package:pecon/src/view/dashboard.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide FormData, MultipartFile;
+import 'package:dio/dio.dart';
 import 'package:pecon/src/view/login.dart';
 import 'package:pecon/src/view/otp_page.dart';
 import 'package:pecon/src/view/reset_password_page.dart';
@@ -66,7 +67,7 @@ class AuthController extends GetxController {
   }
 
   // Register API
-  register({name, number, password, role, district, city, shopName, shopPan, shopOwner}) async {
+  register({name, number, password, role, district, city, shopName, shopPan, profile}) async {
     var data = {
       "name": name,
       "number": number,
@@ -76,11 +77,13 @@ class AuthController extends GetxController {
       "city_id": city,
       if(shopName != "")"shop_name": shopName,
       if (shopPan != "") "pan_number": shopPan,
-      if (shopOwner != "") "owner_name": shopOwner,
+      if (profile != null)"profile" : await MultipartFile.fromFile(profile.path, filename: profile.path.split('/').last)
     };
+
+    var finalData = FormData.fromMap(data);
     try{
       isRegisterLoading(true); // Start Loading
-      var response = await ApiRepo.apiPost('api/register', data, 'Register');
+      var response = await ApiRepo.apiPost('api/register', profile == null ? data : finalData, 'Register');
       if(response != null && response['code'] == 201) {
         isRegisterLoading(false); // Stop Loading
         Get.offAll(()=>const LoginPage());
