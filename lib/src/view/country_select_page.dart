@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/view/register_page.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
+import 'package:pecon/src/widgets/partner_logo.dart';
 
 class CountrySelectPage extends StatefulWidget {
   final String role;
@@ -21,63 +22,70 @@ class _CountrySelectPageState extends State<CountrySelectPage> {
     return Scaffold(
       backgroundColor: primary,
       appBar: AppBar(elevation: 0, backgroundColor: primary),
-      body: Padding(
-        padding: EdgeInsets.all(24.sp),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 30.h),
-
-            Text(
-              "Select Your Country",
-              style: poppinsBold(size: 20.sp, color: black),
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              "Choose your country to continue registration.",
-              style: poppinsMedium(size: 14.sp, color: black),
-            ),
-
-            SizedBox(height: 40.h),
-
-            Row(
-              children: [
-                _countryCard(
-                  title: "Nepal",
-                  code: "+977",
-                  flag: "🇳🇵",
-                  selected: isNepal,
-                  onTap: () {
-                    setState(() => isNepal = true);
-                  },
-                ),
-                SizedBox(width: 16.w),
-                _countryCard(
-                  title: "India",
-                  code: "+91",
-                  flag: "🇮🇳",
-                  selected: !isNepal,
-                  onTap: () {
-                    setState(() => isNepal = false);
-                  },
-                ),
-              ],
-            ),
-
-            const Spacer(),
-
-            SizedBox(
-              width: double.infinity,
-              child: CustomButton(
-                onPressed: () {
-                  Get.to(() => RegisterPage(isNepal: isNepal, role : widget.role));
-                },
-                text: "Continue",
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: EdgeInsets.all(24.sp),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 30.h),
+              Center(
+                child: Image.asset("assets/images/peacon_logo.png", height: 50.h)
               ),
-            ),
-
-            SizedBox(height: 20.h),
-          ],
+              SizedBox(height: 60.h),
+              Text(
+                "Select Your Country",
+                style: poppinsBold(size: 20.sp, color: black),
+              ),
+              SizedBox(height: 8.h),
+              Text(
+                "Choose your country to continue registration.",
+                style: poppinsMedium(size: 14.sp, color: black),
+              ),
+        
+              SizedBox(height: 40.h),
+        
+              Row(
+                children: [
+                  _countryCard(
+                    title: "Nepal",
+                    code: "+977",
+                    flag: "🇳🇵",
+                    selected: isNepal,
+                    onTap: () {
+                      setState(() => isNepal = true);
+                    },
+                  ),
+                  SizedBox(width: 16.w),
+                  _countryCard(
+                    title: "India",
+                    code: "+91",
+                    flag: "🇮🇳",
+                    selected: !isNepal,
+                    onTap: () {
+                      setState(() => isNepal = false);
+                    },
+                  ),
+                ],
+              ),
+        
+              SizedBox(height: 40.h),
+        
+              SizedBox(
+                width: double.infinity,
+                child: CustomButton(
+                  onPressed: () {
+                    Get.to(() => RegisterPage(isNepal: isNepal, role : widget.role));
+                  },
+                  text: "Continue",
+                ),
+              ),
+        
+              SizedBox(height: 120.h),
+              partnerLogo(),
+            ],
+          ),
         ),
       ),
     );

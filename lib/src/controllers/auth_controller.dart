@@ -32,7 +32,7 @@ class AuthController extends GetxController {
     if(token != null && token != ""){
       Get.offAll(()=> const Dashboard());
     } else if (read('hasLoggedOut') == true){
-      Get.offAll(() => const LoginPage());
+      Get.offAll(() => const RoleSelectionPage());
     } else {
       Get.offAll(()=> const RoleSelectionPage());
     }
