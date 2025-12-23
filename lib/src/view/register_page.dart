@@ -33,6 +33,11 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController districtController        = TextEditingController();
   final TextEditingController cityController            = TextEditingController();
 
+  //--- For shopkeeper ---
+  final TextEditingController shopNameCon  = TextEditingController();
+  final TextEditingController shopPanCon   = TextEditingController();
+  final TextEditingController shopOwnerCon = TextEditingController();
+
   bool isObscure = true;
   bool isConfirmPassObscure = true;
 
@@ -77,6 +82,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   _registerHeading(),
                   SizedBox(height: 55.h),
                   _registerForm(),
+                  // ShopKeeper Section
+                  _shopkeeperSection(),
                   SizedBox(height: 50.h),
                   _registerButton(),
                   const SizedBox(height: 16.0),
@@ -315,26 +322,64 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // Register Button
   Widget _registerButton() {
-    return Obx(()=>
-      Center(
-        child: CustomButton(
-          width: double.infinity,
-          isLoading: authCon.isRegisterLoading.value,
-          onPressed: () async {
-            final isValid = formKey.currentState!.validate();
-            if (!isValid) return;
+    return Obx(
+      () => CustomButton(
+        width: double.infinity,
+        isLoading: authCon.isRegisterLoading.value,
+        text: "Register",
+        onPressed: () async {
+          if (!formKey.currentState!.validate()) return;
 
-            await authCon.register(
-              name: nameCon.text.toString().trim(),
-              number: mobileController.text.toString().trim(), // widget.isNepal == true ? "+ ${mobileController.text.toString().trim()}" : "+91 ${mobileController.text.toString().trim()}",
-              password: confirmPasswordController.text.toString().trim(),
-              role: widget.role.toString(), // selectedRole.toString().trim()
-              district: districtId == 0 ? null : districtId,
-              city: cityId,
-            );
-          },
-          text: "Register",
-        ),
+          await authCon.register(
+            name: nameCon.text.trim(),
+            number: mobileController.text.trim(),
+            password: confirmPasswordController.text.trim(),
+            role: widget.role,
+            district: districtId,
+            city: cityId,
+            //--shopkeeper--
+            shopName: shopNameCon.text.toString().trim(),
+            shopPan: shopPanCon.text.toString().trim(),
+            shopOwner: shopOwnerCon.text.toString().trim(),
+          );
+        },
+      ),
+    );
+  }
+
+  // Shopkeeper Section
+  Visibility _shopkeeperSection() {
+    return Visibility(
+      visible: widget.role.toString().toLowerCase() == "shopkeeper",
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 20.h),
+          // Shope Name
+          CustomTextFormField(
+            controller: shopNameCon,
+            textInputAction: TextInputAction.next,
+            headingText: "Shop Name",
+            validator: (value) => value != "" ? null : "Required",
+          ),
+          SizedBox(height: 20.h),
+          // PAN Name
+          CustomTextFormField(
+            controller: shopPanCon,
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.number,
+            headingText: "Shop PAN no.",
+            validator: (value) => value != "" ? null : "Required",
+          ),
+          SizedBox(height: 20.h),
+          // Owner Name
+          CustomTextFormField(
+            controller: shopOwnerCon,
+            textInputAction: TextInputAction.done,
+            headingText: "Shop Owner Name",
+            validator: (value) => value != "" ? null : "Required",
+          ),
+        ],
       ),
     );
   }
