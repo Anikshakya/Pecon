@@ -4,8 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'package:pecon/src/app_config/styles.dart';
+import 'package:pecon/src/view/login.dart';
 import 'package:pecon/src/view/register_termscondition.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
+import 'package:pecon/src/widgets/partner_logo.dart';
 
 class RoleSelectionPage extends StatefulWidget {
   const RoleSelectionPage({super.key});
@@ -27,34 +29,62 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
       ),
       backgroundColor: primary,
       extendBodyBehindAppBar: true,
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
-        child: Column(
-          children: [
-            SizedBox(height: 160.h),
-            Center(
-              child: Image.asset("assets/images/peacon_logo.png", height: 50.h)
-            ),
-            SizedBox(height: 70.h),
-
-            _rolePickerField(),
-
-            SizedBox(height: 30.h),
-
-            SizedBox(
-              width: double.infinity,
-              height: 48.h,
-              child: CustomButton(
-                width: double.infinity,
-                onPressed:  selectedRole.isEmpty
-                    ? () {}
-                    : () {
-                        Get.to(()=> RegisterTermsAndConditions(role: selectedRole,));
-                      },
-                text: "Continue",
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 100.h),
+              Center(
+                child: Image.asset("assets/images/peacon_logo.png", height: 50.h)
               ),
-            ),
-          ],
+              SizedBox(height: 70.h),
+        
+              Text('If you are new here, please select your role to continue',
+                style: poppinsRegular(size: 15.sp, color: black),
+              ),
+              SizedBox(height: 30.h),
+              _rolePickerField(),
+        
+              SizedBox(height: 30.h),
+        
+              SizedBox(
+                width: double.infinity,
+                height: 48.h,
+                child: CustomButton(
+                  width: double.infinity,
+                  onPressed:  selectedRole.isEmpty
+                      ? () {}
+                      : () {
+                          Get.to(()=> RegisterTermsAndConditions(role: selectedRole,));
+                        },
+                  text: "Continue",
+                ),
+              ),
+        
+              SizedBox(height: 50.h,),
+              //already have an account
+              Text('Already have an account?',
+                style: poppinsRegular(size: 15.sp, color: black),
+              ),
+              SizedBox(height: 10.h,),
+              SizedBox(
+                width: double.infinity,
+                height: 48.h,
+                child: CustomButton(
+                  onPressed: (){
+                    Get.to(() => const LoginPage());
+                  },
+                  text: "Login",
+                ),
+              ),
+              
+              SizedBox(height: 134.h),
+              partnerLogo(),
+            ],
+          ),
         ),
       ),
     );

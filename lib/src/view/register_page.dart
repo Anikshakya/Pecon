@@ -74,7 +74,7 @@ class _RegisterPageState extends State<RegisterPage> {
           backgroundColor: primary,
         ),
         backgroundColor: primary,
-        extendBodyBehindAppBar: true,
+        extendBodyBehindAppBar: false,
         body: Center(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
@@ -87,7 +87,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   _registerHeading(),
                   SizedBox(height: 55.h),
                   // Profile
-                  changeProfilePic().
+                  changeProfilePic(),
+                  SizedBox(height: 30.h),
                   _registerForm(),
                   // ShopKeeper Section
                   _shopkeeperSection(),
@@ -329,134 +330,136 @@ class _RegisterPageState extends State<RegisterPage> {
 
   //change profile pic
   changeProfilePic() {
-    return SizedBox(
-      height: 126.sp,
-      width: 126.sp,
-      child: Stack(
-        children: [
-          Container(
-            height: 120.sp,
-            width: 120.sp,
-            decoration: BoxDecoration(
-              border: Border.all(color: black.withOpacity(0.2), width: 0.8.sp),
-              borderRadius: BorderRadius.circular(100.r),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(100.r),
-              child: changedProfileImage == "" || changedProfileImage == null
-                ? Container(
-                  height: 120.sp,
-                  width: 120.sp,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 236, 236, 236),
-                    borderRadius: BorderRadius.circular(100.r),
-                  ),
-                  child: Icon(
-                    Icons.camera,
-                    color: black.withOpacity(0.1),
-                    size: 120 * 0.45,
-                  ),
-                )
-                : Image.file(
-                  File(changedProfileImage!.path),
-                  height: 120.sp,
-                  width: 120.sp,
-                  fit: BoxFit.cover,
-                )
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: PopupMenuButton<int>(
-              color: boxCol,
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: 1,
-                  child: Row(
-                    children: [
-                      SizedBox(
-                          height: 22.sp,
-                          width: 22.sp,
-                          child: Icon(
-                            Icons.photo_camera,
-                            color: black.withOpacity(0.7),
-                          )),
-                      SizedBox(
-                        width: 12.0.w,
-                      ),
-                      Text(
-                        "Camera",
-                        style: poppinsBold(
-                            size: 14.sp, color: black.withOpacity(0.7)),
-                      ),
-                    ],
-                  ),
-                ),
-                const PopupMenuDivider(),
-                PopupMenuItem(
-                  value: 2,
-                  child: Row(
-                    children: [
-                      SizedBox(
-                          height: 22.sp,
-                          width: 22.sp,
-                          child: Icon(
-                            Icons.image,
-                            color: black.withOpacity(0.7),
-                          )),
-                      SizedBox(
-                        width: 12.0.w,
-                      ),
-                      Text(
-                        "Gallery",
-                        style: poppinsBold(
-                            size: 14.sp, color: black.withOpacity(0.7)),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-              onSelected: (value) async {
-                switch (value) {
-                  case 1:
-                    var value = await ImagePicker().pickImage(source: ImageSource.camera);
-                    // await profileCon.uploadProfileImage(value);
-                    setState(() {
-                      changedProfileImage = value;
-                    });
-                    break;
-                  case 2:
-                    var value = await ImagePicker().pickImage(source: ImageSource.gallery);
-                    // await profileCon.uploadProfileImage(value);
-                    setState(() {
-                      changedProfileImage = value;
-                    });
-                    break;
-                }
-              },
-              offset: const Offset(-10, 40),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0.r),
+    return Center(
+      child: SizedBox(
+        height: 126.sp,
+        width: 126.sp,
+        child: Stack(
+          children: [
+            Container(
+              height: 120.sp,
+              width: 120.sp,
+              decoration: BoxDecoration(
+                border: Border.all(color: black.withOpacity(0.2), width: 0.8.sp),
+                borderRadius: BorderRadius.circular(100.r),
               ),
-              constraints: BoxConstraints(minWidth: 150.w),
-              icon: Container(
-                height: 26.sp,
-                width: 26.sp,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100.0.r),
-                    color: primary),
-                padding: EdgeInsets.all(4.sp),
-                child: Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(100.r),
+                child: changedProfileImage == "" || changedProfileImage == null
+                  ? Container(
+                    height: 120.sp,
+                    width: 120.sp,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 236, 236, 236),
+                      borderRadius: BorderRadius.circular(100.r),
+                    ),
                     child: Icon(
-                  Icons.edit,
-                  color: black.withOpacity(0.8),
-                  size: 16.sp,
-                )),
+                      Icons.camera,
+                      color: black.withOpacity(0.1),
+                      size: 120 * 0.45,
+                    ),
+                  )
+                  : Image.file(
+                    File(changedProfileImage!.path),
+                    height: 120.sp,
+                    width: 120.sp,
+                    fit: BoxFit.cover,
+                  )
               ),
             ),
-          )
-        ],
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: PopupMenuButton<int>(
+                color: boxCol,
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: 1,
+                    child: Row(
+                      children: [
+                        SizedBox(
+                            height: 22.sp,
+                            width: 22.sp,
+                            child: Icon(
+                              Icons.photo_camera,
+                              color: black.withOpacity(0.7),
+                            )),
+                        SizedBox(
+                          width: 12.0.w,
+                        ),
+                        Text(
+                          "Camera",
+                          style: poppinsBold(
+                              size: 14.sp, color: black.withOpacity(0.7)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuDivider(),
+                  PopupMenuItem(
+                    value: 2,
+                    child: Row(
+                      children: [
+                        SizedBox(
+                            height: 22.sp,
+                            width: 22.sp,
+                            child: Icon(
+                              Icons.image,
+                              color: black.withOpacity(0.7),
+                            )),
+                        SizedBox(
+                          width: 12.0.w,
+                        ),
+                        Text(
+                          "Gallery",
+                          style: poppinsBold(
+                              size: 14.sp, color: black.withOpacity(0.7)),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+                onSelected: (value) async {
+                  switch (value) {
+                    case 1:
+                      var value = await ImagePicker().pickImage(source: ImageSource.camera);
+                      // await profileCon.uploadProfileImage(value);
+                      setState(() {
+                        changedProfileImage = value;
+                      });
+                      break;
+                    case 2:
+                      var value = await ImagePicker().pickImage(source: ImageSource.gallery);
+                      // await profileCon.uploadProfileImage(value);
+                      setState(() {
+                        changedProfileImage = value;
+                      });
+                      break;
+                  }
+                },
+                offset: const Offset(-10, 40),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0.r),
+                ),
+                constraints: BoxConstraints(minWidth: 150.w),
+                icon: Container(
+                  height: 26.sp,
+                  width: 26.sp,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100.0.r),
+                      color: primary),
+                  padding: EdgeInsets.all(4.sp),
+                  child: Center(
+                      child: Icon(
+                    Icons.edit,
+                    color: black.withOpacity(0.8),
+                    size: 16.sp,
+                  )),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -495,7 +498,6 @@ class _RegisterPageState extends State<RegisterPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20.h),
           // Shope Name
           CustomTextFormField(
             controller: shopNameCon,
