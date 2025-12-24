@@ -78,7 +78,7 @@ class Data {
         name: json["name"] ?? "",
         email: json["email"] ?? "",
         number: json["number"] ?? "",
-        profileUrl: json["profile"] ?? "https://images.squarespace-cdn.com/content/v1/56c346b607eaa09d9189a870/1551408857522-4ZFG11B2M7UPFYBFBRO0/FLAUNT-MAGAZINE-JOJI-2.jpg",
+        profileUrl: json["profile_url"] ?? "https://images.squarespace-cdn.com/content/v1/56c346b607eaa09d9189a870/1551408857522-4ZFG11B2M7UPFYBFBRO0/FLAUNT-MAGAZINE-JOJI-2.jpg",
         redeemed: json["reedemed"] ?? 0,
         city: json["city"] ?? "",
         district: json["district"] ?? "",

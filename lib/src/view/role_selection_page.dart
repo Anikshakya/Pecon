@@ -7,6 +7,7 @@ import 'package:pecon/src/view/login.dart';
 import 'package:pecon/src/view/register_termscondition.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
 import 'package:pecon/src/widgets/partner_logo.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 class RoleSelectionPage extends StatefulWidget {
   const RoleSelectionPage({super.key});
@@ -90,30 +91,39 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
   }
 
   Widget _rolePickerField() {
-    return DropdownButtonFormField<String>(
+    return DropdownButtonFormField2<String>(
       value: selectedRole.isEmpty ? null : selectedRole,
-      items: roles
-          .map(
-            (role) => DropdownMenuItem<String>(
-              value: role,
-              child: Text(
-                role,
-                style: TextStyle(fontSize: 15.sp),
-              ),
-            ),
-          )
-          .toList(),
+      isExpanded: true,
+
+      hint: Text(
+        'Select Category',
+        style: TextStyle(
+          fontSize: 15.sp,
+          color: gray,
+        ),
+      ),
+
+      items: roles.map((role) {
+        return DropdownMenuItem<String>(
+          value: role,
+          child: Text(
+            role,
+            style: TextStyle(fontSize: 15.sp),
+          ),
+        );
+      }).toList(),
+
       onChanged: (value) {
         setState(() {
           selectedRole = value ?? "";
         });
       },
+
+      // ───── Button (TextField) style ─────
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
         contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
-        hintText: "Select Category",
-        hintStyle: TextStyle(color: gray, fontSize: 15.sp),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(color: gray),
@@ -123,9 +133,27 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
           borderSide: const BorderSide(color: gray),
         ),
       ),
-      icon: const Icon(Icons.arrow_drop_down, color: gray),
-      dropdownColor: Colors.white,
-      borderRadius: BorderRadius.circular(10),
+
+      // ───── Dropdown menu style ─────
+      dropdownStyleData: DropdownStyleData(
+        elevation: 4,
+        offset: const Offset(0, 4), // opens just below
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+
+      // ───── Icon style ─────
+      iconStyleData: const IconStyleData(
+        icon: Icon(Icons.arrow_drop_down, color: gray),
+      ),
+
+      // ───── Menu item style ─────
+      menuItemStyleData: MenuItemStyleData(
+        height: 45.h,
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+      ),
     );
   }
 

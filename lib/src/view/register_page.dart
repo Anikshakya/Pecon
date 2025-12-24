@@ -9,6 +9,7 @@ import 'package:pecon/src/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:pecon/src/widgets/custom_toast.dart';
 
 import '../controllers/user_controller.dart';
 
@@ -474,9 +475,14 @@ class _RegisterPageState extends State<RegisterPage> {
         onPressed: () async {
           if (!formKey.currentState!.validate()) return;
 
+          if(changedProfileImage == null){
+            showToast(message: "Please select profile image", isSuccess: false);
+            return;
+          }
+
           await authCon.register(
             name: nameCon.text.trim(),
-            number: mobileController.text.trim(),
+            number: widget.isNepal ? '977${mobileController.text.trim()}' : '91${mobileController.text.trim()}',
             password: confirmPasswordController.text.trim(),
             role: widget.role,
             district: districtId,

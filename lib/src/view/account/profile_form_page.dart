@@ -693,6 +693,9 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                       ? userCon.shopkeeperIdControllers.map((e) => e.text.toString().trim()).toList()
                       : [],
                   );
+                  setState(() {
+                    changedProfileImage = userCon.user.value.data.profileUrl;
+                  });
               }
               : () async {
                 final isValid =  bankFormKey.currentState!.validate();

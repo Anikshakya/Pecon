@@ -67,7 +67,7 @@ class AuthController extends GetxController {
   }
 
   // Register API
-  register({name, number, password, role, district, city, shopName, shopPan, profile}) async {
+  register({name, number, password, role, district, city, shopName, shopPan,required profile}) async {
     var data = {
       "name": name,
       "number": number,
@@ -75,9 +75,9 @@ class AuthController extends GetxController {
       "role": role.toString().toLowerCase(),
       "district_id" : district,
       "city_id": city,
+      "profile" : await MultipartFile.fromFile(profile.path, filename: profile.path.split('/').last),
       if(shopName != "")"shop_name": shopName,
       if (shopPan != "") "pan_number": shopPan,
-      if (profile != null)"profile" : await MultipartFile.fromFile(profile.path, filename: profile.path.split('/').last)
     };
 
     var finalData = FormData.fromMap(data);

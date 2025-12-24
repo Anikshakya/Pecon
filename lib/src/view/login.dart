@@ -1,13 +1,16 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:pecon/src/controllers/auth_controller.dart';
 import 'package:pecon/src/view/role_selection_page.dart';
-import 'package:pecon/src/widgets/custom_toast.dart';
 import 'package:pecon/src/widgets/custom_button.dart';
 import 'package:pecon/src/widgets/custom_text_field.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:pecon/src/widgets/custom_toast.dart';
 import 'package:pecon/src/widgets/partner_logo.dart';
+
+enum Country { nepal, india }
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,26 +20,22 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // Get Controllers
+  // Controllers
   final AuthController authCon = Get.put(AuthController());
-
   final formKey = GlobalKey<FormState>();
 
-  // Text Editing Controllers
   final TextEditingController mobileNoController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  // Bool helper
   bool isObscure = true;
+  Country selectedCountry = Country.nepal;
 
-@override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: primary,
       body: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Center(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
@@ -47,7 +46,10 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   SizedBox(height: 160.h),
                   Center(
-                    child: Image.asset("assets/images/peacon_logo.png", height: 50.h)
+                    child: Image.asset(
+                      "assets/images/peacon_logo.png",
+                      height: 50.h,
+                    ),
                   ),
                   SizedBox(height: 70.h),
                   _loginForm(),
@@ -67,26 +69,34 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // Login Form Section
+  // ───────────────── Login Form ─────────────────
   Widget _loginForm() {
     return Form(
       key: formKey,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Mobile No.
+          /// Mobile Number
           CustomTextFormField(
             controller: mobileNoController,
-            textInputAction: TextInputAction.next,
             keyboardType: TextInputType.number,
+            textInputAction: TextInputAction.next,
             headingText: "Mobile No.",
-            validator: (value) => value != null && value.length == 10
-                ? null
-                : "Enter a valid 10-digit mobile number",
+            prefixIcon: _countryPicker(),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Enter mobile number";
+              }
+              if (value.length != 10) {
+                return "Enter valid 10-digit number";
+              }
+              return null;
+            },
           ),
+
           SizedBox(height: 20.h),
-          // Password
+
+          /// Password
           CustomTextFormField(
             controller: passwordController,
             obscureText: isObscure,
@@ -103,53 +113,100 @@ class _LoginPageState extends State<LoginPage> {
                 color: gray,
               ),
             ),
-            validator: (password) => password != null && password.length >= 6
-                ? null
-                : "Password must be at least 6 characters",
-          )
+            validator: (password) {
+              if (password == null || password.length < 6) {
+                return "Password must be at least 6 characters";
+              }
+              return null;
+            },
+          ),
         ],
       ),
     );
   }
 
-  // Login Button
-  _loginButton() {
-    return Obx(()=>
-      Center(
-        child: CustomButton(
-          width: double.infinity,
-          isLoading: authCon.isLoginLoading.value,
-          onPressed: () async {
-      
-            final isValid = formKey.currentState!.validate();
-            if (!isValid) return;
-      
-            await authCon.login(
-              number: mobileNoController.text.toString().trim(),
-              password: passwordController.text.toString().trim(),
-            );
+  // ───────────────── Country Picker ─────────────────
+  Widget _countryPicker() {
+    return Padding(
+      padding: EdgeInsets.only(left: 8.0.w, right: 4.0.w),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<Country>(
+          value: selectedCountry,
+          icon: const Icon(Icons.arrow_drop_down, color: gray),
+          onChanged: (value) {
+            setState(() {
+              selectedCountry = value!;
+            });
           },
-          text: "Log In",
+          items: const [
+            DropdownMenuItem(
+              value: Country.nepal,
+              child: Row(
+                children: [
+                  Text("🇳🇵"),
+                  SizedBox(width: 6),
+                  Text("+977"),
+                ],
+              ),
+            ),
+            DropdownMenuItem(
+              value: Country.india,
+              child: Row(
+                children: [
+                  Text("🇮🇳"),
+                  SizedBox(width: 6),
+                  Text("+91"),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  // Forgot Password
+  // ───────────────── Login Button ─────────────────
+  Widget _loginButton() {
+    return Obx(
+      () => Center(
+        child: CustomButton(
+          width: double.infinity,
+          isLoading: authCon.isLoginLoading.value,
+          text: "Log In",
+          onPressed: () async {
+            final isValid = formKey.currentState!.validate();
+            if (!isValid) return;
+
+            // final countryCode =
+            //     selectedCountry == Country.nepal ? "977" : "91";
+
+            await authCon.login(
+              number: mobileNoController.text.trim(),
+              password: passwordController.text.trim(),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  // ───────────────── Forgot Password ─────────────────
   Widget _forgotPassword() {
     return TextButton(
       onPressed: () {
         showToast(
-          isSuccess : false,
-          message: "Please Contact Nearest Dealer."
+          isSuccess: false,
+          message: "Please Contact Nearest Dealer.",
         );
-        // Get.to(()=> const ForgotPasswordPage());
       },
-      child: Text('Forgot password?', style: poppinsMedium(size: 13.sp, color: purple),),
+      child: Text(
+        'Forgot password?',
+        style: poppinsMedium(size: 13.sp, color: purple),
+      ),
     );
   }
 
-  // Register Button
+  // ───────────────── Register Button ─────────────────
   Widget _registerButton() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

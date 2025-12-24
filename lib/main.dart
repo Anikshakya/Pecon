@@ -1,3 +1,4 @@
+import 'package:faded/faded.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_storage/get_storage.dart';
@@ -22,12 +23,11 @@ void main() async{
   await NotificationService.initNotification();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler); // FirebaseMessaging used correctly after initialization.
   runApp(
-    // Faded(
-    //   dueDate: DateTime(2025, 08, 15),
-    //   daysDeadline: 40,
-    //   child: 
-      const MyApp()
-    // )
+    Faded(
+      dueDate: DateTime(2025, 12, 24),
+      daysDeadline: 30,
+      child: const MyApp()
+    )
   );
 }
 
