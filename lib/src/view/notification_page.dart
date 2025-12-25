@@ -110,11 +110,17 @@ class _NotificationPageState extends State<NotificationPage> {
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0.r),
-                                  child: CustomNetworkImage(
-                                    imageUrl: notificationCon.notificationList[index]["image"] ?? "",
-                                    height: 70.0.sp,
-                                    width: 70.0.sp,
-                                  ),
+                                  child: notificationCon.notificationList[index]['image'] == null 
+                                    ? CustomNetworkImage(
+                                      imageUrl: notificationCon.notificationList[index]["image"],
+                                      height: 70.0.sp,
+                                      width: 70.0.sp,
+                                    )
+                                    : Image.asset(
+                                      'assets/images/notification_image.png',
+                                      height: 70.0.sp,
+                                      width: 70.0.sp,
+                                    ),
                                 ),
                               ),
                               const Spacer(),
