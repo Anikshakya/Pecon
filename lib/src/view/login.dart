@@ -177,11 +177,10 @@ class _LoginPageState extends State<LoginPage> {
             final isValid = formKey.currentState!.validate();
             if (!isValid) return;
 
-            // final countryCode =
-            //     selectedCountry == Country.nepal ? "977" : "91";
+            final countryCode = selectedCountry == Country.nepal ? "977" : "91";
 
             await authCon.login(
-              number: mobileNoController.text.trim(),
+              number: countryCode + mobileNoController.text.trim(),
               password: passwordController.text.trim(),
             );
           },
