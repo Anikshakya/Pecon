@@ -217,6 +217,8 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             SizedBox(height: 20.h),
             //number
             CustomTextFormHeaderField(
+              onTap: () {},
+              readOnly: true,
               controller: numController,
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.number,

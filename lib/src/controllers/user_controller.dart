@@ -98,6 +98,7 @@ class UserController extends GetxController {
       finaldata = {
         "name": name,
         "phone": number,
+        "number": number,
         "alternate_number": number,
         "email": email,
         "district_id" : district,
