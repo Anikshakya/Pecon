@@ -81,6 +81,54 @@ customerServiceDialog() {
                     ),
                   ),
                 ),
+                SizedBox(height: 5.h,),
+                //tiktok
+                InkWell(
+                  onTap: ()=> AppUtils().openLinkWithUrl(appCon.tiktok),
+                  borderRadius: BorderRadius.circular(30.r),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                    child: Row(
+                      children: [
+                        Image.asset("assets/images/tiktok.png", width: 40.w, height: 40.w, fit: BoxFit.cover), // Replace with your WhatsApp icon
+                        SizedBox(width: 20.w),
+                        Text("TikTok",style: TextStyle(fontSize: 13.sp, color: black, fontWeight: FontWeight.w500),),
+                      ],
+                    ),
+                  ),
+                ),SizedBox(height: 5.h,),
+                //instagram
+                InkWell(
+                  onTap: ()=> AppUtils().openLinkWithUrl(appCon.instagram),
+                  borderRadius: BorderRadius.circular(30.r),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                    child: Row(
+                      children: [
+                        Image.asset("assets/images/instagram.png", width: 30.w, height: 30.w, fit: BoxFit.cover), // Replace with your WhatsApp icon
+                        SizedBox(width: 20.w),
+                        Text("Instagram",style: TextStyle(fontSize: 13.sp, color: black, fontWeight: FontWeight.w500),),
+                      ],
+                    ),
+                  ),
+                ),SizedBox(height: 5.h,),
+                //tiktok
+                InkWell(
+                  onTap: ()=> AppUtils().openLinkWithUrl(appCon.youtube),
+                  borderRadius: BorderRadius.circular(30.r),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(100.r),
+                          child: Image.asset("assets/images/youtube.png", width: 30.w, height: 30.w, fit: BoxFit.fitHeight)), // Replace with your WhatsApp icon
+                        SizedBox(width: 20.w),
+                        Text("YouTube",style: TextStyle(fontSize: 13.sp, color: black, fontWeight: FontWeight.w500),),
+                      ],
+                    ),
+                  ),
+                ),
                 SizedBox(height: 10.h,),
               ],
             ),

@@ -39,6 +39,9 @@ class AppController extends GetxController {
   String fbLink = "";
   String termsCondition = "";
   String privacyPolicy = "";
+  String tiktok = "";
+  String instagram = "";
+  String youtube = "";
 
   // ============================
   // Ad Banner
@@ -79,6 +82,9 @@ class AppController extends GetxController {
         privacyPolicy = response["data"]["privacy_policy"] ?? "";
         phoneLink = response["data"]["phone"] ?? "";
         fbLink = response["data"]["facebook_link"] ?? "";
+        tiktok = response["data"]["tiktok_link"] ?? "";
+        instagram = response["data"]["instagram_link"] ?? "";
+        youtube = response["data"]["youtube_link"] ?? "";
 
         final launcher = response["data"]["launcher"] ?? "";
         if (launcher.isEmpty) return false;
@@ -121,7 +127,7 @@ class AppController extends GetxController {
   // ============================
   Future<void>? showAdDialog() async {
     await getAdBanner();
-    if (adBanner.isEmpty) return null;
+    if (adBanner.isEmpty) return;
 
     return Get.dialog(
       Dialog(

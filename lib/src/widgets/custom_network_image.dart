@@ -10,6 +10,7 @@ class CustomNetworkImage extends StatelessWidget {
   final BoxFit fit;
   final double borderRadius;
   final Color placeholderColor;
+  final String? isFrom;
 
   const CustomNetworkImage({
     super.key,
@@ -19,6 +20,7 @@ class CustomNetworkImage extends StatelessWidget {
     this.fit = BoxFit.cover,
     this.borderRadius = 8.0,
     this.placeholderColor = const Color(0xFFECECEC),
+    this.isFrom,
   });
 
   @override
@@ -37,8 +39,8 @@ class CustomNetworkImage extends StatelessWidget {
             height: height,
             width: width,
             fit: fit,
-            placeholder: (context, url) => _buildPlaceholder(),
-            errorWidget: (context, url, error) => _buildErrorWidget(),
+            placeholder: (context, url) => isFrom == 'notification' ? notificationPlaceholder() : _buildPlaceholder(),
+            errorWidget: (context, url, error) => isFrom == 'notification' ? notificationPlaceholder() : _buildErrorWidget(),
           ),
         ),
       ),
@@ -58,6 +60,14 @@ class CustomNetworkImage extends StatelessWidget {
           size: _calculateIconSize(),
         ),
       ),
+    );
+  }
+
+  Widget notificationPlaceholder() {
+    return Image.asset(
+      'assets/images/notification_image.png',
+      height: height,
+      width: width,
     );
   }
 

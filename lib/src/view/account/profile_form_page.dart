@@ -224,9 +224,9 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
               keyboardType: TextInputType.number,
               headingText: "Mobile Number",
               filledColor: gray.withOpacity(0.2),
-              validator: (value) => value != "" && value!.length == 10
+              validator: (value) => value != "" && value!.length == 13
                   ? null
-                  : "Enter a valid 10-digit mobile number",
+                  : "Enter a valid 13-digit mobile number",
             ),
             SizedBox(height: 20.h),
             //Email
