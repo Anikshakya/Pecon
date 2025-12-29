@@ -24,6 +24,7 @@ class AppController extends GetxController {
   // ============================
   final GetStorage box = GetStorage();
   static const String _splashUrlKey = 'splash_url';
+  static const String _splashTypeKey = 'splash_type';
 
   // ============================
   // Loaders
@@ -86,7 +87,7 @@ class AppController extends GetxController {
         instagram = response["data"]["instagram_link"] ?? "";
         youtube = response["data"]["youtube_link"] ?? "";
 
-        final launcher = response["data"]["launcher"] ?? "";
+        final launcher = response["data"]["lunch_screen_image"] ?? "";
         if (launcher.isEmpty) return false;
 
         splashUrl = launcher;
@@ -184,35 +185,54 @@ class AppController extends GetxController {
   // SPLASH MEDIA CACHE
   // ============================
   Future<void> cacheSplashMedia() async {
+    final storedUrl = box.read(_splashUrlKey);
+    final storedType = box.read(_splashTypeKey);
+
+    // SAME URL + SAME TYPE → reuse cache
+    if (storedUrl == splashUrl &&
+        storedType == splashMediaType.name) {
+      final dir = await getTemporaryDirectory();
+
+      if (splashMediaType == SplashMediaType.video) {
+        final file = File("${dir.path}/splash_video.mp4");
+        if (file.existsSync()) {
+          cachedSplashVideoPath = file.path;
+          return;
+        }
+      }
+
+      if (splashMediaType == SplashMediaType.image) {
+        final file = File("${dir.path}/splash_image");
+        if (file.existsSync()) {
+          cachedSplashImagePath = file.path;
+          return;
+        }
+      }
+    }
+
+    // DIFFERENT URL OR TYPE → clear old & cache new
+    await _clearOldSplashCache();
+
     if (splashMediaType == SplashMediaType.video) {
       await _cacheSplashVideo(splashUrl);
     } else if (splashMediaType == SplashMediaType.image) {
       await _cacheSplashImage(splashUrl);
     }
+
+    box.write(_splashUrlKey, splashUrl);
+    box.write(_splashTypeKey, splashMediaType.name);
   }
 
   Future<void> _cacheSplashVideo(String url) async {
     try {
-      final storedUrl = box.read(_splashUrlKey);
-      final dir = await _getPrivateDirectory();
+      final dir = await getTemporaryDirectory();
       final filePath = "${dir.path}/splash_video.mp4";
       final file = File(filePath);
 
-      // URL changed → delete old file
-      if (storedUrl != url && file.existsSync()) {
-        await file.delete();
-      }
-
-      // Already cached
-      if (storedUrl == url && file.existsSync()) {
-        cachedSplashVideoPath = filePath;
-        return;
-      }
+      if (file.existsSync()) file.deleteSync();
 
       await Dio().download(url, filePath);
-
       cachedSplashVideoPath = filePath;
-      box.write(_splashUrlKey, url);
     } catch (e) {
       log("Splash video cache failed: $e");
     }
@@ -220,14 +240,11 @@ class AppController extends GetxController {
 
   Future<void> _cacheSplashImage(String url) async {
     try {
-      final dir = await _getPrivateDirectory();
+      final dir = await getTemporaryDirectory();
       final filePath = "${dir.path}/splash_image";
 
       final file = File(filePath);
-
-      if (file.existsSync()) {
-        await file.delete();
-      }
+      if (file.existsSync()) file.deleteSync();
 
       await Dio().download(url, filePath);
       cachedSplashImagePath = filePath;
@@ -236,16 +253,14 @@ class AppController extends GetxController {
     }
   }
 
-  // ============================
-  // PRIVATE DIRECTORY
-  // ============================
-  Future<Directory> _getPrivateDirectory() async {
-    if (Platform.isAndroid) {
-      return await getApplicationSupportDirectory();
-    } else if (Platform.isIOS) {
-      return await getApplicationDocumentsDirectory();
-    }
-    throw UnsupportedError("Unsupported platform");
+  Future<void> _clearOldSplashCache() async {
+    final dir = await getTemporaryDirectory();
+
+    final video = File("${dir.path}/splash_video.mp4");
+    final image = File("${dir.path}/splash_image");
+
+    if (video.existsSync()) video.deleteSync();
+    if (image.existsSync()) image.deleteSync();
   }
 
   // ============================
