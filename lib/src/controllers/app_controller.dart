@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import 'package:pecon/src/api_config/api_repo.dart';
 import 'package:pecon/src/app_config/styles.dart';
@@ -179,11 +178,6 @@ class AppController extends GetxController {
   // SPLASH MEDIA CACHE
   // ============================
   Future<void> cacheSplashMedia() async {
-    if (Platform.isAndroid) {
-      await Permission.storage.request();
-      await Permission.manageExternalStorage.request();
-    }
-
     if (splashMediaType == SplashMediaType.video) {
       await _cacheSplashVideo(splashUrl);
     } else if (splashMediaType == SplashMediaType.image) {
@@ -194,17 +188,19 @@ class AppController extends GetxController {
   Future<void> _cacheSplashVideo(String url) async {
     try {
       final storedUrl = box.read(_splashUrlKey);
-      final dir = await _getSaveDirectory();
+      final dir = await _getPrivateDirectory();
       final filePath = "${dir.path}/splash_video.mp4";
       final file = File(filePath);
 
+      // URL changed → delete old file
+      if (storedUrl != url && file.existsSync()) {
+        await file.delete();
+      }
+
+      // Already cached
       if (storedUrl == url && file.existsSync()) {
         cachedSplashVideoPath = filePath;
         return;
-      }
-
-      if (file.existsSync()) {
-        await file.delete();
       }
 
       await Dio().download(url, filePath);
@@ -218,8 +214,14 @@ class AppController extends GetxController {
 
   Future<void> _cacheSplashImage(String url) async {
     try {
-      final dir = await _getSaveDirectory();
+      final dir = await _getPrivateDirectory();
       final filePath = "${dir.path}/splash_image";
+
+      final file = File(filePath);
+
+      if (file.existsSync()) {
+        await file.delete();
+      }
 
       await Dio().download(url, filePath);
       cachedSplashImagePath = filePath;
@@ -229,15 +231,11 @@ class AppController extends GetxController {
   }
 
   // ============================
-  // DIRECTORY RESOLUTION
+  // PRIVATE DIRECTORY
   // ============================
-  Future<Directory> _getSaveDirectory() async {
+  Future<Directory> _getPrivateDirectory() async {
     if (Platform.isAndroid) {
-      final directory = Directory('/storage/emulated/0/Download');
-      if (!await directory.exists()) {
-        await directory.create(recursive: true);
-      }
-      return directory;
+      return await getApplicationSupportDirectory();
     } else if (Platform.isIOS) {
       return await getApplicationDocumentsDirectory();
     }

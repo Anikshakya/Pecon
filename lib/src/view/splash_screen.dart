@@ -22,6 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   VideoPlayerController? _videoController;
   Timer? _imageTimer;
+  Timer? _failSafeTimer;
 
   bool _calledNext = false;
   bool _usingAssetVideo = true;
@@ -30,29 +31,38 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    // Always start with asset video (safe fallback)
+    // Always start with asset video (fallback)
     _loadAssetVideo();
+
+    // Start fail-safe timer: force navigation after max 10 seconds
+    _failSafeTimer = Timer(const Duration(seconds: 10), _navigateNext);
 
     // Poll backend
     appCon.startSplashVideoPolling(
       onResolved: () async {
         if (!mounted) return;
 
-        if (appCon.splashMediaType == SplashMediaType.image &&
-            appCon.cachedSplashImagePath.isNotEmpty) {
-          _showImageAndNavigate();
-        } else if (appCon.splashMediaType == SplashMediaType.video &&
-            appCon.cachedSplashVideoPath.isNotEmpty) {
-          await _switchToCachedVideo();
+        try {
+          if (appCon.splashMediaType == SplashMediaType.image &&
+              appCon.cachedSplashImagePath.isNotEmpty) {
+            _showImageAndNavigate();
+          } else if (appCon.splashMediaType == SplashMediaType.video &&
+              appCon.cachedSplashVideoPath.isNotEmpty) {
+            await _switchToCachedVideo();
+          }
+        } catch (_) {
+          // Any error → fallback to asset video
+          _navigateNext();
         }
       },
     );
   }
 
   // ============================
-  // ASSET VIDEO (FALLBACK)
+  // ASSET VIDEO (fallback)
   // ============================
   void _loadAssetVideo() {
+    _videoController?.removeListener(_videoListener);
     _videoController?.dispose();
 
     _videoController =
@@ -66,6 +76,7 @@ class _SplashScreenState extends State<SplashScreen> {
           });
 
     _videoController!.addListener(_videoListener);
+    _usingAssetVideo = true;
   }
 
   // ============================
@@ -75,7 +86,10 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!_usingAssetVideo) return;
 
     final file = File(appCon.cachedSplashVideoPath);
-    if (!file.existsSync()) return;
+    if (!file.existsSync()) {
+      _navigateNext(); // File missing → fallback
+      return;
+    }
 
     try {
       _videoController?.removeListener(_videoListener);
@@ -87,15 +101,15 @@ class _SplashScreenState extends State<SplashScreen> {
       if (!mounted) return;
 
       _usingAssetVideo = false;
-
       setState(() {});
+
       _videoController!
         ..setVolume(1.0)
         ..play();
-
       _videoController!.addListener(_videoListener);
     } catch (_) {
-      // fallback to asset already playing
+      // Any failure → fallback to asset video
+      _loadAssetVideo();
     }
   }
 
@@ -104,15 +118,12 @@ class _SplashScreenState extends State<SplashScreen> {
   // ============================
   void _showImageAndNavigate() {
     if (_calledNext) return;
-
     _calledNext = true;
 
     _videoController?.removeListener(_videoListener);
     _videoController?.pause();
 
-    _imageTimer = Timer(const Duration(seconds: 3), () async {
-      await authCon.checkUserAuthStatus();
-    });
+    _imageTimer = Timer(const Duration(seconds: 3), _navigateNext);
 
     setState(() {});
   }
@@ -124,13 +135,27 @@ class _SplashScreenState extends State<SplashScreen> {
     if (_videoController == null || _calledNext) return;
 
     final value = _videoController!.value;
-
     if (value.isInitialized &&
         value.position >= value.duration &&
         !_calledNext) {
-      _calledNext = true;
-      await authCon.checkUserAuthStatus();
+      _navigateNext();
     }
+  }
+
+  // ============================
+  // NAVIGATION (SAFE)
+  // ============================
+  void _navigateNext() async {
+    if (_calledNext) return;
+    _calledNext = true;
+
+    _imageTimer?.cancel();
+    _failSafeTimer?.cancel();
+    _videoController?.removeListener(_videoListener);
+    _videoController?.pause();
+
+    if (!mounted) return;
+    await authCon.checkUserAuthStatus();
   }
 
   // ============================
@@ -139,6 +164,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void dispose() {
     _imageTimer?.cancel();
+    _failSafeTimer?.cancel();
     _videoController?.removeListener(_videoListener);
     _videoController?.dispose();
     super.dispose();
