@@ -7,19 +7,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:pecon/src/api_config/api_repo.dart';
 import 'package:pecon/src/app_config/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pecon/src/widgets/custom_network_image.dart';
-import 'package:permission_handler/permission_handler.dart';
+
+/// ============================
+/// Splash Media Type
+/// ============================
+enum SplashMediaType { image, video, unknown }
 
 class AppController extends GetxController {
   // ============================
   // Storage
   // ============================
   final GetStorage box = GetStorage();
-  static const String _splashVideoUrlKey = 'splash_video_url';
+  static const String _splashUrlKey = 'splash_url';
 
   // ============================
   // Loaders
@@ -42,11 +47,17 @@ class AppController extends GetxController {
   String adBanner = "";
 
   // ============================
-  // Splash Video
+  // Splash Media
   // ============================
-  String splashVideoUrl = "";
-  String cachedSplashVideoPath = "";
+  String splashUrl = "";
+  SplashMediaType splashMediaType = SplashMediaType.unknown;
 
+  String cachedSplashVideoPath = "";
+  String cachedSplashImagePath = "";
+
+  // ============================
+  // Polling
+  // ============================
   Timer? _pollingTimer;
   int _pollCount = 0;
 
@@ -70,15 +81,16 @@ class AppController extends GetxController {
         phoneLink = response["data"]["phone"] ?? "";
         fbLink = response["data"]["facebook_link"] ?? "";
 
-        final newSplashUrl = response["data"]["splash_video"] ?? "";
+        final launcher = response["data"]["launcher"] ?? "";
+        if (launcher.isEmpty) return false;
 
-        if (newSplashUrl.isEmpty) return false;
+        splashUrl = launcher;
+        splashMediaType = _detectSplashMediaType(launcher);
 
-        splashVideoUrl = newSplashUrl;
-        return true;
+        return splashMediaType != SplashMediaType.unknown;
       }
     } catch (e) {
-      log(e.toString());
+      log("Setting API Error: $e");
     } finally {
       isLoading(false);
     }
@@ -99,7 +111,7 @@ class AppController extends GetxController {
         adBanner = response["data"]?["image"] ?? "";
       }
     } catch (e) {
-      log(e.toString());
+      log("Ad Banner Error: $e");
     } finally {
       isBannerLoading(false);
     }
@@ -110,58 +122,53 @@ class AppController extends GetxController {
   // ============================
   Future<void>? showAdDialog() async {
     await getAdBanner();
-
     if (adBanner.isEmpty) return null;
 
     return Get.dialog(
       Dialog(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        child: StatefulBuilder(
-          builder: (context, setState) {
-            return Stack(
-              alignment: Alignment.topRight,
-              children: [
-                Obx(
-                  () => Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 12.sp, vertical: 12.sp),
-                    child: SizedBox(
-                      height: 500.h,
-                      width: double.infinity,
-                      child: isBannerLoading.value
-                          ? Container(
-                              decoration: BoxDecoration(
-                                color: gray,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            )
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: CustomNetworkImage(
-                                imageUrl: adBanner,
-                                borderRadius: 10,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                    ),
-                  ),
+        child: Stack(
+          alignment: Alignment.topRight,
+          children: [
+            Obx(
+              () => Padding(
+                padding:
+                    EdgeInsets.symmetric(horizontal: 12.sp, vertical: 12.sp),
+                child: SizedBox(
+                  height: 500.h,
+                  width: double.infinity,
+                  child: isBannerLoading.value
+                      ? Container(
+                          decoration: BoxDecoration(
+                            color: gray,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        )
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: CustomNetworkImage(
+                            imageUrl: adBanner,
+                            borderRadius: 10,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                 ),
-                Positioned(
-                  right: 1,
-                  top: 4,
-                  child: GestureDetector(
-                    onTap: () => Get.back(),
-                    child: const CircleAvatar(
-                      backgroundColor: white,
-                      radius: 16,
-                      child: Icon(Icons.close, color: black, size: 18),
-                    ),
-                  ),
+              ),
+            ),
+            Positioned(
+              right: 1,
+              top: 4,
+              child: GestureDetector(
+                onTap: () => Get.back(),
+                child: const CircleAvatar(
+                  backgroundColor: white,
+                  radius: 16,
+                  child: Icon(Icons.close, color: black, size: 18),
                 ),
-              ],
-            );
-          },
+              ),
+            ),
+          ],
         ),
       ),
       barrierDismissible: false,
@@ -169,66 +176,60 @@ class AppController extends GetxController {
   }
 
   // ============================
-  // SPLASH VIDEO CACHE
+  // SPLASH MEDIA CACHE
   // ============================
+  Future<void> cacheSplashMedia() async {
+    // Request storage permission (only for Android)
+    if (Platform.isAndroid) {
+      await Permission.storage.request();
+      await Permission.manageExternalStorage.request();
+    }
+
+    if (splashMediaType == SplashMediaType.video) {
+      await _cacheSplashVideo(splashUrl);
+    } else if (splashMediaType == SplashMediaType.image) {
+      await _cacheSplashImage(splashUrl);
+    }
+  }
+
   Future<void> _cacheSplashVideo(String url) async {
     try {
-      // Request storage permission (only for Android)
-      if (Platform.isAndroid) {
-        await Permission.storage.request();
-        await Permission.manageExternalStorage.request();
-      }
 
-      // Get the appropriate directory for saving the file
-      Directory directory = await _getSaveDirectory();
-
-      // Ensure the directory exists
-      
-      if (!await directory.exists()) {
-        await directory.create(recursive: true);
-        debugPrint("Directory created: ${directory.path}");
-      }
-
-
-      final storedUrl = box.read(_splashVideoUrlKey);
+      final storedUrl = box.read(_splashUrlKey);
       final dir = await getTemporaryDirectory();
       final filePath = "${dir.path}/splash_video.mp4";
       final file = File(filePath);
 
-      // Same URL & file exists → skip download
       if (storedUrl == url && file.existsSync()) {
         cachedSplashVideoPath = filePath;
         return;
       }
 
-      // URL changed → clear old cache
-      if (file.existsSync()) {
-        file.deleteSync();
-      }
+      if (file.existsSync()) file.deleteSync();
 
       await Dio().download(url, filePath);
 
       cachedSplashVideoPath = filePath;
-      box.write(_splashVideoUrlKey, url);
+      box.write(_splashUrlKey, url);
     } catch (e) {
-      log("Splash video download failed: $e");
+      log("Splash video cache failed: $e");
     }
   }
 
-   /// Gets the appropriate directory for saving files based on the platform.
-  Future<Directory> _getSaveDirectory() async {
-    if (Platform.isAndroid) {
-      return Directory('/storage/emulated/0/Download');
-    } else if (Platform.isIOS) {
-      // For iOS, save to the application's documents directory
-      return await getApplicationDocumentsDirectory();
+  Future<void> _cacheSplashImage(String url) async {
+    try {
+      final dir = await getTemporaryDirectory();
+      final filePath = "${dir.path}/splash_image";
+
+      await Dio().download(url, filePath);
+      cachedSplashImagePath = filePath;
+    } catch (e) {
+      log("Splash image cache failed: $e");
     }
-    // Throw an error for unsupported platforms
-    throw UnsupportedError("Unsupported platform");
   }
 
   // ============================
-  // SPLASH VIDEO POLLING
+  // SPLASH POLLING
   // ============================
   void startSplashVideoPolling({
     required VoidCallback onResolved,
@@ -242,7 +243,7 @@ class AppController extends GetxController {
       final resolved = await getSettingApi();
 
       if (resolved) {
-        await _cacheSplashVideo(splashVideoUrl);
+        await cacheSplashMedia();
         timer.cancel();
         onResolved();
         return;
@@ -253,6 +254,29 @@ class AppController extends GetxController {
         onResolved();
       }
     });
+  }
+
+  // ============================
+  // MEDIA TYPE DETECTION
+  // ============================
+  SplashMediaType _detectSplashMediaType(String url) {
+    final lower = url.toLowerCase();
+
+    if (lower.endsWith('.mp4') ||
+        lower.endsWith('.mov') ||
+        lower.endsWith('.webm') ||
+        lower.endsWith('.mkv')) {
+      return SplashMediaType.video;
+    }
+
+    if (lower.endsWith('.jpg') ||
+        lower.endsWith('.jpeg') ||
+        lower.endsWith('.png') ||
+        lower.endsWith('.webp')) {
+      return SplashMediaType.image;
+    }
+
+    return SplashMediaType.unknown;
   }
 
   // ============================

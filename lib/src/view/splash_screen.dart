@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -20,73 +21,72 @@ class _SplashScreenState extends State<SplashScreen> {
   final AppController appCon = Get.put(AppController());
 
   VideoPlayerController? _videoController;
+  Timer? _imageTimer;
 
   bool _calledNext = false;
-  bool _isSwitchingVideo = false;
-  bool _usingAsset = true;
+  bool _usingAssetVideo = true;
 
   @override
   void initState() {
     super.initState();
 
+    // Always start with asset video (safe fallback)
     _loadAssetVideo();
 
+    // Poll backend
     appCon.startSplashVideoPolling(
       onResolved: () async {
         if (!mounted) return;
 
-        if (appCon.cachedSplashVideoPath.isNotEmpty) {
-          await _trySwitchToCachedVideo();
+        if (appCon.splashMediaType == SplashMediaType.image &&
+            appCon.cachedSplashImagePath.isNotEmpty) {
+          _showImageAndNavigate();
+        } else if (appCon.splashMediaType == SplashMediaType.video &&
+            appCon.cachedSplashVideoPath.isNotEmpty) {
+          await _switchToCachedVideo();
         }
       },
     );
   }
 
   // ============================
-  // LOAD ASSET (ALWAYS SAFE)
+  // ASSET VIDEO (FALLBACK)
   // ============================
   void _loadAssetVideo() {
-    try {
-      _videoController = VideoPlayerController.asset(
-        'assets/video/splash_video.mp4',
-      )..initialize().then((_) {
-          if (!mounted) return;
+    _videoController?.dispose();
 
-          setState(() {});
-          _videoController!
-            ..setVolume(1.0)
-            ..play();
-        });
+    _videoController =
+        VideoPlayerController.asset('assets/video/splash_video.mp4')
+          ..initialize().then((_) {
+            if (!mounted) return;
+            setState(() {});
+            _videoController!
+              ..setVolume(1.0)
+              ..play();
+          });
 
-      _videoController!.addListener(_videoListener);
-    } catch (_) {
-      // Asset failure is unrecoverable — allow app to continue
-    }
+    _videoController!.addListener(_videoListener);
   }
 
   // ============================
-  // TRY SWITCH TO CACHED VIDEO
+  // SWITCH TO CACHED VIDEO
   // ============================
-  Future<void> _trySwitchToCachedVideo() async {
-    if (_isSwitchingVideo || !_usingAsset) return;
+  Future<void> _switchToCachedVideo() async {
+    if (!_usingAssetVideo) return;
 
     final file = File(appCon.cachedSplashVideoPath);
-
     if (!file.existsSync()) return;
-
-    _isSwitchingVideo = true;
 
     try {
       _videoController?.removeListener(_videoListener);
       await _videoController?.dispose();
 
-      final controller = VideoPlayerController.file(file);
-      await controller.initialize();
+      _videoController = VideoPlayerController.file(file);
+      await _videoController!.initialize();
 
       if (!mounted) return;
 
-      _videoController = controller;
-      _usingAsset = false;
+      _usingAssetVideo = false;
 
       setState(() {});
       _videoController!
@@ -94,19 +94,34 @@ class _SplashScreenState extends State<SplashScreen> {
         ..play();
 
       _videoController!.addListener(_videoListener);
-    } catch (e) {
-      // Any failure → revert to asset
-      _isSwitchingVideo = false;
-      _usingAsset = true;
-      _loadAssetVideo();
+    } catch (_) {
+      // fallback to asset already playing
     }
+  }
+
+  // ============================
+  // IMAGE FLOW
+  // ============================
+  void _showImageAndNavigate() {
+    if (_calledNext) return;
+
+    _calledNext = true;
+
+    _videoController?.removeListener(_videoListener);
+    _videoController?.pause();
+
+    _imageTimer = Timer(const Duration(seconds: 3), () async {
+      await authCon.checkUserAuthStatus();
+    });
+
+    setState(() {});
   }
 
   // ============================
   // VIDEO END LISTENER
   // ============================
   void _videoListener() async {
-    if (_videoController == null) return;
+    if (_videoController == null || _calledNext) return;
 
     final value = _videoController!.value;
 
@@ -114,7 +129,6 @@ class _SplashScreenState extends State<SplashScreen> {
         value.position >= value.duration &&
         !_calledNext) {
       _calledNext = true;
-
       await authCon.checkUserAuthStatus();
     }
   }
@@ -124,6 +138,7 @@ class _SplashScreenState extends State<SplashScreen> {
   // ============================
   @override
   void dispose() {
+    _imageTimer?.cancel();
     _videoController?.removeListener(_videoListener);
     _videoController?.dispose();
     super.dispose();
@@ -137,13 +152,31 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: black,
       body: Center(
-        child: _videoController != null && _videoController!.value.isInitialized
-            ? AspectRatio(
-                aspectRatio: _videoController!.value.aspectRatio,
-                child: VideoPlayer(_videoController!),
-              )
-            : const SizedBox(),
+        child: _buildContent(),
       ),
     );
+  }
+
+  Widget _buildContent() {
+    // IMAGE SPLASH
+    if (appCon.splashMediaType == SplashMediaType.image &&
+        appCon.cachedSplashImagePath.isNotEmpty) {
+      return Image.file(
+        File(appCon.cachedSplashImagePath),
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+      );
+    }
+
+    // VIDEO SPLASH
+    if (_videoController != null && _videoController!.value.isInitialized) {
+      return AspectRatio(
+        aspectRatio: _videoController!.value.aspectRatio,
+        child: VideoPlayer(_videoController!),
+      );
+    }
+
+    return const SizedBox();
   }
 }
