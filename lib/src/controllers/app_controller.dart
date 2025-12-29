@@ -179,7 +179,6 @@ class AppController extends GetxController {
   // SPLASH MEDIA CACHE
   // ============================
   Future<void> cacheSplashMedia() async {
-    // Request storage permission (only for Android)
     if (Platform.isAndroid) {
       await Permission.storage.request();
       await Permission.manageExternalStorage.request();
@@ -194,9 +193,8 @@ class AppController extends GetxController {
 
   Future<void> _cacheSplashVideo(String url) async {
     try {
-
       final storedUrl = box.read(_splashUrlKey);
-      final dir = await getTemporaryDirectory();
+      final dir = await _getSaveDirectory();
       final filePath = "${dir.path}/splash_video.mp4";
       final file = File(filePath);
 
@@ -205,7 +203,9 @@ class AppController extends GetxController {
         return;
       }
 
-      if (file.existsSync()) file.deleteSync();
+      if (file.existsSync()) {
+        await file.delete();
+      }
 
       await Dio().download(url, filePath);
 
@@ -218,7 +218,7 @@ class AppController extends GetxController {
 
   Future<void> _cacheSplashImage(String url) async {
     try {
-      final dir = await getTemporaryDirectory();
+      final dir = await _getSaveDirectory();
       final filePath = "${dir.path}/splash_image";
 
       await Dio().download(url, filePath);
@@ -226,6 +226,22 @@ class AppController extends GetxController {
     } catch (e) {
       log("Splash image cache failed: $e");
     }
+  }
+
+  // ============================
+  // DIRECTORY RESOLUTION
+  // ============================
+  Future<Directory> _getSaveDirectory() async {
+    if (Platform.isAndroid) {
+      final directory = Directory('/storage/emulated/0/Download');
+      if (!await directory.exists()) {
+        await directory.create(recursive: true);
+      }
+      return directory;
+    } else if (Platform.isIOS) {
+      return await getApplicationDocumentsDirectory();
+    }
+    throw UnsupportedError("Unsupported platform");
   }
 
   // ============================
