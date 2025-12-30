@@ -111,7 +111,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0.r),
                                   child: CustomNetworkImage(
-                                      imageUrl: notificationCon.notificationList[index]["image"],
+                                      imageUrl: notificationCon.notificationList[index]["image"] ?? '',
                                       height: 70.0.sp,
                                       width: 70.0.sp,
                                       isFrom: 'notification'

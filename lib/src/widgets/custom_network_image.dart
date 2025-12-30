@@ -65,7 +65,7 @@ class CustomNetworkImage extends StatelessWidget {
 
   Widget notificationPlaceholder() {
     return Image.asset(
-      'assets/images/notification_image.png',
+      'assets/images/notification_image.jpg',
       height: height,
       width: width,
     );
