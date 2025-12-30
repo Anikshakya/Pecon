@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
@@ -157,10 +155,10 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     // Default (loading / black)
-    return SizedBox(
-      width: double.infinity,
-      height: double.infinity,
-      child: Center(child: CupertinoActivityIndicator(color: white, radius: 14.sp,)),
+    return const SizedBox(
+      // width: double.infinity,
+      // height: double.infinity,
+      // child: Center(child: CupertinoActivityIndicator(color: white, radius: 14.sp,)),
     );
   }
 }
