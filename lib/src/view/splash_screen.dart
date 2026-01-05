@@ -17,8 +17,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final AuthController authCon = Get.put(AuthController());
   final AppController appCon = Get.put(AppController());
+  final AuthController authCon = Get.put(AuthController());
 
   VideoPlayerController? _videoController;
   Timer? _imageTimer;
@@ -28,55 +28,49 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
-    // Poll backend only
-    appCon.startSplashVideoPolling(
-      onResolved: () async {
-        if (!mounted) return;
-
-        if (appCon.splashMediaType == SplashMediaType.image &&
-            appCon.cachedSplashImagePath.isNotEmpty) {
-          _showImageAndNavigate();
-        } else if (appCon.splashMediaType == SplashMediaType.video &&
-            appCon.cachedSplashVideoPath.isNotEmpty) {
-          await _playCachedVideo();
-        } else {
-          // Nothing valid → proceed
-          await authCon.checkUserAuthStatus();
-        }
-      },
-    );
+    _initialize();
   }
 
   // ============================
-  // PLAY CACHED VIDEO
+  // APP START FLOW
   // ============================
-  Future<void> _playCachedVideo() async {
-    if (_calledNext) return;
+  Future<void> _initialize() async {
+    final result = await appCon.startApp();
 
-    final file = File(appCon.cachedSplashVideoPath);
-    if (!file.existsSync()) {
-      await authCon.checkUserAuthStatus();
+    switch (result) {
+      case AppStartResult.blockedByUpdate:
+        // Update dialog already shown
+        await _routeNext();
+        return;
+
+      case AppStartResult.playSplash:
+      case AppStartResult.playCachedSplash:
+        await _playSplashFromCacheOrRoute();
+        return;
+
+      case AppStartResult.routeImmediately:
+        await _routeNext();
+        return;
+    }
+  }
+
+  // ============================
+  // SPLASH DECISION
+  // ============================
+  Future<void> _playSplashFromCacheOrRoute() async {
+    if (appCon.splashMediaType == SplashMediaType.image &&
+        appCon.cachedSplashImagePath.isNotEmpty) {
+      _showImageAndNavigate();
       return;
     }
 
-    try {
-      _videoController?.dispose();
-
-      _videoController = VideoPlayerController.file(file);
-      await _videoController!.initialize();
-
-      if (!mounted) return;
-
-      setState(() {});
-      _videoController!
-        ..setVolume(1.0)
-        ..play();
-
-      _videoController!.addListener(_videoListener);
-    } catch (_) {
-      await authCon.checkUserAuthStatus();
+    if (appCon.splashMediaType == SplashMediaType.video &&
+        appCon.cachedSplashVideoPath.isNotEmpty) {
+      await _playCachedVideo();
+      return;
     }
+
+    await _routeNext();
   }
 
   // ============================
@@ -84,29 +78,62 @@ class _SplashScreenState extends State<SplashScreen> {
   // ============================
   void _showImageAndNavigate() {
     if (_calledNext) return;
-
     _calledNext = true;
 
     _imageTimer = Timer(const Duration(seconds: 3), () async {
-      await authCon.checkUserAuthStatus();
+      await _routeNext();
     });
 
     setState(() {});
   }
 
   // ============================
-  // VIDEO END LISTENER
+  // VIDEO FLOW
   // ============================
+  Future<void> _playCachedVideo() async {
+    if (_calledNext) return;
+
+    final file = File(appCon.cachedSplashVideoPath);
+    if (!file.existsSync()) {
+      await _routeNext();
+      return;
+    }
+
+    try {
+      _videoController?.dispose();
+      _videoController = VideoPlayerController.file(file);
+
+      await _videoController!.initialize();
+      if (!mounted) return;
+
+      setState(() {});
+
+      _videoController!
+        ..setVolume(1.0)
+        ..play()
+        ..addListener(_videoListener);
+    } catch (_) {
+      await _routeNext();
+    }
+  }
+
   void _videoListener() async {
-    if (_videoController == null || _calledNext) return;
+    if (_calledNext || _videoController == null) return;
 
     final value = _videoController!.value;
-
-    if (value.isInitialized &&
-        value.position >= value.duration) {
+    if (value.isInitialized && value.position >= value.duration) {
       _calledNext = true;
-      await authCon.checkUserAuthStatus();
+      await _routeNext();
     }
+  }
+
+  // ============================
+  // ROUTING
+  // ============================
+  Future<void> _routeNext() async {
+    if (_calledNext) return;
+    _calledNext = true;
+    await authCon.checkUserAuthStatus();
   }
 
   // ============================
@@ -127,9 +154,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: black,
-      body: Center(
-        child: _buildContent(),
-      ),
+      body: _buildContent(),
     );
   }
 
@@ -139,26 +164,27 @@ class _SplashScreenState extends State<SplashScreen> {
         appCon.cachedSplashImagePath.isNotEmpty) {
       return Image.file(
         File(appCon.cachedSplashImagePath),
-        fit: BoxFit.cover,
         width: double.infinity,
         height: double.infinity,
+        fit: BoxFit.cover,
       );
     }
 
     // VIDEO SPLASH
-    if (_videoController != null &&
-        _videoController!.value.isInitialized) {
-      return AspectRatio(
-        aspectRatio: _videoController!.value.aspectRatio,
-        child: VideoPlayer(_videoController!),
+    if (_videoController != null && _videoController!.value.isInitialized) {
+      return SizedBox.expand(
+        child: FittedBox(
+          fit: BoxFit.cover,
+          child: SizedBox(
+            width: _videoController!.value.size.width,
+            height: _videoController!.value.size.height,
+            child: VideoPlayer(_videoController!),
+          ),
+        ),
       );
     }
 
-    // Default (loading / black)
-    return const SizedBox(
-      // width: double.infinity,
-      // height: double.infinity,
-      // child: Center(child: CupertinoActivityIndicator(color: white, radius: 14.sp,)),
-    );
+    // FALLBACK
+    return const SizedBox();
   }
 }

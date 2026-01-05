@@ -2,38 +2,65 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:new_version_plus/new_version_plus.dart';
+import 'package:open_store/open_store.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pecon/src/app_config/styles.dart';
+import 'package:pecon/src/widgets/custom_network_image.dart';
+import 'package:version/version.dart';
 
 import 'package:pecon/src/api_config/api_repo.dart';
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pecon/src/widgets/custom_network_image.dart';
+import 'package:pecon/src/app_config/constant.dart';
 
 /// ============================
 /// Splash Media Type
 /// ============================
 enum SplashMediaType { image, video, unknown }
 
+/// ============================
+/// App Start Result
+/// ============================
+enum AppStartResult {
+  blockedByUpdate,
+  playSplash,
+  playCachedSplash,
+  routeImmediately,
+}
+
 class AppController extends GetxController {
   // ============================
-  // Storage
+  // UPDATE STATE
+  // ============================
+  RxBool isUpdateAvailable = false.obs;
+  Version? installedVersion;
+  Version? latestVersion;
+  String? installedFileName;
+  String? latestFileName;
+
+  final RxBool isBannerLoading = false.obs;
+  var adBanner = "";
+
+  // ============================
+  // STORAGE
   // ============================
   final GetStorage box = GetStorage();
   static const String _splashUrlKey = 'splash_url';
   static const String _splashTypeKey = 'splash_type';
 
   // ============================
-  // Loaders
+  // LOADERS
   // ============================
   final RxBool isLoading = false.obs;
-  final RxBool isBannerLoading = false.obs;
 
   // ============================
-  // General Settings
+  // SETTINGS
   // ============================
   String webUrl = "";
   String phoneLink = "";
@@ -45,12 +72,7 @@ class AppController extends GetxController {
   String youtube = "";
 
   // ============================
-  // Ad Banner
-  // ============================
-  String adBanner = "";
-
-  // ============================
-  // Splash Media
+  // SPLASH MEDIA
   // ============================
   String splashUrl = "";
   SplashMediaType splashMediaType = SplashMediaType.unknown;
@@ -59,13 +81,65 @@ class AppController extends GetxController {
   String cachedSplashImagePath = "";
 
   // ============================
-  // Polling
+  // INTERNET CHECK
   // ============================
-  Timer? _pollingTimer;
-  int _pollCount = 0;
+  Future<bool> hasInternet() async {
+    final result = await Connectivity().checkConnectivity();
+    return result != ConnectivityResult.none;
+  }
 
-  static const int maxPollAttempts = 6;
-  static const Duration pollInterval = Duration(seconds: 5);
+  // ============================
+  // APP START FLOW (MASTER)
+  // ============================
+  Future<AppStartResult> startApp() async {
+    final hasNet = await hasInternet();
+
+    // ----------------------------
+    // ONLINE FLOW
+    // ----------------------------
+    if (hasNet) {
+      try {
+        // 1️⃣ CHECK UPDATE
+        final newVersion = NewVersionPlus(
+          iOSId: iOSPackageName,
+          iOSAppStoreCountry: 'JP',
+          androidId: androidAppBundleId,
+          androidPlayStoreCountry: 'JP',
+        );
+
+        final status = await newVersion.getVersionStatus();
+
+        if (status != null) {
+          installedFileName = status.localVersion;
+          latestFileName = status.storeVersion;
+
+          final updateAvailable = await _isUpdateAvailableCheck();
+          if (updateAvailable) {
+            _showUpdateDialog();
+            return AppStartResult.blockedByUpdate;
+          }
+        }
+
+        // 2️⃣ SETTINGS + SPLASH
+        final ok = await getSettingApi();
+        if (ok) {
+          await cacheSplashMedia();
+          return AppStartResult.playSplash;
+        }
+      } catch (e) {
+        log("StartApp error: $e");
+      }
+    }
+
+    // ----------------------------
+    // OFFLINE / FALLBACK
+    // ----------------------------
+    if (_loadCachedSplash()) {
+      return AppStartResult.playCachedSplash;
+    }
+
+    return AppStartResult.routeImmediately;
+  }
 
   // ============================
   // SETTINGS API
@@ -96,7 +170,7 @@ class AppController extends GetxController {
         return splashMediaType != SplashMediaType.unknown;
       }
     } catch (e) {
-      log("Setting API Error: $e");
+      log("Settings API Error: $e");
     } finally {
       isLoading(false);
     }
@@ -104,23 +178,154 @@ class AppController extends GetxController {
   }
 
   // ============================
-  // AD BANNER API
+  // SPLASH CACHE
   // ============================
-  Future<void> getAdBanner() async {
-    try {
-      isBannerLoading(true);
+  Future<void> cacheSplashMedia() async {
+    final storedUrl = box.read(_splashUrlKey);
+    final storedType = box.read(_splashTypeKey);
 
-      final response =
-          await ApiRepo.apiGet('api/ads_banner', "", 'SettingApiAPI');
+    final dir = await getTemporaryDirectory();
 
-      if (response != null && response['code'] == 200) {
-        adBanner = response["data"]?["image"] ?? "";
+    if (storedUrl == splashUrl && storedType == splashMediaType.name) {
+      if (splashMediaType == SplashMediaType.video) {
+        final f = File("${dir.path}/splash_video.mp4");
+        if (f.existsSync()) {
+          cachedSplashVideoPath = f.path;
+          return;
+        }
       }
-    } catch (e) {
-      log("Ad Banner Error: $e");
-    } finally {
-      isBannerLoading(false);
+
+      if (splashMediaType == SplashMediaType.image) {
+        final f = File("${dir.path}/splash_image");
+        if (f.existsSync()) {
+          cachedSplashImagePath = f.path;
+          return;
+        }
+      }
     }
+
+    await _clearOldSplashCache();
+
+    if (splashMediaType == SplashMediaType.video) {
+      await _cacheSplashVideo(splashUrl);
+    } else if (splashMediaType == SplashMediaType.image) {
+      await _cacheSplashImage(splashUrl);
+    }
+
+    box.write(_splashUrlKey, splashUrl);
+    box.write(_splashTypeKey, splashMediaType.name);
+  }
+
+  Future<void> _cacheSplashVideo(String url) async {
+    try {
+      final dir = await getTemporaryDirectory();
+      final path = "${dir.path}/splash_video.mp4";
+      await Dio().download(url, path);
+      cachedSplashVideoPath = path;
+    } catch (e) {
+      log("Video cache failed: $e");
+    }
+  }
+
+  Future<void> _cacheSplashImage(String url) async {
+    try {
+      final dir = await getTemporaryDirectory();
+      final path = "${dir.path}/splash_image";
+      await Dio().download(url, path);
+      cachedSplashImagePath = path;
+    } catch (e) {
+      log("Image cache failed: $e");
+    }
+  }
+
+  Future<void> _clearOldSplashCache() async {
+    final dir = await getTemporaryDirectory();
+    File("${dir.path}/splash_video.mp4").deleteSync(recursive: true);
+    File("${dir.path}/splash_image").deleteSync(recursive: true);
+  }
+
+  bool _loadCachedSplash() {
+    final dir = Directory.systemTemp;
+
+    final video = File("${dir.path}/splash_video.mp4");
+    if (video.existsSync()) {
+      cachedSplashVideoPath = video.path;
+      splashMediaType = SplashMediaType.video;
+      return true;
+    }
+
+    final image = File("${dir.path}/splash_image");
+    if (image.existsSync()) {
+      cachedSplashImagePath = image.path;
+      splashMediaType = SplashMediaType.image;
+      return true;
+    }
+
+    return false;
+  }
+
+  // ============================
+  // UPDATE CHECK
+  // ============================
+  Future<bool> _isUpdateAvailableCheck() async {
+    installedVersion = Version.parse(installedFileName!);
+    latestVersion = Version.parse(latestFileName!);
+
+    if (latestVersion! > installedVersion!) {
+      isUpdateAvailable(true);
+      return true;
+    }
+
+    isUpdateAvailable(false);
+    return false;
+  }
+
+  void _showUpdateDialog() {
+    Get.dialog(
+      PopScope(
+        canPop: false,
+        child: CupertinoAlertDialog(
+          title: Text('updateAvailable'.tr),
+          content: Text('installLatest'.tr),
+          actions: [
+            CupertinoDialogAction(
+              child: Text('はい'.tr),
+              onPressed: () => _openStore(),
+            ),
+          ],
+        ),
+      ),
+      barrierDismissible: false,
+    );
+  }
+
+  void _openStore() {
+    OpenStore.instance.open(
+      appStoreId: appStoreId,
+      androidAppBundleId: androidAppBundleId,
+    );
+  }
+
+  // ============================
+  // MEDIA TYPE DETECTION
+  // ============================
+  SplashMediaType _detectSplashMediaType(String url) {
+    final lower = url.toLowerCase();
+
+    if (lower.endsWith('.mp4') ||
+        lower.endsWith('.mov') ||
+        lower.endsWith('.webm')) {
+      return SplashMediaType.video;
+    }
+
+    if (lower.endsWith('.jpg') ||
+        lower.endsWith('.jpeg') ||
+        lower.endsWith('.png') ||
+        lower.endsWith('.webp')) {
+      return SplashMediaType.image;
+    }
+
+    return SplashMediaType.unknown;
   }
 
   // ============================
@@ -182,144 +387,22 @@ class AppController extends GetxController {
   }
 
   // ============================
-  // SPLASH MEDIA CACHE
+  // AD BANNER API
   // ============================
-  Future<void> cacheSplashMedia() async {
-    final storedUrl = box.read(_splashUrlKey);
-    final storedType = box.read(_splashTypeKey);
-
-    // SAME URL + SAME TYPE → reuse cache
-    if (storedUrl == splashUrl &&
-        storedType == splashMediaType.name) {
-      final dir = await getTemporaryDirectory();
-
-      if (splashMediaType == SplashMediaType.video) {
-        final file = File("${dir.path}/splash_video.mp4");
-        if (file.existsSync()) {
-          cachedSplashVideoPath = file.path;
-          return;
-        }
-      }
-
-      if (splashMediaType == SplashMediaType.image) {
-        final file = File("${dir.path}/splash_image");
-        if (file.existsSync()) {
-          cachedSplashImagePath = file.path;
-          return;
-        }
-      }
-    }
-
-    // DIFFERENT URL OR TYPE → clear old & cache new
-    await _clearOldSplashCache();
-
-    if (splashMediaType == SplashMediaType.video) {
-      await _cacheSplashVideo(splashUrl);
-    } else if (splashMediaType == SplashMediaType.image) {
-      await _cacheSplashImage(splashUrl);
-    }
-
-    box.write(_splashUrlKey, splashUrl);
-    box.write(_splashTypeKey, splashMediaType.name);
-  }
-
-  Future<void> _cacheSplashVideo(String url) async {
+  Future<void> getAdBanner() async {
     try {
-      final dir = await getTemporaryDirectory();
-      final filePath = "${dir.path}/splash_video.mp4";
-      final file = File(filePath);
+      isBannerLoading(true);
 
-      if (file.existsSync()) file.deleteSync();
+      final response =
+          await ApiRepo.apiGet('api/ads_banner', "", 'SettingApiAPI');
 
-      await Dio().download(url, filePath);
-      cachedSplashVideoPath = filePath;
-    } catch (e) {
-      log("Splash video cache failed: $e");
-    }
-  }
-
-  Future<void> _cacheSplashImage(String url) async {
-    try {
-      final dir = await getTemporaryDirectory();
-      final filePath = "${dir.path}/splash_image";
-
-      final file = File(filePath);
-      if (file.existsSync()) file.deleteSync();
-
-      await Dio().download(url, filePath);
-      cachedSplashImagePath = filePath;
-    } catch (e) {
-      log("Splash image cache failed: $e");
-    }
-  }
-
-  Future<void> _clearOldSplashCache() async {
-    final dir = await getTemporaryDirectory();
-
-    final video = File("${dir.path}/splash_video.mp4");
-    final image = File("${dir.path}/splash_image");
-
-    if (video.existsSync()) video.deleteSync();
-    if (image.existsSync()) image.deleteSync();
-  }
-
-  // ============================
-  // SPLASH POLLING
-  // ============================
-  void startSplashVideoPolling({
-    required VoidCallback onResolved,
-  }) {
-    _pollingTimer?.cancel();
-    _pollCount = 0;
-
-    _pollingTimer = Timer.periodic(pollInterval, (timer) async {
-      _pollCount++;
-
-      final resolved = await getSettingApi();
-
-      if (resolved) {
-        await cacheSplashMedia();
-        timer.cancel();
-        onResolved();
-        return;
+      if (response != null && response['code'] == 200) {
+        adBanner = response["data"]?["image"] ?? "";
       }
-
-      if (_pollCount >= maxPollAttempts) {
-        timer.cancel();
-        onResolved();
-      }
-    });
-  }
-
-  // ============================
-  // MEDIA TYPE DETECTION
-  // ============================
-  SplashMediaType _detectSplashMediaType(String url) {
-    final lower = url.toLowerCase();
-
-    if (lower.endsWith('.mp4') ||
-        lower.endsWith('.mov') ||
-        lower.endsWith('.webm') ||
-        lower.endsWith('.mkv')) {
-      return SplashMediaType.video;
+    } catch (e) {
+      log("Ad Banner Error: $e");
+    } finally {
+      isBannerLoading(false);
     }
-
-    if (lower.endsWith('.jpg') ||
-        lower.endsWith('.jpeg') ||
-        lower.endsWith('.png') ||
-        lower.endsWith('.webp')) {
-      return SplashMediaType.image;
-    }
-
-    return SplashMediaType.unknown;
-  }
-
-  // ============================
-  // CLEANUP
-  // ============================
-  @override
-  void onClose() {
-    _pollingTimer?.cancel();
-    super.onClose();
   }
 }
