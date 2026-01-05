@@ -59,9 +59,12 @@ dependencies:
   firebase_core: ^2.9.0
   firebase_messaging: ^14.6.5
   flutter_local_notifications: ^15.1.0+1
+  connectivity_plus: ^7.0.0
 
-  #Fade
-  faded: ^2.0.0
+  #app updates
+  new_version_plus: ^0.1.0
+  version: ^3.0.2
+  open_store: ^0.5.0
 
 dev_dependencies:
   flutter_test:
