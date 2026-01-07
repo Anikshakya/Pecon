@@ -81,7 +81,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void _showImageAndNavigate() {
     if (_calledNext) return;
     setState((){
-      _calledNext = true;
+      _calledNext = false;
     });
 
     _imageTimer = Timer(const Duration(seconds: 3), () async {
@@ -162,7 +162,10 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: black,
-      body: _buildContent(),
+      body: SafeArea(
+        bottom: false,
+        child: _buildContent()
+      ),
     );
   }
 
