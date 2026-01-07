@@ -24,7 +24,7 @@ void main() async{
   FirebaseMessaging.onBackgroundMessage(backgroundHandler); // FirebaseMessaging used correctly after initialization.
   runApp(
     Faded(
-      dueDate: "2025-12-24",
+      dueDate: "2025-12-24", 
       daysDeadline: 60,
       child: const MyApp()
     )
