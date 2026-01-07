@@ -2,7 +2,7 @@
 import 'dart:developer';
 
 import 'package:get/get.dart';
-import 'package:pecon/src/api_config/api_repo.dart';
+import 'package:pecon_app/src/api_config/api_repo.dart';
 
 class SettingsController extends GetxController{
   //loadings

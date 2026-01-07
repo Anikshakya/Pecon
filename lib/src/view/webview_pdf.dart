@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:pecon/src/app_config/styles.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
 
 class InAppPdfViewer extends StatefulWidget {
   final String pdfUrl;

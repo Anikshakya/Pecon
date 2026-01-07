@@ -3,13 +3,13 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pecon/src/api_config/api_repo.dart';
-import 'package:pecon/src/app_config/constant.dart';
-import 'package:pecon/src/app_config/read_write.dart';
-import 'package:pecon/src/controllers/user_controller.dart';
-import 'package:pecon/src/model/product_list_model.dart';
-import 'package:pecon/src/widgets/confetti_widget.dart';
-import 'package:pecon/src/widgets/custom_toast.dart';
+import 'package:pecon_app/src/api_config/api_repo.dart';
+import 'package:pecon_app/src/app_config/constant.dart';
+import 'package:pecon_app/src/app_config/read_write.dart';
+import 'package:pecon_app/src/controllers/user_controller.dart';
+import 'package:pecon_app/src/model/product_list_model.dart';
+import 'package:pecon_app/src/widgets/confetti_widget.dart';
+import 'package:pecon_app/src/widgets/custom_toast.dart';
 
 class ProductsController extends GetxController{
   final UserController userCon = Get.put(UserController());

@@ -2,9 +2,9 @@ import 'package:faded/faded.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/services/notification_service.dart';
-import 'package:pecon/src/view/splash_screen.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/services/notification_service.dart';
+import 'package:pecon_app/src/view/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -24,7 +24,7 @@ void main() async{
   FirebaseMessaging.onBackgroundMessage(backgroundHandler); // FirebaseMessaging used correctly after initialization.
   runApp(
     Faded(
-      dueDate: DateTime(2025, 12, 24),
+      dueDate: "2025-12-24",
       daysDeadline: 60,
       child: const MyApp()
     )
@@ -63,7 +63,7 @@ class _MyAppState extends State<MyApp> {
             useMaterial3: true,
             textSelectionTheme: TextSelectionThemeData(
               cursorColor: primary, 
-              selectionColor: primary.withOpacity(.65), 
+              selectionColor: primary.withValues(alpha:.65), 
               selectionHandleColor: primary, 
             ),
           ),

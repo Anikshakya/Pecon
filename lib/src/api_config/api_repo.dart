@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:pecon/src/api_config/dio_client.dart';
-import 'package:pecon/src/widgets/custom_toast.dart';
+import 'package:pecon_app/src/api_config/dio_client.dart';
+import 'package:pecon_app/src/widgets/custom_toast.dart';
 
 class ApiRepo{
   static apiPost(apiPath,params, [apiName]) async {

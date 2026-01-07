@@ -1,10 +1,10 @@
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/controllers/auth_controller.dart';
-import 'package:pecon/src/widgets/custom_button.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/controllers/auth_controller.dart';
+import 'package:pecon_app/src/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pecon/src/widgets/custom_textfieldheader.dart';
+import 'package:pecon_app/src/widgets/custom_textfieldheader.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key});
@@ -86,7 +86,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           // Old Password
           // Password
           CustomTextFormHeaderField(
-            filledColor: gray.withOpacity(0.2),
+            filledColor: gray.withValues(alpha:0.2),
             controller: oldPasswordCon,
             obscureText: isOldObscure,
             headingText: "Old Password",
@@ -111,7 +111,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
           // Password
           CustomTextFormHeaderField(
-            filledColor: gray.withOpacity(0.2),
+            filledColor: gray.withValues(alpha:0.2),
             controller: newPasswordCon,
             obscureText: isNewObscure,
             headingText: "New Password",
@@ -135,7 +135,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
           // Confirm Password
           CustomTextFormHeaderField(
-            filledColor: gray.withOpacity(0.2),
+            filledColor: gray.withValues(alpha:0.2),
             controller: confirmPasswordCon,
             obscureText: isConfirmPassObscure,
             headingText: "Confirm Password",

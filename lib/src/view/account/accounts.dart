@@ -1,21 +1,21 @@
 import 'package:intl/intl.dart';
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/controllers/auth_controller.dart';
-import 'package:pecon/src/controllers/user_controller.dart';
-import 'package:pecon/src/view/account/change_password.dart';
-import 'package:pecon/src/view/account/download_catalogue.dart';
-import 'package:pecon/src/view/account/earning_history_page.dart';
-import 'package:pecon/src/view/account/offer_promotion.dart';
-import 'package:pecon/src/view/account/privacy_policy.dart';
-import 'package:pecon/src/view/account/profile_form_page.dart';
-import 'package:pecon/src/view/account/replace_product/replace_product.dart';
-import 'package:pecon/src/view/account/return_product/return_qr_scanner.dart';
-import 'package:pecon/src/view/account/terms_condition.dart';
-import 'package:pecon/src/view/account/withdrawal_request.dart';
-import 'package:pecon/src/view/dashboard.dart';
-import 'package:pecon/src/widgets/custom_appbar.dart';
-import 'package:pecon/src/widgets/custom_button.dart';
-import 'package:pecon/src/widgets/custom_network_image.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/controllers/auth_controller.dart';
+import 'package:pecon_app/src/controllers/user_controller.dart';
+import 'package:pecon_app/src/view/account/change_password.dart';
+import 'package:pecon_app/src/view/account/download_catalogue.dart';
+import 'package:pecon_app/src/view/account/earning_history_page.dart';
+import 'package:pecon_app/src/view/account/offer_promotion.dart';
+import 'package:pecon_app/src/view/account/privacy_policy.dart';
+import 'package:pecon_app/src/view/account/profile_form_page.dart';
+import 'package:pecon_app/src/view/account/replace_product/replace_product.dart';
+import 'package:pecon_app/src/view/account/return_product/return_qr_scanner.dart';
+import 'package:pecon_app/src/view/account/terms_condition.dart';
+import 'package:pecon_app/src/view/account/withdrawal_request.dart';
+import 'package:pecon_app/src/view/dashboard.dart';
+import 'package:pecon_app/src/widgets/custom_appbar.dart';
+import 'package:pecon_app/src/widgets/custom_button.dart';
+import 'package:pecon_app/src/widgets/custom_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -214,7 +214,7 @@ class _AccountPageState extends State<AccountPage> {
                         Center(
                           child: Text(
                             "Version 4.0.0",
-                            style: poppinsRegular(size: 12.sp, color: black.withOpacity(0.5)),
+                            style: poppinsRegular(size: 12.sp, color: black.withValues(alpha:0.5)),
                           ),
                         ),
                       ],
@@ -277,10 +277,10 @@ class _AccountPageState extends State<AccountPage> {
                           children: [
                             Text(userCon.user.value.data.name.toString(), style: poppinsBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
                             SizedBox(height: 2.h),
-                            Text("Membership ID: ${userCon.user.value.data.id}", style: poppinsSemiBold(size: 9.sp, color: black.withOpacity(0.7)), maxLines: 2,),
+                            Text("Membership ID: ${userCon.user.value.data.id}", style: poppinsSemiBold(size: 9.sp, color: black.withValues(alpha:0.7)), maxLines: 2,),
                             Text(
                               userCon.user.value.data.number.toString(),
-                              style: poppinsMedium(size: 11.sp, color: black.withOpacity(0.6))
+                              style: poppinsMedium(size: 11.sp, color: black.withValues(alpha:0.6))
                             ),
                           ],
                         ),
@@ -291,7 +291,7 @@ class _AccountPageState extends State<AccountPage> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text("Total Gain Points", style: poppinsSemiBold(size: 9.sp, color: black.withOpacity(0.5)),),
+                                Text("Total Gain Points", style: poppinsSemiBold(size: 9.sp, color: black.withValues(alpha:0.5)),),
                                 SizedBox(height: 4.h),
                                 Container(
                                   constraints: BoxConstraints(
@@ -342,7 +342,7 @@ class _AccountPageState extends State<AccountPage> {
         InkWell(
           onTap: onTap,
           child: CircleAvatar(
-            backgroundColor: color.withOpacity(0.2),
+            backgroundColor: color.withValues(alpha:0.2),
             radius: 24,
             child: Icon(icon, color: color, size: 24),
           ),

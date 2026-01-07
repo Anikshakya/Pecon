@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pecon/src/widgets/view_full_screen_image.dart';
+import 'package:pecon_app/src/widgets/view_full_screen_image.dart';
 
 class CustomNetworkImage extends StatelessWidget {
   final String imageUrl;
@@ -56,7 +56,7 @@ class CustomNetworkImage extends StatelessWidget {
       child: Center(
         child: Icon(
           Icons.image,
-          color: Colors.black.withOpacity(0.2),
+          color: Colors.black.withValues(alpha:0.2),
           size: _calculateIconSize(),
         ),
       ),
@@ -80,7 +80,7 @@ class CustomNetworkImage extends StatelessWidget {
       child: Center(
         child: Icon(
           Icons.broken_image,
-          color: Colors.black.withOpacity(0.2),
+          color: Colors.black.withValues(alpha:0.2),
           size: _calculateIconSize(),
         ),
       ),

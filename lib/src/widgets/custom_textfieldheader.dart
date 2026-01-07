@@ -1,4 +1,4 @@
-import 'package:pecon/src/app_config/styles.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -122,7 +122,7 @@ class CustomTextFormHeaderField extends StatelessWidget {
               hintText: headingText,
               labelStyle: labelStyle,
               errorStyle: poppinsMedium(size: 11.sp,color: const Color.fromARGB(255, 139, 47, 47)),
-              hintStyle: hintStyle ?? poppinsMedium(size: 12.sp, color: grey10.withOpacity(0.8)),
+              hintStyle: hintStyle ?? poppinsMedium(size: 12.sp, color: grey10.withValues(alpha:0.8)),
               prefixIcon: prefixIcon,
               suffixIcon: isDropdown == true 
                 ? const Icon(Icons.arrow_drop_down, color: grey1,)
@@ -148,7 +148,7 @@ class CustomTextFormHeaderField extends StatelessWidget {
                   width: 1.6
                 ),
               ),
-              fillColor: filledColor ?? white.withOpacity(0.9),
+              fillColor: filledColor ?? white.withValues(alpha:0.9),
               filled: true,
               errorBorder: errorBorder ?? const OutlineInputBorder(
                 borderSide: BorderSide(

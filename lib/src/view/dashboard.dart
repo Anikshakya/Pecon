@@ -1,11 +1,11 @@
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/controllers/app_controller.dart';
-import 'package:pecon/src/controllers/user_controller.dart';
-import 'package:pecon/src/view/account/accounts.dart';
-import 'package:pecon/src/view/home_page.dart';
-import 'package:pecon/src/view/notification_page.dart';
-import 'package:pecon/src/view/products_page.dart';
-import 'package:pecon/src/view/qr_scanner.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/controllers/app_controller.dart';
+import 'package:pecon_app/src/controllers/user_controller.dart';
+import 'package:pecon_app/src/view/account/accounts.dart';
+import 'package:pecon_app/src/view/home_page.dart';
+import 'package:pecon_app/src/view/notification_page.dart';
+import 'package:pecon_app/src/view/products_page.dart';
+import 'package:pecon_app/src/view/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -78,9 +78,9 @@ class _DashboardState extends State<Dashboard> {
                 IconButton(
                   icon: Column(
                     children: [
-                      Icon(Icons.home, color: _selectedIndex == 0 ? black : black.withOpacity(0.5)),
+                      Icon(Icons.home, color: _selectedIndex == 0 ? black : black.withValues(alpha:0.5)),
                       SizedBox(height: 2.0.h),
-                      Text("HOME", style: poppinsSemiBold(size: 9, color: _selectedIndex == 0 ? black : black.withOpacity(0.5)),)
+                      Text("HOME", style: poppinsSemiBold(size: 9, color: _selectedIndex == 0 ? black : black.withValues(alpha:0.5)),)
                     ],
                   ),
                   onPressed: () => _onItemTapped(0),
@@ -90,9 +90,9 @@ class _DashboardState extends State<Dashboard> {
             IconButton(
               icon: Column(
                 children: [
-                  Icon(Icons.shopping_cart_outlined, color: _selectedIndex == 1 ? black : black.withOpacity(0.5)),
+                  Icon(Icons.shopping_cart_outlined, color: _selectedIndex == 1 ? black : black.withValues(alpha:0.5)),
                   SizedBox(height: 2.0.h),
-                  Text("PRODUCT", style: poppinsSemiBold(size: 9, color: _selectedIndex == 1 ? black : black.withOpacity(0.5)),)
+                  Text("PRODUCT", style: poppinsSemiBold(size: 9, color: _selectedIndex == 1 ? black : black.withValues(alpha:0.5)),)
                 ],
               ),
               onPressed: () => _onItemTapped(1),
@@ -101,9 +101,9 @@ class _DashboardState extends State<Dashboard> {
             IconButton(
               icon: Column(
                 children: [
-                  Icon(Icons.notifications, color: _selectedIndex == 2 ? black : black.withOpacity(0.5)),
+                  Icon(Icons.notifications, color: _selectedIndex == 2 ? black : black.withValues(alpha:0.5)),
                   SizedBox(height: 2.0.h),
-                  Text("NOTIFY", style: poppinsSemiBold(size: 9, color: _selectedIndex == 2 ? black : black.withOpacity(0.5)),)
+                  Text("NOTIFY", style: poppinsSemiBold(size: 9, color: _selectedIndex == 2 ? black : black.withValues(alpha:0.5)),)
                 ],
               ),
               onPressed: () => _onItemTapped(2),
@@ -111,9 +111,9 @@ class _DashboardState extends State<Dashboard> {
             IconButton(
               icon: Column(
                 children: [
-                  Icon(Icons.person, color: _selectedIndex == 3 ? black : black.withOpacity(0.5)),
+                  Icon(Icons.person, color: _selectedIndex == 3 ? black : black.withValues(alpha:0.5)),
                   SizedBox(height: 2.0.h),
-                  Text("ACCOUNT", style: poppinsSemiBold(size: 9, color: _selectedIndex == 3 ? black : black.withOpacity(0.5)),)
+                  Text("ACCOUNT", style: poppinsSemiBold(size: 9, color: _selectedIndex == 3 ? black : black.withValues(alpha:0.5)),)
                 ],
               ),
               onPressed: () => _onItemTapped(3),

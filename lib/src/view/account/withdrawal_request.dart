@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/controllers/user_controller.dart';
-import 'package:pecon/src/widgets/custom_appbar.dart';
-import 'package:pecon/src/widgets/custom_network_image.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/controllers/user_controller.dart';
+import 'package:pecon_app/src/widgets/custom_appbar.dart';
+import 'package:pecon_app/src/widgets/custom_network_image.dart';
 
 class WithdrawalRequestPage extends StatefulWidget {
   const WithdrawalRequestPage({super.key});
@@ -109,7 +109,7 @@ class _WithdrawalRequestPageState extends State<WithdrawalRequestPage> {
                 ListView.separated(
                   separatorBuilder: (context, index) => 
                     Divider(
-                      color: gray.withOpacity(0.25),
+                      color: gray.withValues(alpha:0.25),
                       thickness: 0.8.sp,
                       height: 0,
                     ),
@@ -125,9 +125,9 @@ class _WithdrawalRequestPageState extends State<WithdrawalRequestPage> {
                           //products image
                           Container(
                             decoration: BoxDecoration(
-                              color: gray.withOpacity(0.1),
+                              color: gray.withValues(alpha:0.1),
                               border: Border.all(
-                                color: gray.withOpacity(0.25), width: 0.8.sp
+                                color: gray.withValues(alpha:0.25), width: 0.8.sp
                               ),
                               borderRadius: BorderRadius.circular(6.sp),
                             ),
@@ -160,7 +160,7 @@ class _WithdrawalRequestPageState extends State<WithdrawalRequestPage> {
                                     children: [
                                       Text(
                                         "Status: ".toUpperCase(),
-                                        style: poppinsSemiBold(color: black.withOpacity(.5), size: 11.sp ),
+                                        style: poppinsSemiBold(color: black.withValues(alpha:.5), size: 11.sp ),
                                       ),
                                       SizedBox(width: 4.w,),
                                       Container(
@@ -169,12 +169,12 @@ class _WithdrawalRequestPageState extends State<WithdrawalRequestPage> {
                                         ),
                                         padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
                                         decoration: BoxDecoration(
-                                          color: userCon.withdrawalList[index].status.toString().toLowerCase() == "rejected" ? red.withOpacity(0.9) : userCon.withdrawalList[index].status.toString().toLowerCase() == "approved" ? green.withOpacity(0.9) : primary.withOpacity(0.9),
+                                          color: userCon.withdrawalList[index].status.toString().toLowerCase() == "rejected" ? red.withValues(alpha:0.9) : userCon.withdrawalList[index].status.toString().toLowerCase() == "approved" ? green.withValues(alpha:0.9) : primary.withValues(alpha:0.9),
                                           borderRadius: BorderRadius.circular(6.sp),
                                         ),
                                         child: Text(
                                           userCon.withdrawalList[index].status.toString().toUpperCase(),
-                                          style: poppinsSemiBold(color: black.withOpacity(.9), size: 12.sp ),
+                                          style: poppinsSemiBold(color: black.withValues(alpha:.9), size: 12.sp ),
                                         )
                                       ),
                                     ],
@@ -189,12 +189,12 @@ class _WithdrawalRequestPageState extends State<WithdrawalRequestPage> {
                                     ),
                                     padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
                                     decoration: BoxDecoration(
-                                      color: gray.withOpacity(0.2),
+                                      color: gray.withValues(alpha:0.2),
                                       borderRadius: BorderRadius.circular(6.sp),
                                     ),
                                     child: Text(
                                       "Gift Type: ${userCon.withdrawalList[index].customerPaymentOption.toString().toUpperCase()}",
-                                      style: poppinsSemiBold(color: black.withOpacity(.5), size: 11.sp ),
+                                      style: poppinsSemiBold(color: black.withValues(alpha:.5), size: 11.sp ),
                                     )
                                   ),
                                 ),
@@ -207,12 +207,12 @@ class _WithdrawalRequestPageState extends State<WithdrawalRequestPage> {
                                     ),
                                     padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
                                     decoration: BoxDecoration(
-                                      color: gray.withOpacity(0.2),
+                                      color: gray.withValues(alpha:0.2),
                                       borderRadius: BorderRadius.circular(6.sp),
                                     ),
                                     child: Text(
                                       "Remarks: ${userCon.withdrawalList[index].remarks.toString()}",
-                                      style: poppinsSemiBold(color: black.withOpacity(.5), size: 11.sp ),
+                                      style: poppinsSemiBold(color: black.withValues(alpha:.5), size: 11.sp ),
                                     )
                                   ),
                                 ),
@@ -226,12 +226,12 @@ class _WithdrawalRequestPageState extends State<WithdrawalRequestPage> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text("Used Points", style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),),
+                                  Text("Used Points", style: poppinsSemiBold(size: 11.sp, color: black.withValues(alpha:0.5)),),
                                   SizedBox(height: 4.h),
                                   Container(
                                     padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
                                     decoration: BoxDecoration(
-                                      color: maroon.withOpacity(0.95),
+                                      color: maroon.withValues(alpha:0.95),
                                       borderRadius: BorderRadius.circular(6.sp),
                                     ),
                                     child: RichText(
@@ -262,7 +262,7 @@ class _WithdrawalRequestPageState extends State<WithdrawalRequestPage> {
                   },
                 ),
                 Divider(
-                  color: gray.withOpacity(0.25),
+                  color: gray.withValues(alpha:0.25),
                   thickness: 0.8.sp,
                   height: 0,
                 ),

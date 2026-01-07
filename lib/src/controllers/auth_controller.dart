@@ -1,17 +1,17 @@
 import 'dart:developer';
 
-import 'package:pecon/src/api_config/api_repo.dart';
-import 'package:pecon/src/app_config/read_write.dart';
-import 'package:pecon/src/controllers/app_controller.dart';
-import 'package:pecon/src/services/notification_service.dart';
-import 'package:pecon/src/view/dashboard.dart';
+import 'package:pecon_app/src/api_config/api_repo.dart';
+import 'package:pecon_app/src/app_config/read_write.dart';
+import 'package:pecon_app/src/controllers/app_controller.dart';
+import 'package:pecon_app/src/services/notification_service.dart';
+import 'package:pecon_app/src/view/dashboard.dart';
 import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:dio/dio.dart';
-import 'package:pecon/src/view/login.dart';
-import 'package:pecon/src/view/otp_page.dart';
-import 'package:pecon/src/view/reset_password_page.dart';
-import 'package:pecon/src/view/role_selection_page.dart';
-import 'package:pecon/src/widgets/custom_toast.dart';
+import 'package:pecon_app/src/view/login.dart';
+import 'package:pecon_app/src/view/otp_page.dart';
+import 'package:pecon_app/src/view/reset_password_page.dart';
+import 'package:pecon_app/src/view/role_selection_page.dart';
+import 'package:pecon_app/src/widgets/custom_toast.dart';
 
 class AuthController extends GetxController {
   // Get Controllers 

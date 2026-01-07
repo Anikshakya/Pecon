@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-import 'package:pecon/src/app_config/styles.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pecon/src/widgets/customer_service_dialog.dart';
+import 'package:pecon_app/src/widgets/customer_service_dialog.dart';
 
 //logo app bar
 customAppbar(){

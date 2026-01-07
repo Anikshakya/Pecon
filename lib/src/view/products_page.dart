@@ -1,15 +1,15 @@
 import 'package:get/get.dart';
-import 'package:pecon/src/controllers/product_controller.dart';
-import 'package:pecon/src/controllers/user_controller.dart';
-import 'package:pecon/src/view/product_details.dart';
-import 'package:pecon/src/widgets/custom_button.dart';
-import 'package:pecon/src/widgets/custom_network_image.dart';
+import 'package:pecon_app/src/controllers/product_controller.dart';
+import 'package:pecon_app/src/controllers/user_controller.dart';
+import 'package:pecon_app/src/view/product_details.dart';
+import 'package:pecon_app/src/widgets/custom_button.dart';
+import 'package:pecon_app/src/widgets/custom_network_image.dart';
 import 'package:intl/intl.dart';
-import 'package:pecon/src/app_config/styles.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pecon/src/widgets/custom_text_field.dart';
-import 'package:pecon/src/widgets/customer_service_dialog.dart';
+import 'package:pecon_app/src/widgets/custom_text_field.dart';
+import 'package:pecon_app/src/widgets/customer_service_dialog.dart';
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
@@ -89,7 +89,7 @@ class _ProductsPageState extends State<ProductsPage> {
                   ListView.separated(
                     separatorBuilder: (context, index) => 
                       Divider(
-                        color: gray.withOpacity(0.25),
+                        color: gray.withValues(alpha:0.25),
                         thickness: 0.8.sp,
                         height: 0,
                       ),
@@ -111,9 +111,9 @@ class _ProductsPageState extends State<ProductsPage> {
                               //products image
                               Container(
                                 decoration: BoxDecoration(
-                                  color: gray.withOpacity(0.1),
+                                  color: gray.withValues(alpha:0.1),
                                   border: Border.all(
-                                    color: gray.withOpacity(0.25), width: 0.8.sp
+                                    color: gray.withValues(alpha:0.25), width: 0.8.sp
                                   ),
                                   borderRadius: BorderRadius.circular(6.sp),
                                 ),
@@ -149,7 +149,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withOpacity(0.5)),),
+                                                Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withValues(alpha:0.5)),),
                                                 SizedBox(height: 4.h),
                                                 Container(
                                                   constraints: BoxConstraints(
@@ -157,12 +157,12 @@ class _ProductsPageState extends State<ProductsPage> {
                                                   ),
                                                   padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
                                                   decoration: BoxDecoration(
-                                                    color: gray.withOpacity(0.2),
+                                                    color: gray.withValues(alpha:0.2),
                                                     borderRadius: BorderRadius.circular(6.sp),
                                                   ),
                                                   child: RichText(
                                                     text: TextSpan(
-                                                      style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
+                                                      style: poppinsSemiBold(size: 11.sp, color: black.withValues(alpha:0.5)),
                                                       children: [
                                                         const TextSpan(text: "₹  "),
                                                         TextSpan(
@@ -187,12 +187,12 @@ class _ProductsPageState extends State<ProductsPage> {
                                                   ),
                                                   padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
                                                   decoration: BoxDecoration(
-                                                    color: gray.withOpacity(0.2),
+                                                    color: gray.withValues(alpha:0.2),
                                                     borderRadius: BorderRadius.circular(6.sp),
                                                   ),
                                                   child: Text(
                                                     productCon.productList[index].category.name,
-                                                    style: poppinsSemiBold(color: black.withOpacity(.5), size: 11.sp ),
+                                                    style: poppinsSemiBold(color: black.withValues(alpha:.5), size: 11.sp ),
                                                   )
                                                 ),
                                               ],
@@ -202,7 +202,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                         Column(
                                           crossAxisAlignment: CrossAxisAlignment.end,
                                           children: [
-                                            Text("Points", style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),),
+                                            Text("Points", style: poppinsSemiBold(size: 11.sp, color: black.withValues(alpha:0.5)),),
                                             SizedBox(height: 4.h),
                                             Row(
                                               children: [
@@ -214,7 +214,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                                     ),
                                                     padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.5.sp),
                                                     decoration: BoxDecoration(
-                                                      color: black.withOpacity(0.8),
+                                                      color: black.withValues(alpha:0.8),
                                                       borderRadius: BorderRadius.circular(6.sp),
                                                     ),
                                                     child: Text("${productCon.productList[index].color}", 
@@ -233,7 +233,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                                     ),
                                                     padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.5.sp),
                                                     decoration: BoxDecoration(
-                                                      color: black.withOpacity(0.8),
+                                                      color: black.withValues(alpha:0.8),
                                                       borderRadius: BorderRadius.circular(6.sp),
                                                     ),
                                                     child: Text("${productCon.productList[index].watt ?? "0"}", 
@@ -250,7 +250,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                                   ),
                                                   padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
                                                   decoration: BoxDecoration(
-                                                    color: green.withOpacity(0.95),
+                                                    color: green.withValues(alpha:0.95),
                                                     borderRadius: BorderRadius.circular(6.sp),
                                                   ),
                                                   child: RichText(
@@ -287,7 +287,7 @@ class _ProductsPageState extends State<ProductsPage> {
                     },
                   ),
                   Divider(
-                    color: gray.withOpacity(0.25),
+                    color: gray.withValues(alpha:0.25),
                     thickness: 0.8.sp,
                     height: 0,
                   ),
@@ -344,7 +344,7 @@ class _ProductsPageState extends State<ProductsPage> {
                     child:  CustomTextFormField(
                       controller: searchController,
                       headingText: "Search", 
-                      prefixIcon: Icon(Icons.search, color: grey10.withOpacity(0.8),),
+                      prefixIcon: Icon(Icons.search, color: grey10.withValues(alpha:0.8),),
                       filledColor: white,
                       onChanged : (value)async{
                         var success = await productCon.getProductList(searchController.text,categoryId,subCategoryId);
@@ -383,7 +383,7 @@ class _ProductsPageState extends State<ProductsPage> {
                             Future.delayed(const Duration(seconds: 2), (){setState(() {});});
                           }
                         },
-                      child: Icon(Icons.filter_alt_outlined, color: productCon.isLoading.isTrue ? black.withOpacity(0.2) : black)
+                      child: Icon(Icons.filter_alt_outlined, color: productCon.isLoading.isTrue ? black.withValues(alpha:0.2) : black)
                     ),
                   ),
                 ],
@@ -465,7 +465,7 @@ class _ProductsPageState extends State<ProductsPage> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha:0.9),
                         borderRadius: BorderRadius.circular(8.0),
                         border: Border.all(color: Colors.transparent, width: 0),
                       ),
@@ -519,7 +519,7 @@ class _ProductsPageState extends State<ProductsPage> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.9),
+                          color: Colors.white.withValues(alpha:0.9),
                           borderRadius: BorderRadius.circular(8.0),
                           border: Border.all(color: Colors.transparent, width: 0),
                         ),

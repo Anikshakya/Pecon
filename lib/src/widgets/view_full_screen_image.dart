@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pecon/src/app_config/styles.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
 
 class FullScreenImagePage extends StatefulWidget {
   final String imageUrl;

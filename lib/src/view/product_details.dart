@@ -3,12 +3,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/controllers/product_controller.dart';
-import 'package:pecon/src/controllers/user_controller.dart';
-import 'package:pecon/src/widgets/custom_appbar.dart';
-import 'package:pecon/src/widgets/custom_markdown.dart';
-import 'package:pecon/src/widgets/custom_network_image.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/controllers/product_controller.dart';
+import 'package:pecon_app/src/controllers/user_controller.dart';
+import 'package:pecon_app/src/widgets/custom_appbar.dart';
+import 'package:pecon_app/src/widgets/custom_markdown.dart';
+import 'package:pecon_app/src/widgets/custom_network_image.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final int index;
@@ -88,17 +88,17 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withOpacity(0.5)),),
+                      Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withValues(alpha:0.5)),),
                       SizedBox(height: 4.h),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
                         decoration: BoxDecoration(
-                          color: gray.withOpacity(0.2),
+                          color: gray.withValues(alpha:0.2),
                           borderRadius: BorderRadius.circular(6.sp),
                         ),
                         child: RichText(
                           text: TextSpan(
-                            style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
+                            style: poppinsSemiBold(size: 11.sp, color: black.withValues(alpha:0.5)),
                             children: [
                               const TextSpan(text: "₹  "),
                               TextSpan(
@@ -123,12 +123,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         ),
                         padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
                         decoration: BoxDecoration(
-                          color: gray.withOpacity(0.2),
+                          color: gray.withValues(alpha:0.2),
                           borderRadius: BorderRadius.circular(6.sp),
                         ),
                         child: Text(
                           productCon.productList[widget.index].category.name,
-                          style: poppinsSemiBold(color: black.withOpacity(.5), size: 11.sp ),
+                          style: poppinsSemiBold(color: black.withValues(alpha:.5), size: 11.sp ),
                         )
                       ),
                     ],
@@ -138,12 +138,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text("Points", style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),),
+                  Text("Points", style: poppinsSemiBold(size: 11.sp, color: black.withValues(alpha:0.5)),),
                   SizedBox(height: 4.h),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
                     decoration: BoxDecoration(
-                      color: green.withOpacity(0.95),
+                      color: green.withValues(alpha:0.95),
                       borderRadius: BorderRadius.circular(6.sp),
                     ),
                     child: RichText(
@@ -170,7 +170,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           ),
           SizedBox(height: 14.h,),
           Divider(
-            color: gray.withOpacity(0.25),
+            color: gray.withValues(alpha:0.25),
             thickness: 0.8.sp,
             height: 0,
           ),
@@ -249,7 +249,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   margin: const EdgeInsets.symmetric(horizontal: 4),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: activeIndex == index ? black.withOpacity(0.8) : black.withOpacity(0.1),
+                    color: activeIndex == index ? black.withValues(alpha:0.8) : black.withValues(alpha:0.1),
                   ),
                 ),
               ),

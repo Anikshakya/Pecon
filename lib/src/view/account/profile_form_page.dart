@@ -6,13 +6,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/app_config/validator.dart';
-import 'package:pecon/src/controllers/user_controller.dart';
-import 'package:pecon/src/widgets/custom_appbar.dart';
-import 'package:pecon/src/widgets/custom_button.dart';
-import 'package:pecon/src/widgets/custom_network_image.dart';
-import 'package:pecon/src/widgets/custom_textfieldheader.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/app_config/validator.dart';
+import 'package:pecon_app/src/controllers/user_controller.dart';
+import 'package:pecon_app/src/widgets/custom_appbar.dart';
+import 'package:pecon_app/src/widgets/custom_button.dart';
+import 'package:pecon_app/src/widgets/custom_network_image.dart';
+import 'package:pecon_app/src/widgets/custom_textfieldheader.dart';
 
 class ProfileFormPage extends StatefulWidget {
   const ProfileFormPage({super.key});
@@ -144,7 +144,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                         width: 160.w,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8.r),
-                          color: isProfileView ? primary : black.withOpacity(0.15)
+                          color: isProfileView ? primary : black.withValues(alpha:0.15)
                         ),
                         child: Center(child: Text("Personal Details", style: poppinsSemiBold(size: 14.sp, color: black),)),
                       ),
@@ -161,7 +161,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                         width: 160.w,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8.r),
-                          color: isProfileView ? black.withOpacity(0.15) : primary
+                          color: isProfileView ? black.withValues(alpha:0.15) : primary
                         ),
                         child: Center(child: Text("Bank Details", style: poppinsSemiBold(size: 14.sp, color: black),)),
                       ),
@@ -209,7 +209,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
               controller: nameController,
               textInputAction: TextInputAction.next,
               headingText: "User Name",
-              filledColor: gray.withOpacity(0.2),
+              filledColor: gray.withValues(alpha:0.2),
               validator: (value) => value != ""
                   ? null
                   : "Required",
@@ -223,7 +223,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.number,
               headingText: "Mobile Number",
-              filledColor: gray.withOpacity(0.2),
+              filledColor: gray.withValues(alpha:0.2),
               validator: (value) => value != "" && value!.length == 13
                   ? null
                   : "Enter a valid 13-digit mobile number",
@@ -236,7 +236,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
               keyboardType: TextInputType.emailAddress,
               autoValidateMode: AutovalidateMode.onUserInteraction,
               headingText: "Email",
-              filledColor: gray.withOpacity(0.2),
+              filledColor: gray.withValues(alpha:0.2),
               inputFormatters: [
                 LengthLimitingTextInputFormatter(255),
               ],
@@ -248,7 +248,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
               controller: addressController,
               textInputAction: TextInputAction.next,
               headingText: "Address",
-              filledColor: gray.withOpacity(0.2),
+              filledColor: gray.withValues(alpha:0.2),
             ),
             SizedBox(height: 20.h),
             //District
@@ -259,7 +259,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
               controller: districtController,
               textInputAction: TextInputAction.next,
               headingText: "District",
-              filledColor: gray.withOpacity(0.2),
+              filledColor: gray.withValues(alpha:0.2),
               suffixIcon: userCon.isDistrictLoading.isTrue 
                 ? Container(
                   height: 48.h,
@@ -288,7 +288,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     controller: cityController,
                     textInputAction: TextInputAction.next,
                     headingText: "City",
-                    filledColor: gray.withOpacity(0.2),
+                    filledColor: gray.withValues(alpha:0.2),
                     suffixIcon: userCon.isDistrictLoading.isTrue || userCon.isCityLoading.isTrue
                       ? Container(
                         height: 48.h,
@@ -315,7 +315,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
               controller: genderController,
               textInputAction: TextInputAction.next,
               headingText: "Gender",
-              filledColor: gray.withOpacity(0.2),
+              filledColor: gray.withValues(alpha:0.2),
               isDropdown: true,
             ),
             SizedBox(height: 20.h),
@@ -326,7 +326,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
               controller: dobController,
               textInputAction: userCon.user.value.data.role.toLowerCase() == "customer" ? TextInputAction.done : TextInputAction.next,
               headingText: "Date of Birth",
-              filledColor: gray.withOpacity(0.2),
+              filledColor: gray.withValues(alpha:0.2),
               isDropdown: true,
             ),
             // ---------- shopkeeper ----------
@@ -341,7 +341,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     controller: shopNameCon,
                     textInputAction: TextInputAction.next,
                     headingText: "Shop Name",
-                    filledColor: gray.withOpacity(0.2),
+                    filledColor: gray.withValues(alpha:0.2),
                     validator: (value) => value != ""
                       ? null
                       : "Required",
@@ -353,7 +353,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.number,
                     headingText: "Shop PAN no.",
-                    filledColor: gray.withOpacity(0.2),
+                    filledColor: gray.withValues(alpha:0.2),
                     validator: (value) => value != ""
                       ? null
                       : "Required",
@@ -364,7 +364,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     controller: shopOwnerCon,
                     textInputAction: TextInputAction.done,
                     headingText: "Shop Owner Name",
-                    filledColor: gray.withOpacity(0.2),
+                    filledColor: gray.withValues(alpha:0.2),
                     validator: (value) => value != ""
                       ? null
                       : "Required",
@@ -398,7 +398,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                                   textInputAction: TextInputAction.done,
                                   keyboardType: TextInputType.number,
                                   filled: true,
-                                  filledColor: Colors.grey.withOpacity(0.2),
+                                  filledColor: Colors.grey.withValues(alpha:0.2),
                                   suffixIcon: userCon.isshopkeeperIdLoading.isTrue 
                                     ? Container(
                                         padding: const EdgeInsets.all(14),
@@ -482,7 +482,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             controller: accNameController,
             textInputAction: TextInputAction.next,
             headingText: "Account Holder Name",
-            filledColor: gray.withOpacity(0.2),
+            filledColor: gray.withValues(alpha:0.2),
           ),
           SizedBox(height: 20.h),
           //bank name
@@ -490,7 +490,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             controller: bankController,
             textInputAction: TextInputAction.next,
             headingText: "Bank Name",
-            filledColor: gray.withOpacity(0.2),
+            filledColor: gray.withValues(alpha:0.2),
           ),
           SizedBox(height: 20.h),
           //bank acc no
@@ -498,7 +498,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             controller: accNoController,
             textInputAction: TextInputAction.next,
             headingText: "Account Number",
-            filledColor: gray.withOpacity(0.2),
+            filledColor: gray.withValues(alpha:0.2),
           ),
           SizedBox(height: 20.h),
           //branchName
@@ -506,7 +506,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             controller: branchController,
             textInputAction: TextInputAction.next,
             headingText: "Branch Name",
-            filledColor: gray.withOpacity(0.2),
+            filledColor: gray.withValues(alpha:0.2),
           ),
           SizedBox(height: 20.h),
           //esewa number
@@ -515,7 +515,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             textInputAction: TextInputAction.next,
             keyboardType: TextInputType.number,
             headingText: "Esewa Number",
-            filledColor: gray.withOpacity(0.2),
+            filledColor: gray.withValues(alpha:0.2),
             inputFormatters: [
               LengthLimitingTextInputFormatter(10),
             ],
@@ -527,7 +527,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             textInputAction: TextInputAction.done,
             keyboardType: TextInputType.number,
             headingText: "Khalti Number",
-            filledColor: gray.withOpacity(0.2),
+            filledColor: gray.withValues(alpha:0.2),
             inputFormatters: [
               LengthLimitingTextInputFormatter(10),
             ],
@@ -548,7 +548,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             height: 120.sp,
             width: 120.sp,
             decoration: BoxDecoration(
-              border: Border.all(color: black.withOpacity(0.2), width: 0.8.sp),
+              border: Border.all(color: black.withValues(alpha:0.2), width: 0.8.sp),
               borderRadius: BorderRadius.circular(100.r),
             ),
             child: ClipRRect(
@@ -563,7 +563,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                   ),
                   child: Icon(
                     Icons.camera,
-                    color: black.withOpacity(0.1),
+                    color: black.withValues(alpha:0.1),
                     size: 120 * 0.45,
                   ),
               )
@@ -594,10 +594,10 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                       SizedBox(
                         height: 22.sp,
                         width: 22.sp,
-                        child: Icon(Icons.photo_camera, color: black.withOpacity(0.7),)
+                        child: Icon(Icons.photo_camera, color: black.withValues(alpha:0.7),)
                       ),
                       SizedBox(width: 12.0.w,),
-                      Text("Camera", style: poppinsBold(size: 14.sp, color: black.withOpacity(0.7)),),
+                      Text("Camera", style: poppinsBold(size: 14.sp, color: black.withValues(alpha:0.7)),),
                     ],
                   ),
                 ),
@@ -609,10 +609,10 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                       SizedBox(
                         height: 22.sp,
                         width: 22.sp,
-                        child: Icon(Icons.image, color: black.withOpacity(0.7),)
+                        child: Icon(Icons.image, color: black.withValues(alpha:0.7),)
                       ),
                       SizedBox(width: 12.0.w,),
-                      Text("Gallery", style: poppinsBold(size: 14.sp, color: black.withOpacity(0.7)),),
+                      Text("Gallery", style: poppinsBold(size: 14.sp, color: black.withValues(alpha:0.7)),),
                     ],
                   ),
                 ),
@@ -651,7 +651,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                 ),
                 padding: EdgeInsets.all(4.sp),
                 child: Center(
-                  child: Icon(Icons.edit, color: black.withOpacity(0.8), size: 16.sp,)
+                  child: Icon(Icons.edit, color: black.withValues(alpha:0.8), size: 16.sp,)
                 ),
               ),
             ),

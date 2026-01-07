@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/controllers/app_controller.dart';
-import 'package:pecon/src/controllers/auth_controller.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/controllers/app_controller.dart';
+import 'package:pecon_app/src/controllers/auth_controller.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

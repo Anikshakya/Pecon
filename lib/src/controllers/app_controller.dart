@@ -12,12 +12,12 @@ import 'package:get_storage/get_storage.dart';
 import 'package:new_version_plus/new_version_plus.dart';
 import 'package:open_store/open_store.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/widgets/custom_network_image.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/widgets/custom_network_image.dart';
 import 'package:version/version.dart';
 
-import 'package:pecon/src/api_config/api_repo.dart';
-import 'package:pecon/src/app_config/constant.dart';
+import 'package:pecon_app/src/api_config/api_repo.dart';
+import 'package:pecon_app/src/app_config/constant.dart';
 
 /// ============================
 /// Splash Media Type

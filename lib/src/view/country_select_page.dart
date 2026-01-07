@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/view/register_page.dart';
-import 'package:pecon/src/widgets/custom_button.dart';
-import 'package:pecon/src/widgets/partner_logo.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/view/register_page.dart';
+import 'package:pecon_app/src/widgets/custom_button.dart';
+import 'package:pecon_app/src/widgets/partner_logo.dart';
 
 class CountrySelectPage extends StatefulWidget {
   final String role;
@@ -115,7 +115,7 @@ class _CountrySelectPageState extends State<CountrySelectPage> {
                 selected
                     ? [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.06),
+                        color: Colors.black.withValues(alpha:0.06),
                         blurRadius: 12,
                         offset: const Offset(0, 6),
                       ),

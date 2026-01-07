@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/controllers/auth_controller.dart';
-import 'package:pecon/src/view/role_selection_page.dart';
-import 'package:pecon/src/widgets/custom_button.dart';
-import 'package:pecon/src/widgets/custom_text_field.dart';
-import 'package:pecon/src/widgets/custom_toast.dart';
-import 'package:pecon/src/widgets/partner_logo.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/controllers/auth_controller.dart';
+import 'package:pecon_app/src/view/role_selection_page.dart';
+import 'package:pecon_app/src/widgets/custom_button.dart';
+import 'package:pecon_app/src/widgets/custom_text_field.dart';
+import 'package:pecon_app/src/widgets/custom_toast.dart';
+import 'package:pecon_app/src/widgets/partner_logo.dart';
 
 enum Country { nepal, india }
 

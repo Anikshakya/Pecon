@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/controllers/notification_controller.dart';
-import 'package:pecon/src/utils/app_utils.dart';
-import 'package:pecon/src/widgets/custom_appbar.dart';
-import 'package:pecon/src/widgets/custom_network_image.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/controllers/notification_controller.dart';
+import 'package:pecon_app/src/utils/app_utils.dart';
+import 'package:pecon_app/src/widgets/custom_appbar.dart';
+import 'package:pecon_app/src/widgets/custom_network_image.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
@@ -69,7 +69,7 @@ class _NotificationPageState extends State<NotificationPage> {
               children: [
                 ListView.separated(
                   separatorBuilder: (context, index) => Divider(
-                    color: gray.withOpacity(0.25),
+                    color: gray.withValues(alpha:0.25),
                     thickness: 0.8.sp,
                     height: 0,
                   ),
@@ -101,9 +101,9 @@ class _NotificationPageState extends State<NotificationPage> {
                                 height: 70.0.sp,
                                 width: 70.0.sp,
                                 decoration: BoxDecoration(
-                                  color: gray.withOpacity(0.1),
+                                  color: gray.withValues(alpha:0.1),
                                   border: Border.all(
-                                    color: gray.withOpacity(0.25),
+                                    color: gray.withValues(alpha:0.25),
                                     width: 0.8.sp,
                                   ),
                                   borderRadius: BorderRadius.circular(8.sp),
@@ -144,7 +144,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                       SizedBox(height: 10.0.h),
                                       Text(
                                         notificationCon.notificationList[index]["created_at"] ?? "",
-                                        style: poppinsRegular(size: 10.sp, color: black.withOpacity(0.7)),
+                                        style: poppinsRegular(size: 10.sp, color: black.withValues(alpha:0.7)),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
                                       ),
@@ -161,7 +161,7 @@ class _NotificationPageState extends State<NotificationPage> {
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 notificationCon.notificationList[index]["description"] ?? "",
-                                style: poppinsRegular(size: 14.sp, color: black.withOpacity(0.7)),
+                                style: poppinsRegular(size: 14.sp, color: black.withValues(alpha:0.7)),
                               ),
                             ),
                           ],
@@ -171,7 +171,7 @@ class _NotificationPageState extends State<NotificationPage> {
                   },
                 ),
                 Divider(
-                  color: gray.withOpacity(0.25),
+                  color: gray.withValues(alpha:0.25),
                   thickness: 0.8.sp,
                   height: 0,
                 ),

@@ -1,4 +1,4 @@
-# pecon
+# pecon_app
 
 A new Flutter project.
 

@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:pecon/src/controllers/app_controller.dart';
-import 'package:pecon/src/utils/app_utils.dart';
-import 'package:pecon/src/app_config/styles.dart';
+import 'package:pecon_app/src/controllers/app_controller.dart';
+import 'package:pecon_app/src/utils/app_utils.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
 
 final AppController appCon = Get.put(AppController());
 

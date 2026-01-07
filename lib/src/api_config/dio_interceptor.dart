@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:pecon/src/app_config/read_write.dart';
+import 'package:pecon_app/src/app_config/read_write.dart';
 
 class DioInterceptor extends Interceptor {
   

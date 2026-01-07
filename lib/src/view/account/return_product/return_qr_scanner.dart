@@ -1,16 +1,16 @@
 import 'dart:developer';
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/controllers/product_controller.dart';
-import 'package:pecon/src/utils/app_utils.dart';
-import 'package:pecon/src/widgets/custom_button.dart';
-import 'package:pecon/src/widgets/custom_text_field.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/controllers/product_controller.dart';
+import 'package:pecon_app/src/utils/app_utils.dart';
+import 'package:pecon_app/src/widgets/custom_button.dart';
+import 'package:pecon_app/src/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:scan/scan.dart';
+import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
 class ReturnQRScannerPage extends StatefulWidget {
   const ReturnQRScannerPage({super.key});
@@ -190,7 +190,7 @@ class _ReturnQRScannerPageState extends State<ReturnQRScannerPage> {
                   snapshot.data!
                       ? Icons.flashlight_on_rounded
                       : Icons.flashlight_off_rounded,
-                  color: Colors.white.withOpacity(0.6),
+                  color: Colors.white.withValues(alpha:0.6),
                   size: 30,
                 );
               } else {

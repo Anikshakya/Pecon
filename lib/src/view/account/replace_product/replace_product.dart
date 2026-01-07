@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/controllers/product_controller.dart';
-import 'package:pecon/src/view/account/replace_product/replace_qr_scanner.dart';
-import 'package:pecon/src/widgets/custom_appbar.dart';
-import 'package:pecon/src/widgets/custom_button.dart';
-import 'package:pecon/src/widgets/custom_text_field.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/controllers/product_controller.dart';
+import 'package:pecon_app/src/view/account/replace_product/replace_qr_scanner.dart';
+import 'package:pecon_app/src/widgets/custom_appbar.dart';
+import 'package:pecon_app/src/widgets/custom_button.dart';
+import 'package:pecon_app/src/widgets/custom_text_field.dart';
 
 class ReplaceProductPage extends StatefulWidget {
   const ReplaceProductPage({super.key});

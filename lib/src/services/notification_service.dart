@@ -9,7 +9,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import 'package:pecon/src/view/dashboard.dart';
+import 'package:pecon_app/src/view/dashboard.dart';
 // ignore: depend_on_referenced_packages
 import 'package:timezone/data/latest_all.dart' as tz;
 // ignore: depend_on_referenced_packages
@@ -171,8 +171,6 @@ class NotificationService {
       body,
       tz.TZDateTime.from(scheduledTime, tz.local),
       notificationDetails(imagePath: imagePath),
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       payload: payload,
     );

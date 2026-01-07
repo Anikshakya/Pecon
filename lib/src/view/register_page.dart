@@ -2,14 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/controllers/auth_controller.dart';
-import 'package:pecon/src/widgets/custom_button.dart';
-import 'package:pecon/src/widgets/custom_text_field.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/controllers/auth_controller.dart';
+import 'package:pecon_app/src/widgets/custom_button.dart';
+import 'package:pecon_app/src/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pecon/src/widgets/custom_toast.dart';
+import 'package:pecon_app/src/widgets/custom_toast.dart';
 
 import '../controllers/user_controller.dart';
 
@@ -341,7 +341,7 @@ class _RegisterPageState extends State<RegisterPage> {
               height: 120.sp,
               width: 120.sp,
               decoration: BoxDecoration(
-                border: Border.all(color: black.withOpacity(0.2), width: 0.8.sp),
+                border: Border.all(color: black.withValues(alpha:0.2), width: 0.8.sp),
                 borderRadius: BorderRadius.circular(100.r),
               ),
               child: ClipRRect(
@@ -356,7 +356,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     child: Icon(
                       Icons.camera,
-                      color: black.withOpacity(0.1),
+                      color: black.withValues(alpha:0.1),
                       size: 120 * 0.45,
                     ),
                   )
@@ -383,7 +383,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             width: 22.sp,
                             child: Icon(
                               Icons.photo_camera,
-                              color: black.withOpacity(0.7),
+                              color: black.withValues(alpha:0.7),
                             )),
                         SizedBox(
                           width: 12.0.w,
@@ -391,7 +391,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         Text(
                           "Camera",
                           style: poppinsBold(
-                              size: 14.sp, color: black.withOpacity(0.7)),
+                              size: 14.sp, color: black.withValues(alpha:0.7)),
                         ),
                       ],
                     ),
@@ -406,7 +406,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             width: 22.sp,
                             child: Icon(
                               Icons.image,
-                              color: black.withOpacity(0.7),
+                              color: black.withValues(alpha:0.7),
                             )),
                         SizedBox(
                           width: 12.0.w,
@@ -414,7 +414,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         Text(
                           "Gallery",
                           style: poppinsBold(
-                              size: 14.sp, color: black.withOpacity(0.7)),
+                              size: 14.sp, color: black.withValues(alpha:0.7)),
                         ),
                       ],
                     ),
@@ -453,7 +453,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Center(
                       child: Icon(
                     Icons.edit,
-                    color: black.withOpacity(0.8),
+                    color: black.withValues(alpha:0.8),
                     size: 16.sp,
                   )),
                 ),

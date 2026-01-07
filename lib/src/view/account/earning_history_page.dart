@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/controllers/user_controller.dart';
-import 'package:pecon/src/widgets/custom_appbar.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/controllers/user_controller.dart';
+import 'package:pecon_app/src/widgets/custom_appbar.dart';
 
 class EarningHistoryPage extends StatefulWidget {
   const EarningHistoryPage({super.key});
@@ -107,7 +107,7 @@ class _EarningHistoryPageState extends State<EarningHistoryPage> {
                 ListView.separated(
                   separatorBuilder: (context, index) => 
                     Divider(
-                      color: gray.withOpacity(0.25),
+                      color: gray.withValues(alpha:0.25),
                       thickness: 0.8.sp,
                       height: 0,
                     ),
@@ -136,12 +136,12 @@ class _EarningHistoryPageState extends State<EarningHistoryPage> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Text("Points", style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),),
+                                    Text("Points", style: poppinsSemiBold(size: 11.sp, color: black.withValues(alpha:0.5)),),
                                     SizedBox(height: 4.h),
                                     Container(
                                       padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
                                       decoration: BoxDecoration(
-                                        color: green.withOpacity(0.95),
+                                        color: green.withValues(alpha:0.95),
                                         borderRadius: BorderRadius.circular(6.sp),
                                       ),
                                       child: RichText(
@@ -173,7 +173,7 @@ class _EarningHistoryPageState extends State<EarningHistoryPage> {
                   },
                 ),
                 Divider(
-                  color: gray.withOpacity(0.25),
+                  color: gray.withValues(alpha:0.25),
                   thickness: 0.8.sp,
                   height: 0,
                 ),

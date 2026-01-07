@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/controllers/product_controller.dart';
-import 'package:pecon/src/controllers/user_controller.dart';
-import 'package:pecon/src/view/account/return_product/return_qr_scanner.dart';
-import 'package:pecon/src/widgets/custom_appbar.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/controllers/product_controller.dart';
+import 'package:pecon_app/src/controllers/user_controller.dart';
+import 'package:pecon_app/src/view/account/return_product/return_qr_scanner.dart';
+import 'package:pecon_app/src/widgets/custom_appbar.dart';
 class ReturnProductPage extends StatefulWidget {
   const ReturnProductPage({super.key});
 
@@ -80,7 +80,7 @@ class _ReturnProductPageState extends State<ReturnProductPage> {
                 ListView.separated(
                   separatorBuilder: (context, index) => 
                     Divider(
-                      color: gray.withOpacity(0.25),
+                      color: gray.withValues(alpha:0.25),
                       thickness: 0.8.sp,
                       height: 0,
                     ),
@@ -112,7 +112,7 @@ class _ReturnProductPageState extends State<ReturnProductPage> {
                   },
                 ),
                 Divider(
-                  color: gray.withOpacity(0.25),
+                  color: gray.withValues(alpha:0.25),
                   thickness: 0.8.sp,
                   height: 0,
                 ),

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:pecon/src/api_config/dio_interceptor.dart';
-import 'package:pecon/src/app_config/constant.dart';
+import 'package:pecon_app/src/api_config/dio_interceptor.dart';
+import 'package:pecon_app/src/app_config/constant.dart';
 
 final dio = Dio(
   BaseOptions(

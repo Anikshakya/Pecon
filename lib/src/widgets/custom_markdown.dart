@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pecon/src/app_config/styles.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:html2md/html2md.dart' as html2md;
 
@@ -45,7 +45,7 @@ class CustomMarkdownWidget extends StatelessWidget {
         h4: poppinsMedium(size: 16.sp, color: black),
         h5: poppinsMedium(size: 14.sp, color: black),
         h6: poppinsMedium(size: 12.sp, color: black),
-        p: poppinsMedium(size: 14.sp, color: black.withOpacity(0.6)),
+        p: poppinsMedium(size: 14.sp, color: black.withValues(alpha:0.6)),
         listBullet: null, //Bullet Color
         listIndent: null, //Bullet Spacing
         strong: poppinsBold(size: 14.sp, color: black), //Bullet Heading

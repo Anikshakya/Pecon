@@ -4,13 +4,13 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide FormData, MultipartFile;
-import 'package:pecon/src/api_config/api_repo.dart';
-import 'package:pecon/src/app_config/constant.dart';
-import 'package:pecon/src/app_config/read_write.dart';
-import 'package:pecon/src/model/return_product_model.dart';
-import 'package:pecon/src/model/user_profile_model.dart';
-import 'package:pecon/src/model/withdrawal_request_model.dart';
-import 'package:pecon/src/widgets/custom_toast.dart';
+import 'package:pecon_app/src/api_config/api_repo.dart';
+import 'package:pecon_app/src/app_config/constant.dart';
+import 'package:pecon_app/src/app_config/read_write.dart';
+import 'package:pecon_app/src/model/return_product_model.dart';
+import 'package:pecon_app/src/model/user_profile_model.dart';
+import 'package:pecon_app/src/model/withdrawal_request_model.dart';
+import 'package:pecon_app/src/widgets/custom_toast.dart';
 
 class UserController extends GetxController {
   final RxBool isLoginLoading = false.obs;

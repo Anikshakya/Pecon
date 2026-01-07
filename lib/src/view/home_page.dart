@@ -1,18 +1,18 @@
 
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/controllers/app_controller.dart';
-import 'package:pecon/src/controllers/home_controller.dart';
-import 'package:pecon/src/controllers/user_controller.dart';
-import 'package:pecon/src/widgets/custom_appbar.dart';
-import 'package:pecon/src/widgets/custom_button.dart';
-import 'package:pecon/src/widgets/custom_network_image.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/controllers/app_controller.dart';
+import 'package:pecon_app/src/controllers/home_controller.dart';
+import 'package:pecon_app/src/controllers/user_controller.dart';
+import 'package:pecon_app/src/widgets/custom_appbar.dart';
+import 'package:pecon_app/src/widgets/custom_button.dart';
+import 'package:pecon_app/src/widgets/custom_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:pecon/src/widgets/custom_toast.dart';
-import 'package:pecon/src/widgets/partner_logo.dart';
+import 'package:pecon_app/src/widgets/custom_toast.dart';
+import 'package:pecon_app/src/widgets/partner_logo.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -145,7 +145,7 @@ class _HomePageState extends State<HomePage> {
                   margin: const EdgeInsets.symmetric(horizontal: 2),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: _currentIndex == index ? black.withOpacity(0.8) : black.withOpacity(0.1),
+                    color: _currentIndex == index ? black.withValues(alpha:0.8) : black.withValues(alpha:0.1),
                   ),
                 );
               }),
@@ -261,8 +261,8 @@ class _HomePageState extends State<HomePage> {
                                                       horizontal: 8.sp, vertical: 4.sp),
                                                   decoration: BoxDecoration(
                                                     color: userCon.user.value.data.redeemed < item.points
-                                                        ? gray.withOpacity(0.5)
-                                                        : maroon.withOpacity(.95),
+                                                        ? gray.withValues(alpha:0.5)
+                                                        : maroon.withValues(alpha:.95),
                                                     borderRadius: BorderRadius.circular(6.sp),
                                                   ),
                                                   child: RichText(
@@ -375,8 +375,8 @@ class _HomePageState extends State<HomePage> {
                                             padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp), // Larger padding
                                             decoration: BoxDecoration(
                                               color: userCon.user.value.data.redeemed < lastItem.points
-                                                  ? gray.withOpacity(0.5)
-                                                  : maroon.withOpacity(.95),
+                                                  ? gray.withValues(alpha:0.5)
+                                                  : maroon.withValues(alpha:.95),
                                               borderRadius: BorderRadius.circular(6.sp),
                                             ),
                                             child: RichText(
@@ -481,10 +481,10 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Text(userCon.user.value.data.name.toString(), style: poppinsBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
                               SizedBox(height: 2.h),
-                              Text("Membership ID: ${userCon.user.value.data.id}", style: poppinsSemiBold(size: 9.sp, color: black.withOpacity(0.7)), maxLines: 2,),
+                              Text("Membership ID: ${userCon.user.value.data.id}", style: poppinsSemiBold(size: 9.sp, color: black.withValues(alpha:0.7)), maxLines: 2,),
                               Text(
                                 userCon.user.value.data.number.toString(),
-                                style: poppinsMedium(size: 11.sp, color: black.withOpacity(0.6))
+                                style: poppinsMedium(size: 11.sp, color: black.withValues(alpha:0.6))
                               ),
                             ],
                           ),
@@ -495,7 +495,7 @@ class _HomePageState extends State<HomePage> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text("Total Gain Points", style: poppinsSemiBold(size: 9.sp, color: black.withOpacity(0.5)),),
+                                  Text("Total Gain Points", style: poppinsSemiBold(size: 9.sp, color: black.withValues(alpha:0.5)),),
                                   SizedBox(height: 4.h),
                                   Container(
                                     constraints: BoxConstraints(
@@ -564,7 +564,7 @@ class _HomePageState extends State<HomePage> {
               height: 260.h,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: gray.withOpacity(0.1),
+                color: gray.withValues(alpha:0.1),
               ),
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Column(
@@ -623,12 +623,12 @@ class _HomePageState extends State<HomePage> {
                                     constraints: BoxConstraints(minWidth: 80.w),
                                     padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
                                     decoration: BoxDecoration(
-                                      color: black.withOpacity(0.95),
+                                      color: black.withValues(alpha:0.95),
                                       borderRadius: BorderRadius.circular(6.sp),
                                     ),
                                     child: RichText(
                                       text: TextSpan(
-                                        style: poppinsSemiBold(size: 11.sp, color: black.withOpacity(0.5)),
+                                        style: poppinsSemiBold(size: 11.sp, color: black.withValues(alpha:0.5)),
                                         children: [
                                           WidgetSpan(
                                             child: Padding(
@@ -729,13 +729,13 @@ class _HomePageState extends State<HomePage> {
   //                 children: [
   //                   Image.asset("assets/images/logo.png", height: 50.h),
   //                   const Spacer(),
-  //                   Icon(Icons.headphones, color: black.withOpacity(0.7), size: 20.sp),
+  //                   Icon(Icons.headphones, color: black.withValues(alpha:0.7), size: 20.sp),
   //                 ],
   //               ),
   //             ),
   //             const Spacer(),
   //             Divider(
-  //               color: gray.withOpacity(0.25),
+  //               color: gray.withValues(alpha:0.25),
   //               thickness: 0.8.sp,
   //               height: 0,
   //             ),
@@ -822,7 +822,7 @@ class _HomePageState extends State<HomePage> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha:0.9),
                         borderRadius: BorderRadius.circular(8.0),
                         border: Border.all(color: Colors.transparent, width: 0),
                       ),

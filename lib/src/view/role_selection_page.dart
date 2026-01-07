@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'package:pecon/src/app_config/styles.dart';
-import 'package:pecon/src/view/login.dart';
-import 'package:pecon/src/view/register_termscondition.dart';
-import 'package:pecon/src/widgets/custom_button.dart';
-import 'package:pecon/src/widgets/partner_logo.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/view/login.dart';
+import 'package:pecon_app/src/view/register_termscondition.dart';
+import 'package:pecon_app/src/widgets/custom_button.dart';
+import 'package:pecon_app/src/widgets/partner_logo.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
 class RoleSelectionPage extends StatefulWidget {
