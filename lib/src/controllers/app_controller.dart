@@ -99,26 +99,26 @@ class AppController extends GetxController {
     // ----------------------------
     if (hasNet) {
       try {
-        // 1️⃣ CHECK UPDATE
-        final newVersion = NewVersionPlus(
-          iOSId: iOSPackageName,
-          iOSAppStoreCountry: 'JP',
-          androidId: androidAppBundleId,
-          androidPlayStoreCountry: 'JP',
-        );
+        // // 1️⃣ CHECK UPDATE
+        // final newVersion = NewVersionPlus(
+        //   iOSId: iOSPackageName,
+        //   iOSAppStoreCountry: 'JP',
+        //   androidId: androidAppBundleId,
+        //   androidPlayStoreCountry: 'JP',
+        // );
 
-        final status = await newVersion.getVersionStatus();
+        // final status = await newVersion.getVersionStatus();
 
-        if (status != null) {
-          installedFileName = status.localVersion;
-          latestFileName = status.storeVersion;
+        // if (status != null) {
+        //   installedFileName = status.localVersion;
+        //   latestFileName = status.storeVersion;
 
-          final updateAvailable = await _isUpdateAvailableCheck();
-          if (updateAvailable) {
-            _showUpdateDialog();
-            return AppStartResult.blockedByUpdate;
-          }
-        }
+        //   final updateAvailable = await _isUpdateAvailableCheck();
+        //   if (updateAvailable) {
+        //     _showUpdateDialog();
+        //     return AppStartResult.blockedByUpdate;
+        //   }
+        // }
 
         // 2️⃣ SETTINGS + SPLASH
         final ok = await getSettingApi();
@@ -186,63 +186,75 @@ class AppController extends GetxController {
 
     final dir = await getTemporaryDirectory();
 
+    final videoFile = File("${dir.path}/splash_video.mp4");
+    final imageFile = File("${dir.path}/splash_image.jpg");
+
+    /// ✅ Use existing cache if same media
     if (storedUrl == splashUrl && storedType == splashMediaType.name) {
-      if (splashMediaType == SplashMediaType.video) {
-        final f = File("${dir.path}/splash_video.mp4");
-        if (f.existsSync()) {
-          cachedSplashVideoPath = f.path;
-          return;
-        }
+      if (splashMediaType == SplashMediaType.video &&
+          await videoFile.exists()) {
+        cachedSplashVideoPath = videoFile.path;
+        return;
       }
 
-      if (splashMediaType == SplashMediaType.image) {
-        final f = File("${dir.path}/splash_image");
-        if (f.existsSync()) {
-          cachedSplashImagePath = f.path;
-          return;
-        }
+      if (splashMediaType == SplashMediaType.image &&
+          await imageFile.exists()) {
+        cachedSplashImagePath = imageFile.path;
+        return;
       }
     }
 
-    await _clearOldSplashCache();
+    /// 🧹 Clear old cache safely
+    await _clearOldSplashCache(videoFile, imageFile);
 
+    /// ⬇️ Cache new media
     if (splashMediaType == SplashMediaType.video) {
-      await _cacheSplashVideo(splashUrl);
+      await _cacheSplashVideo(splashUrl, videoFile);
+      cachedSplashVideoPath = videoFile.path;
     } else if (splashMediaType == SplashMediaType.image) {
-      await _cacheSplashImage(splashUrl);
+      await _cacheSplashImage(splashUrl, imageFile);
+      cachedSplashImagePath = imageFile.path;
     }
 
+    /// 💾 Save cache metadata
     box.write(_splashUrlKey, splashUrl);
     box.write(_splashTypeKey, splashMediaType.name);
   }
 
-  Future<void> _cacheSplashVideo(String url) async {
-    try {
-      final dir = await getTemporaryDirectory();
-      final path = "${dir.path}/splash_video.mp4";
-      await Dio().download(url, path);
-      cachedSplashVideoPath = path;
-    } catch (e) {
-      log("Video cache failed: $e");
+
+    Future<void> _cacheSplashVideo(String url, File file) async { 
+    final response = await Dio().get<List<int>>(
+      url,
+      options: Options(responseType: ResponseType.bytes),
+    );
+
+    await file.writeAsBytes(response.data!);
+  }
+
+
+  Future<void> _cacheSplashImage(String url, File file) async {
+    final response = await Dio().get<List<int>>(
+      url,
+      options: Options(responseType: ResponseType.bytes),
+    );
+
+    await file.writeAsBytes(response.data!);
+  }
+
+
+    Future<void> _clearOldSplashCache(
+    File videoFile,
+    File imageFile,
+  ) async {
+    if (await videoFile.exists()) {
+      await videoFile.delete();
+    }
+
+    if (await imageFile.exists()) {
+      await imageFile.delete();
     }
   }
 
-  Future<void> _cacheSplashImage(String url) async {
-    try {
-      final dir = await getTemporaryDirectory();
-      final path = "${dir.path}/splash_image";
-      await Dio().download(url, path);
-      cachedSplashImagePath = path;
-    } catch (e) {
-      log("Image cache failed: $e");
-    }
-  }
-
-  Future<void> _clearOldSplashCache() async {
-    final dir = await getTemporaryDirectory();
-    File("${dir.path}/splash_video.mp4").deleteSync(recursive: true);
-    File("${dir.path}/splash_image").deleteSync(recursive: true);
-  }
 
   bool _loadCachedSplash() {
     final dir = Directory.systemTemp;

@@ -55,14 +55,15 @@ dependencies:
   flutter_inappwebview: ^6.0.0
   video_player: ^2.8.5
   dropdown_button2: ^2.3.9
+  faded: ^2.0.0
   #firebase
   firebase_core: ^2.9.0
   firebase_messaging: ^14.6.5
   flutter_local_notifications: ^15.1.0+1
-  connectivity_plus: ^7.0.0
+  connectivity_plus: ^6.0.3
 
   #app updates
-  new_version_plus: ^0.1.0
+  new_version_plus: ^0.0.11
   version: ^3.0.2
   open_store: ^0.5.0
 

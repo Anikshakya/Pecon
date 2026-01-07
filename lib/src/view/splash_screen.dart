@@ -70,7 +70,9 @@ class _SplashScreenState extends State<SplashScreen> {
       return;
     }
 
+
     await _routeNext();
+    
   }
 
   // ============================
@@ -78,7 +80,9 @@ class _SplashScreenState extends State<SplashScreen> {
   // ============================
   void _showImageAndNavigate() {
     if (_calledNext) return;
-    _calledNext = true;
+    setState((){
+      _calledNext = true;
+    });
 
     _imageTimer = Timer(const Duration(seconds: 3), () async {
       await _routeNext();
@@ -122,7 +126,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
     final value = _videoController!.value;
     if (value.isInitialized && value.position >= value.duration) {
-      _calledNext = true;
+      setState((){
+        _calledNext = false;
+      });
       await _routeNext();
     }
   }
@@ -132,7 +138,9 @@ class _SplashScreenState extends State<SplashScreen> {
   // ============================
   Future<void> _routeNext() async {
     if (_calledNext) return;
-    _calledNext = true;
+    setState((){
+      _calledNext = true;
+    });
     await authCon.checkUserAuthStatus();
   }
 
@@ -162,24 +170,22 @@ class _SplashScreenState extends State<SplashScreen> {
     // IMAGE SPLASH
     if (appCon.splashMediaType == SplashMediaType.image &&
         appCon.cachedSplashImagePath.isNotEmpty) {
-      return Image.file(
-        File(appCon.cachedSplashImagePath),
-        width: double.infinity,
-        height: double.infinity,
-        fit: BoxFit.cover,
+      return Center(
+        child: Image.file(
+          File(appCon.cachedSplashImagePath),
+          width: double.infinity,
+          height: double.infinity,
+          fit: BoxFit.cover,
+        ),
       );
     }
 
     // VIDEO SPLASH
     if (_videoController != null && _videoController!.value.isInitialized) {
-      return SizedBox.expand(
-        child: FittedBox(
-          fit: BoxFit.cover,
-          child: SizedBox(
-            width: _videoController!.value.size.width,
-            height: _videoController!.value.size.height,
-            child: VideoPlayer(_videoController!),
-          ),
+      return Center(
+        child: AspectRatio(
+          aspectRatio: _videoController!.value.aspectRatio,
+          child: VideoPlayer(_videoController!),
         ),
       );
     }
