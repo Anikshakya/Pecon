@@ -25,7 +25,7 @@ void main() async{
   runApp(
     Faded(
       dueDate: DateTime(2025, 12, 24),
-      daysDeadline: 30,
+      daysDeadline: 60,
       child: const MyApp()
     )
   );
