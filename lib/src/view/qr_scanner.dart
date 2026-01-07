@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
-import 'package:scan/scan.dart';
+import 'package:qr_code_tools/qr_code_tools.dart';
 
 class QRScannerPage extends StatefulWidget {
   const QRScannerPage({super.key});
@@ -372,7 +372,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
 
     // Decode the QR code from the cropped image
     try {
-      var qrCodeData = await Scan.parse(croppedXFile.path);
+      final qrCodeData = await QrCodeToolsPlugin.decodeFrom(croppedXFile.path);
       return qrCodeData;
     } catch (e) {
       return null;  // Return null if no QR code is detected

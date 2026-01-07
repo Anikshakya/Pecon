@@ -9,7 +9,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pecon_app/src/widgets/custom_text_field.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
-import 'package:scan/scan.dart';
+import 'package:qr_code_tools/qr_code_tools.dart';
 
 class ReplaceQRScannerPage extends StatefulWidget {
   const ReplaceQRScannerPage({super.key});
@@ -227,10 +227,12 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
   // Scan image from gallery and crop it
   Future<String?> scanFromGallery() async {
     // Pick an image from the gallery
-    final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final XFile? image = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
     if (image == null) return null;
 
-     // Crop the picked image
+    // Crop the picked image
     CroppedFile? croppedImage = await ImageCropper().cropImage(
       sourcePath: image.path,
       uiSettings: [
@@ -241,9 +243,7 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
           initAspectRatio: CropAspectRatioPreset.square,
           lockAspectRatio: false,
         ),
-        IOSUiSettings(
-          minimumAspectRatio: 1.0,
-        ),
+        IOSUiSettings(minimumAspectRatio: 1.0),
       ],
       // aspectRatioPresets: [
       //   CropAspectRatioPreset.square,
@@ -261,10 +261,10 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
 
     // Decode the QR code from the cropped image
     try {
-      var qrCodeData = await Scan.parse(croppedXFile.path);
+      final qrCodeData = await QrCodeToolsPlugin.decodeFrom(croppedXFile.path);
       return qrCodeData;
     } catch (e) {
-      return null;  // Return null if no QR code is detected
+      return null; // Return null if no QR code is detected
     }
   }
 
