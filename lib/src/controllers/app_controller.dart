@@ -98,43 +98,49 @@ class AppController extends GetxController {
     // ONLINE FLOW
     // ----------------------------
     if (hasNet) {
+      // 1️⃣ CHECK UPDATE (NON-BLOCKING)
       try {
-        // // 1️⃣ CHECK UPDATE
-        // final newVersion = NewVersionPlus(
-        //   iOSId: iOSPackageName,
-        //   iOSAppStoreCountry: 'JP',
-        //   androidId: androidAppBundleId,
-        //   androidPlayStoreCountry: 'JP',
-        // );
+        final newVersion = NewVersionPlus(
+          iOSId: iOSPackageName,
+          iOSAppStoreCountry: 'JP',
+          androidId: androidAppBundleId,
+          androidPlayStoreCountry: 'JP',
+        );
 
-        // final status = await newVersion.getVersionStatus();
+        final status = await newVersion.getVersionStatus();
 
-        // if (status != null) {
-        //   installedFileName = status.localVersion;
-        //   latestFileName = status.storeVersion;
+        if (status != null) {
+          installedFileName = status.localVersion;
+          latestFileName = status.storeVersion;
 
-        //   final updateAvailable = await _isUpdateAvailableCheck();
-        //   if (updateAvailable) {
-        //     _showUpdateDialog();
-        //     return AppStartResult.blockedByUpdate;
-        //   }
-        // }
+          final updateAvailable = await _isUpdateAvailableCheck();
+          if (updateAvailable) {
+            _showUpdateDialog();
+            // DO NOT return here → allow app to continue
+          }
+        }
+      } catch (e, s) {
+        log("Update check failed, continuing app start: $e");
+        log("$s");
+      }
 
-        // 2️⃣ SETTINGS + SPLASH
+      // 2️⃣ SETTINGS + SPLASH (ALWAYS RUN)
+      try {
         final ok = await getSettingApi();
         if (ok) {
           await cacheSplashMedia();
           return AppStartResult.playSplash;
         }
       } catch (e) {
-        log("StartApp error: $e");
+        log("Settings/Splash error: $e");
       }
     }
+
 
     // ----------------------------
     // OFFLINE / FALLBACK
     // ----------------------------
-    if (_loadCachedSplash()) {
+    if (await _loadCachedSplash()) {
       return AppStartResult.playCachedSplash;
     }
 
@@ -256,18 +262,18 @@ class AppController extends GetxController {
   }
 
 
-  bool _loadCachedSplash() {
-    final dir = Directory.systemTemp;
+  Future<bool> _loadCachedSplash() async {
+    final dir = await getTemporaryDirectory();
 
     final video = File("${dir.path}/splash_video.mp4");
-    if (video.existsSync()) {
+    if (await video.exists()) {
       cachedSplashVideoPath = video.path;
       splashMediaType = SplashMediaType.video;
       return true;
     }
 
-    final image = File("${dir.path}/splash_image");
-    if (image.existsSync()) {
+    final image = File("${dir.path}/splash_image.jpg");
+    if (await image.exists()) {
       cachedSplashImagePath = image.path;
       splashMediaType = SplashMediaType.image;
       return true;
@@ -275,6 +281,7 @@ class AppController extends GetxController {
 
     return false;
   }
+
 
   // ============================
   // UPDATE CHECK
