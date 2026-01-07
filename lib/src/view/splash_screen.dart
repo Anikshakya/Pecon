@@ -21,7 +21,6 @@ class _SplashScreenState extends State<SplashScreen> {
   final AuthController authCon = Get.put(AuthController());
 
   VideoPlayerController? _videoController;
-  Timer? _imageTimer;
 
   bool _calledNext = false;
 
@@ -78,13 +77,13 @@ class _SplashScreenState extends State<SplashScreen> {
   // ============================
   // IMAGE FLOW
   // ============================
-  void _showImageAndNavigate() {
+  void _showImageAndNavigate() async{
     if (_calledNext) return;
     setState((){
       _calledNext = false;
     });
 
-    _imageTimer = Timer(const Duration(seconds: 3), () async {
+    await Future.delayed(const Duration(seconds: 4), () async{
       await _routeNext();
     });
 
@@ -149,7 +148,6 @@ class _SplashScreenState extends State<SplashScreen> {
   // ============================
   @override
   void dispose() {
-    _imageTimer?.cancel();
     _videoController?.removeListener(_videoListener);
     _videoController?.dispose();
     super.dispose();
