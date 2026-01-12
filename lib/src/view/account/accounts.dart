@@ -1,4 +1,6 @@
 import 'package:intl/intl.dart';
+import 'package:new_version_plus/new_version_plus.dart';
+import 'package:pecon_app/src/app_config/constant.dart';
 import 'package:pecon_app/src/app_config/styles.dart';
 import 'package:pecon_app/src/controllers/auth_controller.dart';
 import 'package:pecon_app/src/controllers/user_controller.dart';
@@ -34,6 +36,9 @@ class _AccountPageState extends State<AccountPage> {
   // Formate Number to US standard
   final NumberFormat formatter = NumberFormat("#,##0", "en_US");
 
+  dynamic version;
+  bool isLoadingVersion = true;
+
   @override
   void initState() {
     super.initState();
@@ -44,15 +49,28 @@ class _AccountPageState extends State<AccountPage> {
     }
   }
 
-  // Get Initial Data
-  getData() async{
+  getData() async {
+    try {
+      final newVersion = NewVersionPlus(
+        iOSId: iOSPackageName,
+        iOSAppStoreCountry: 'JP',
+        androidId: androidAppBundleId,
+        androidPlayStoreCountry: 'JP',
+      );
+
+      version = await newVersion.getVersionStatus();
+    } catch (e) {
+      version = null; // handle gracefully
+    }
+
     // Get Logged In User data
     await userCon.getUserData();
+
     setState(() {
-      
+      isLoadingVersion = false;
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -211,12 +229,19 @@ class _AccountPageState extends State<AccountPage> {
                         ),
                         _buildListTile('Delete Account', Icons.delete, isDestructive: true),
                         SizedBox(height: 30.h),
-                        Center(
-                          child: Text(
-                            "Version 4.0.0",
-                            style: poppinsRegular(size: 12.sp, color: black.withValues(alpha:0.5)),
-                          ),
-                        ),
+                        isLoadingVersion
+                        ? SizedBox.shrink()
+                        : Center(
+                            child: Text(
+                              version != null && version.localVersion != null
+                                  ? "Version ${version.localVersion}"
+                                  : "Version info not available",
+                              style: poppinsRegular(
+                                size: 12.sp,
+                                color: black.withValues(alpha: 0.5),
+                              ),
+                            ),
+                          )
                       ],
                     ),
                   ),

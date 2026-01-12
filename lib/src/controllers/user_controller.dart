@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide FormData, MultipartFile;
+import 'package:new_version_plus/new_version_plus.dart';
 import 'package:pecon_app/src/api_config/api_repo.dart';
 import 'package:pecon_app/src/app_config/constant.dart';
 import 'package:pecon_app/src/app_config/read_write.dart';
@@ -94,6 +95,14 @@ class UserController extends GetxController {
   //update profile
   updateProfile({name, number, email, gender, dob, city, district, address, image, shopName, panNum, ownerName, shopkeeperId, displayPrice}) async{
     dynamic finaldata;
+    final newVersion = NewVersionPlus(
+        iOSId: iOSPackageName,
+        iOSAppStoreCountry: 'JP',
+        androidId: androidAppBundleId,
+        androidPlayStoreCountry: 'JP',
+      );
+
+      final status = await newVersion.getVersionStatus();
     if(image == null){
       finaldata = {
         "name": name,
@@ -106,6 +115,7 @@ class UserController extends GetxController {
         "city_id" : city,
         "gender": gender,
         "dob" : dob,
+        "app_version" : status!.localVersion.toString(),
       };
     }
     else{
@@ -119,6 +129,7 @@ class UserController extends GetxController {
         "city_id" : city,
         "gender": gender,
         "dob" : dob,
+        "app_version" : status!.localVersion.toString(),
         "profile" : await MultipartFile.fromFile(image.path, filename: image.path.split('/').last)
       };
     }
