@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:faded/faded.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -68,6 +70,19 @@ class _MyAppState extends State<MyApp> {
             ),
           ),
           home: const SplashScreen(),
+          builder: (context, child) {
+            return SafeArea(
+              top: false,
+              bottom: Platform.isIOS ? false : true,
+              child: MediaQuery(
+                data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1.0)),
+                child: ScrollConfiguration(
+                  behavior: NoGlowScrollBehavior(),
+                  child: child!,
+                ),
+              ),
+            );
+          },
         );
       }
     );
