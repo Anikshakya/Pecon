@@ -69,10 +69,7 @@ class _MyAppState extends State<MyApp> {
               selectionHandleColor: primary, 
             ),
           ),
-          home: SafeArea(
-            top: false,
-            child: const SplashScreen()
-          ),
+          home: const SplashScreen(),
           builder: (context, child) {
             return SafeArea(
               top: false,
