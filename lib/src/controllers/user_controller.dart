@@ -7,12 +7,14 @@ import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:pecon_app/src/api_config/api_repo.dart';
 import 'package:pecon_app/src/app_config/constant.dart';
 import 'package:pecon_app/src/app_config/read_write.dart';
+import 'package:pecon_app/src/controllers/app_controller.dart';
 import 'package:pecon_app/src/model/return_product_model.dart';
 import 'package:pecon_app/src/model/user_profile_model.dart';
 import 'package:pecon_app/src/model/withdrawal_request_model.dart';
 import 'package:pecon_app/src/widgets/custom_toast.dart';
 
 class UserController extends GetxController {
+  final AppController appCon = Get.put(AppController());
   final RxBool isLoginLoading = false.obs;
   final RxBool isProfileBtnLoading = false.obs;
   final RxBool isBankBtnLoading = false.obs;
@@ -106,6 +108,7 @@ class UserController extends GetxController {
         "city_id" : city,
         "gender": gender,
         "dob" : dob,
+        "app_version" : appCon.version.value,
       };
     }
     else{
@@ -119,6 +122,7 @@ class UserController extends GetxController {
         "city_id" : city,
         "gender": gender,
         "dob" : dob,
+        "app_version" : appCon.version.value,
         "profile" : await MultipartFile.fromFile(image.path, filename: image.path.split('/').last)
       };
     }

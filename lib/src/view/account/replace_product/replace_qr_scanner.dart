@@ -1,12 +1,13 @@
 import 'dart:developer';
-import 'package:pecon_app/src/app_config/styles.dart';
-import 'package:pecon_app/src/utils/app_utils.dart';
-import 'package:pecon_app/src/widgets/custom_button.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/utils/app_utils.dart';
+import 'package:pecon_app/src/widgets/custom_button.dart';
 import 'package:pecon_app/src/widgets/custom_text_field.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 import 'package:qr_code_tools/qr_code_tools.dart';
@@ -23,13 +24,6 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
   String scannedQr = "N/A";
-
-  @override
-  void dispose() {
-    // Dispose of the QR controller when the widget is disposed
-    controller?.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

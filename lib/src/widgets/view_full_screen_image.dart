@@ -4,7 +4,7 @@ import 'package:pecon_app/src/app_config/styles.dart';
 class FullScreenImagePage extends StatefulWidget {
   final String imageUrl;
 
-  const FullScreenImagePage({Key? key, required this.imageUrl}) : super(key: key);
+  const FullScreenImagePage({super.key, required this.imageUrl});
 
   @override
   State<FullScreenImagePage> createState() => _FullScreenImagePageState();

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -30,19 +30,22 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appbar(),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            // Product Image Slider
-            productImageSlider(),
-            SizedBox(height: 4.h),
-            // Product Details
-            productDetails(),
-            SizedBox(height: 20.h),
-          ],
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: appbar(),
+        body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              // Product Image Slider
+              productImageSlider(),
+              SizedBox(height: 4.h),
+              // Product Details
+              productDetails(),
+              SizedBox(height: 20.h),
+            ],
+          ),
         ),
       ),
     );

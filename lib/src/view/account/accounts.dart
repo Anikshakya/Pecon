@@ -1,5 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:new_version_plus/new_version_plus.dart';
+import 'package:pecon_app/src/app_config/constant.dart';
 import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/controllers/app_controller.dart';
 import 'package:pecon_app/src/controllers/auth_controller.dart';
 import 'package:pecon_app/src/controllers/user_controller.dart';
 import 'package:pecon_app/src/view/account/change_password.dart';
@@ -16,9 +22,6 @@ import 'package:pecon_app/src/view/dashboard.dart';
 import 'package:pecon_app/src/widgets/custom_appbar.dart';
 import 'package:pecon_app/src/widgets/custom_button.dart';
 import 'package:pecon_app/src/widgets/custom_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -31,8 +34,12 @@ class _AccountPageState extends State<AccountPage> {
   // Get Controllers
   final UserController userCon = Get.put(UserController());
   final AuthController authCon = Get.put(AuthController());
+  final AppController appCon = Get.put(AppController());
   // Formate Number to US standard
   final NumberFormat formatter = NumberFormat("#,##0", "en_US");
+
+  dynamic version;
+  bool isLoadingVersion = true;
 
   @override
   void initState() {
@@ -44,15 +51,28 @@ class _AccountPageState extends State<AccountPage> {
     }
   }
 
-  // Get Initial Data
-  getData() async{
+  getData() async {
+    try {
+      final newVersion = NewVersionPlus(
+        iOSId: iOSPackageName,
+        iOSAppStoreCountry: 'JP',
+        androidId: androidAppBundleId,
+        androidPlayStoreCountry: 'JP',
+      );
+
+      version = await newVersion.getVersionStatus();
+    } catch (e) {
+      version = null; // handle gracefully
+    }
+
     // Get Logged In User data
     await userCon.getUserData();
+
     setState(() {
-      
+      isLoadingVersion = false;
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -211,12 +231,17 @@ class _AccountPageState extends State<AccountPage> {
                         ),
                         _buildListTile('Delete Account', Icons.delete, isDestructive: true),
                         SizedBox(height: 30.h),
-                        Center(
-                          child: Text(
-                            "Version 4.0.0",
-                            style: poppinsRegular(size: 12.sp, color: black.withValues(alpha:0.5)),
-                          ),
-                        ),
+                        isLoadingVersion
+                        ? SizedBox.shrink()
+                        : Center(
+                            child: Text(
+                              "Version: ${appCon.version.value}",
+                              style: poppinsRegular(
+                                size: 12.sp,
+                                color: black.withValues(alpha: 0.5),
+                              ),
+                            ),
+                          )
                       ],
                     ),
                   ),

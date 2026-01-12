@@ -47,6 +47,7 @@ dependencies:
   # Scanner (updated for Flutter 3+)
   qr_code_scanner_plus: ^2.0.14   # Keep if you need it
   qr_code_tools: ^0.2.0
+  package_info_plus: ^8.3.1
 
 dev_dependencies:
   flutter_test:

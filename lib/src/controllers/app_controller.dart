@@ -11,13 +11,13 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:new_version_plus/new_version_plus.dart';
 import 'package:open_store/open_store.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pecon_app/src/api_config/api_repo.dart';
+import 'package:pecon_app/src/app_config/constant.dart';
 import 'package:pecon_app/src/app_config/styles.dart';
 import 'package:pecon_app/src/widgets/custom_network_image.dart';
 import 'package:version/version.dart';
-
-import 'package:pecon_app/src/api_config/api_repo.dart';
-import 'package:pecon_app/src/app_config/constant.dart';
 
 /// ============================
 /// Splash Media Type
@@ -43,6 +43,7 @@ class AppController extends GetxController {
   Version? latestVersion;
   String? installedFileName;
   String? latestFileName;
+  RxString version = ''.obs;
 
   final RxBool isBannerLoading = false.obs;
   var adBanner = "";
@@ -85,7 +86,13 @@ class AppController extends GetxController {
   // ============================
   Future<bool> hasInternet() async {
     final result = await Connectivity().checkConnectivity();
+    // ignore: unrelated_type_equality_checks
     return result != ConnectivityResult.none;
+  }
+
+  getAppVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    return version(packageInfo.version);
   }
 
   // ============================

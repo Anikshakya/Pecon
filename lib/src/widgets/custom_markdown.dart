@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:html2md/html2md.dart' as html2md;
 import 'package:pecon_app/src/app_config/styles.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:html2md/html2md.dart' as html2md;
 
 class CustomMarkdownWidget extends StatelessWidget {
   final String data;
@@ -53,6 +53,7 @@ class CustomMarkdownWidget extends StatelessWidget {
         blockquoteDecoration: const BoxDecoration(color: grey3),
       ),
       data: html2md.convert(data),
+      // ignore: deprecated_member_use
       imageBuilder: imageBuilder,
     );
   }

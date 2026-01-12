@@ -3,11 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:video_player/video_player.dart';
-
 import 'package:pecon_app/src/app_config/styles.dart';
 import 'package:pecon_app/src/controllers/app_controller.dart';
 import 'package:pecon_app/src/controllers/auth_controller.dart';
+import 'package:video_player/video_player.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -34,6 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
   // APP START FLOW
   // ============================
   Future<void> _initialize() async {
+    appCon.getAppVersion();
     final result = await appCon.startApp();
 
     switch (result) {

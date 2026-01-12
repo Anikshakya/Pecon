@@ -1,16 +1,14 @@
-import 'dart:io';
-
 import 'package:faded/faded.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:pecon_app/src/app_config/styles.dart';
-import 'package:pecon_app/src/services/notification_service.dart';
-import 'package:pecon_app/src/view/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/services/notification_service.dart';
+import 'package:pecon_app/src/view/splash_screen.dart';
 
 // To Update Notification
 Future<void> backgroundHandler(RemoteMessage message) async{
@@ -73,7 +71,7 @@ class _MyAppState extends State<MyApp> {
           builder: (context, child) {
             return SafeArea(
               top: false,
-              bottom: Platform.isIOS ? false : true,
+              bottom: false,
               child: MediaQuery(
                 data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1.0)),
                 child: ScrollConfiguration(
