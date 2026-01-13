@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:69600728067:android:f14eec7fe92a2722bdaa36",
+        "mobilesdk_app_id": "1:69600728067:android:53c27e169a0a945fbdaa36",
         "android_client_info": {
-          "package_name": "com.jujutech.np.pecon"
+          "package_name": "com.pecon.np"
         }
       },
       "oauth_client": [],

@@ -5,8 +5,8 @@ String getBaseUrl() {
 
 // App updates
 String appStoreId = '0000000000';                     
-String androidAppBundleId = 'com.jujutech.np.pecon';
-String iOSPackageName = 'com.jujutech.np.pecon';   
+String androidAppBundleId = 'com.pecon.np';
+String iOSPackageName = 'com.pecon.np';   
 
 class AppConstants {
   String userData = "UserData";

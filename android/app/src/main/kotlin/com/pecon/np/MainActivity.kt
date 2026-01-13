@@ -1,4 +1,4 @@
-package com.jujutech.np.pecon
+package com.pecon.np
 
 import io.flutter.embedding.android.FlutterActivity
 import android.view.WindowManager.LayoutParams
