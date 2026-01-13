@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
@@ -14,7 +15,6 @@ import 'package:pecon_app/src/view/dashboard.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 // ignore: depend_on_referenced_packages
 import 'package:timezone/timezone.dart' as tz;
-import 'package:get/get.dart'; // ✅ Added for navigation
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -32,7 +32,7 @@ class NotificationService {
   static Future<void> initializeNotification() async {
     // Android Settings
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('ic_launcher');
+        AndroidInitializationSettings('notification_icon');
 
     // iOS Settings
     const DarwinInitializationSettings initializationSettingsIOS =
