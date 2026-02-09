@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:pecon_app/src/app_config/styles.dart';
 import 'package:pecon_app/src/controllers/app_controller.dart';
 import 'package:pecon_app/src/controllers/user_controller.dart';
@@ -6,9 +9,6 @@ import 'package:pecon_app/src/view/home_page.dart';
 import 'package:pecon_app/src/view/notification_page.dart';
 import 'package:pecon_app/src/view/products_page.dart';
 import 'package:pecon_app/src/view/qr_scanner.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 
 class Dashboard extends StatefulWidget {
   final int? initialIndex;
@@ -64,7 +64,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomAppBar(
+      bottomSheet: BottomAppBar(
         color: primary,
         shadowColor: black,
         elevation: 90,

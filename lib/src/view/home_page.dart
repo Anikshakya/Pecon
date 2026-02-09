@@ -1,4 +1,9 @@
 
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:pecon_app/src/app_config/styles.dart';
 import 'package:pecon_app/src/controllers/app_controller.dart';
 import 'package:pecon_app/src/controllers/home_controller.dart';
@@ -6,11 +11,6 @@ import 'package:pecon_app/src/controllers/user_controller.dart';
 import 'package:pecon_app/src/widgets/custom_appbar.dart';
 import 'package:pecon_app/src/widgets/custom_button.dart';
 import 'package:pecon_app/src/widgets/custom_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:pecon_app/src/widgets/custom_toast.dart';
 import 'package:pecon_app/src/widgets/partner_logo.dart';
 
@@ -60,33 +60,30 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: white,
       appBar: customAppbar(),
-      body: SafeArea(
-        bottom: false,
-        child: RefreshIndicator(
-          color: black,
-          onRefresh: (){
-            return Future.delayed(const Duration(seconds: 1),()async{// Get Athlete Details Data
-              getData();
-              userCon.getUserData(true);
-            });
-          },
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child:  Column(
-              children: [
-                SizedBox(height: 10.h),
-                userInfo(),
-                // SizedBox(height: 20),
-                topBanner(),
-                SizedBox(height: 10.h),
-                rewardsSection(),
-                SizedBox(height: 20.h),
-                topFivePerformersSection(),
-                SizedBox(height: 30.h),
-                partnerLogo(),
-                SizedBox(height: 50.h)
-              ],
-            ),
+      body: RefreshIndicator(
+        color: black,
+        onRefresh: (){
+          return Future.delayed(const Duration(seconds: 1),()async{// Get Athlete Details Data
+            getData();
+            userCon.getUserData(true);
+          });
+        },
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child:  Column(
+            children: [
+              SizedBox(height: 10.h),
+              userInfo(),
+              // SizedBox(height: 20),
+              topBanner(),
+              SizedBox(height: 10.h),
+              rewardsSection(),
+              SizedBox(height: 20.h),
+              topFivePerformersSection(),
+              SizedBox(height: 30.h),
+              partnerLogo(),
+              SizedBox(height: 120.h)
+            ],
           ),
         ),
       ),
