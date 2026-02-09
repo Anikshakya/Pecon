@@ -123,6 +123,7 @@ class AppController extends GetxController {
           final updateAvailable = await _isUpdateAvailableCheck();
           if (updateAvailable) {
             _showUpdateDialog();
+            return AppStartResult.blockedByUpdate;
             // DO NOT return here → allow app to continue
           }
         }
@@ -311,11 +312,11 @@ class AppController extends GetxController {
       PopScope(
         canPop: false,
         child: CupertinoAlertDialog(
-          title: Text('updateAvailable'.tr),
-          content: Text('installLatest'.tr),
+          title: Text('There is a Latest Version Avialable for the App'.tr),
+          content: Text('Please Install The Latest Version To Procees'.tr),
           actions: [
             CupertinoDialogAction(
-              child: Text('はい'.tr),
+              child: Text('Update App'.tr),
               onPressed: () => _openStore(),
             ),
           ],

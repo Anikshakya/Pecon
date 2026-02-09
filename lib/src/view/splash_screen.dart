@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
     switch (result) {
       case AppStartResult.blockedByUpdate:
         // Update dialog already shown
-        await _routeNext();
+        // await _routeNext();
         return;
 
       case AppStartResult.playSplash:

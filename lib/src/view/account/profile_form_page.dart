@@ -121,60 +121,66 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
     return Scaffold(
       backgroundColor: white,
       appBar: appbar(title: "My Profile"),
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.0.h),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    //get profile form button
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          isProfileView = true;
-                        });
-                      },
-                      child: Container(
-                        height: 50.h,
-                        width: 160.w,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.r),
-                          color: isProfileView ? primary : black.withValues(alpha:0.15)
+      body: SafeArea(
+        top: false,
+        bottom: Platform.isIOS ? false : true,
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.0.h),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      //get profile form button
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            isProfileView = true;
+                          });
+                        },
+                        child: Container(
+                          height: 50.h,
+                          width: 160.w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.r),
+                            color: isProfileView ? primary : black.withValues(alpha:0.15)
+                          ),
+                          child: Center(child: Text("Personal Details", style: poppinsSemiBold(size: 14.sp, color: black),)),
                         ),
-                        child: Center(child: Text("Personal Details", style: poppinsSemiBold(size: 14.sp, color: black),)),
                       ),
-                    ),
-                    //get bank form button
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          isProfileView = false;
-                        });
-                      },  
-                      child: Container(
-                        height: 50.h,
-                        width: 160.w,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.r),
-                          color: isProfileView ? black.withValues(alpha:0.15) : primary
+                      //get bank form button
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            isProfileView = false;
+                          });
+                        },  
+                        child: Container(
+                          height: 50.h,
+                          width: 160.w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.r),
+                            color: isProfileView ? black.withValues(alpha:0.15) : primary
+                          ),
+                          child: Center(child: Text("Bank Details", style: poppinsSemiBold(size: 14.sp, color: black),)),
                         ),
-                        child: Center(child: Text("Bank Details", style: poppinsSemiBold(size: 14.sp, color: black),)),
                       ),
-                    ),
-                  ],
-                ),
-                //form
-                isProfileView 
-                  ? profileView()
-                  : bankView(),
-                //submitButton
-                submitButton()
-              ],
+                    ],
+                  ),
+                  //form
+                  isProfileView 
+                    ? profileView()
+                    : bankView(),
+                  //submitButton
+                  submitButton(),
+        
+                  SizedBox(height: 20.h),
+                ],
+              ),
             ),
           ),
         ),

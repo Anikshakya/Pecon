@@ -1,4 +1,5 @@
-import 'package:faded/faded.dart';
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -23,11 +24,7 @@ void main() async{
   await NotificationService.initNotification();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler); // FirebaseMessaging used correctly after initialization.
   runApp(
-    Faded(
-      dueDate: "2026-01-01", 
-      daysDeadline: 200,
-      child: const MyApp()
-    )
+    const MyApp()
   );
 }
 
@@ -71,7 +68,7 @@ class _MyAppState extends State<MyApp> {
           builder: (context, child) {
             return SafeArea(
               top: false,
-              bottom: false,
+              bottom: Platform.isIOS ? false : true,
               child: MediaQuery(
                 data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1.0)),
                 child: ScrollConfiguration(

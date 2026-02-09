@@ -86,8 +86,8 @@ class NotificationService {
   static NotificationDetails notificationDetails({String? imagePath}) {
     AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      'fujisawa_channel', // Channel ID
-      'Fujisawa Notifications', // Channel Name
+      'Pecon_channel', // Channel ID
+      'Pecon Notifications', // Channel Name
       importance: Importance.high,
       priority: Priority.high,
       ticker: 'ticker',
