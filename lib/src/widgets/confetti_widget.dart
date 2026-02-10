@@ -24,6 +24,7 @@ class _ConfettiDialogState extends State<ConfettiDialog> {
 
     // Close the dialog automatically after 1 second (same as the confetti duration)
     Future.delayed(const Duration(seconds: 4), () {
+      // ignore: use_build_context_synchronously
       Navigator.of(context).pop(); // Automatically pop the dialog after 1 second
     });
   }

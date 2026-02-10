@@ -87,8 +87,8 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
                   } else {
                     // Show error message if no QR code is found
                     controller!.stopCamera();  // Stop the camera after scanning
-                    // ignore: use_build_context_synchronously
                     showDialog(
+                      // ignore: use_build_context_synchronously
                       context: context,
                       barrierDismissible: true,
                       builder: (context) => AlertDialog(

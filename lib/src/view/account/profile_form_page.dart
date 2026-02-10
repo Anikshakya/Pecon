@@ -13,6 +13,9 @@ import 'package:pecon_app/src/widgets/custom_appbar.dart';
 import 'package:pecon_app/src/widgets/custom_button.dart';
 import 'package:pecon_app/src/widgets/custom_network_image.dart';
 import 'package:pecon_app/src/widgets/custom_textfieldheader.dart';
+import 'package:nepali_utils/nepali_utils.dart';
+import 'package:nepali_date_picker/nepali_date_picker.dart' as nepali;
+
 
 class ProfileFormPage extends StatefulWidget {
   const ProfileFormPage({super.key});
@@ -41,7 +44,10 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   bool? displayPrice;
 
   //initial DOB
-  DateTime selectedDate = DateTime.now(); 
+  DateTime selectedDate = DateTime.now();
+  DateTime selectedEnglishDate = DateTime.now();
+  NepaliDateTime selectedNepaliDate = NepaliDateTime.now();
+
 
   // Profile Text Editing Controllers 
   final TextEditingController nameController     = TextEditingController();
@@ -51,6 +57,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   final TextEditingController cityController     = TextEditingController();
   final TextEditingController genderController   = TextEditingController();
   final TextEditingController dobController      = TextEditingController();
+  final TextEditingController dobNepController      = TextEditingController();
   final TextEditingController addressController  = TextEditingController();
   //--- For shopkeeper ---
   final TextEditingController shopNameCon  = TextEditingController();
@@ -68,6 +75,9 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   //current form view
   bool isProfileView = true;
 
+  // Show BS
+  bool showBs = false;
+
   @override
   void initState() {
     initialise();
@@ -83,6 +93,9 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
       }
 
       setState((){
+        if (userCon.user.value.data.number.toString().startsWith("977")) {
+          showBs = true;
+        }
         districtId              = userCon.user.value.data.districtId;
         cityId                  = userCon.user.value.data.cityId;
         selectedDistrictIndex   = userCon.districtList.indexWhere((item) => item["name"] == userCon.user.value.data.district.toString());
@@ -96,8 +109,27 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
         districtController.text = userCon.user.value.data.district;
         cityController.text     = userCon.user.value.data.city;
         genderController.text   = userCon.user.value.data.gender == "" ? "" : userCon.user.value.data.gender[0].toUpperCase() + userCon.user.value.data.gender.substring(1);
-        dobController.text      = userCon.user.value.data.dob;
         addressController.text  = userCon.user.value.data.address;
+        dobController.text      = userCon.user.value.data.dob; 
+        // -------- DOB (AD → BS Prefill) --------
+        if (userCon.user.value.data.dob.isNotEmpty) {
+          final DateTime englishDate = DateTime.parse(userCon.user.value.data.dob);
+
+          selectedDate = englishDate;
+
+          final NepaliDateTime nepaliDate = englishDate.toNepaliDateTime();
+
+          dobController.text =
+              "${englishDate.year.toString().padLeft(4, '0')}-"
+              "${englishDate.month.toString().padLeft(2, '0')}-"
+              "${englishDate.day.toString().padLeft(2, '0')}";
+
+          dobNepController.text =
+              "${nepaliDate.year.toString().padLeft(4, '0')}-"
+              "${nepaliDate.month.toString().padLeft(2, '0')}-"
+              "${nepaliDate.day.toString().padLeft(2, '0')}";
+        }
+
 
         // Bank Text Editing Controllers 
         accNameController.text  = userCon.user.value.data.bank.holderName;
@@ -327,10 +359,24 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
               readOnly: true,
               controller: dobController,
               textInputAction: userCon.user.value.data.role.toLowerCase() == "customer" ? TextInputAction.done : TextInputAction.next,
-              headingText: "Date of Birth",
+              headingText: "Date of Birth (AD)",
               filledColor: gray.withValues(alpha:0.2),
               isDropdown: true,
             ),
+
+            if(showBs == true) SizedBox(height: 20.h),
+
+            // Nepali DOB
+            if(showBs == true)
+              CustomTextFormHeaderField(
+                onTap: showNepaliDatePicker,
+                readOnly: true,
+                controller: dobNepController,
+                headingText: "Date of Birth (BS)",
+                filledColor: gray.withValues(alpha:0.2),
+                isDropdown: true,
+              ),
+
             // ---------- shopkeeper ----------
             Visibility(
               visible: userCon.user.value.data.role.toLowerCase() == "shopkeeper",
@@ -1006,11 +1052,28 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     TextButton(
                       onPressed: () {
                         setState(() {
-                          dobController.text = "${selectedDate.year}-${selectedDate.month}-${selectedDate.day}";
+                          // English date (AD)
+                          dobController.text =
+                              "${selectedDate.year.toString().padLeft(4, '0')}-"
+                              "${selectedDate.month.toString().padLeft(2, '0')}-"
+                              "${selectedDate.day.toString().padLeft(2, '0')}";
+
+                          // Convert to Nepali (BS)
+                          final NepaliDateTime nepaliDate =
+                              selectedDate.toNepaliDateTime();
+
+                          dobNepController.text =
+                              "${nepaliDate.year.toString().padLeft(4, '0')}-"
+                              "${nepaliDate.month.toString().padLeft(2, '0')}-"
+                              "${nepaliDate.day.toString().padLeft(2, '0')}";
                         });
+
                         Navigator.pop(context);
                       },
-                      child: Text("Done", style: poppinsMedium(size:15.sp, color: purple),),
+                      child: Text(
+                        "Done",
+                        style: poppinsMedium(size: 15.sp, color: purple),
+                      ),
                     ),
                   ],
                 ),
@@ -1037,5 +1100,28 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
       },
     );
   }
+
+  void showNepaliDatePicker() async {
+    final pickedDate = await nepali.showMaterialDatePicker(
+      context: context,
+      initialDate: selectedNepaliDate,
+      firstDate: NepaliDateTime(1980, 1, 1),
+      lastDate: NepaliDateTime.now(),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        selectedNepaliDate = pickedDate;
+        selectedEnglishDate = pickedDate.toDateTime();
+
+        dobNepController.text =
+            "${pickedDate.year}-${pickedDate.month}-${pickedDate.day}";
+        dobController.text =
+            "${selectedEnglishDate.year}-${selectedEnglishDate.month}-${selectedEnglishDate.day}";
+      });
+    }
+  }
+
+
 
 }
