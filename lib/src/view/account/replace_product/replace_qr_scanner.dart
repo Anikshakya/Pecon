@@ -20,10 +20,17 @@ class ReplaceQRScannerPage extends StatefulWidget {
 }
 
 class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
-   
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
-  String scannedQr = "N/A";
+
+  bool _isScanned = false; // 🔒 IMPORTANT LOCK
+
+  @override
+  void dispose() {
+    // ignore: deprecated_member_use
+    controller?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,22 +38,16 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
       backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          // QR Code Scanner View
           qrView(),
-          // Instructions for the user to place QR code in the frame
           scannerText(),
-          // Flashlight toggle button
           flash(),
-          // Manual code entry and gallery scan options
           manualCodeButton(),
-          // Back button to navigate back to previous screen
-          backButton(context),
+          backButton(),
         ],
       ),
     );
   }
 
-  // Button for manual code entry and selecting QR code from gallery
   Widget manualCodeButton() {
     return Align(
       alignment: Alignment.topCenter,
@@ -55,15 +56,13 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // Manual Code Entry Button
             SizedBox(
               width: 140.w,
               height: 36.h,
               child: CustomButton(
-                onPressed: () async{
-                  // Open dialog to enter QR code manually
+                onPressed: () {
                   scannedCodeDialogue(
-                    code: null, 
+                    code: null,
                     isReadOnly: false,
                     headingText: "Manual Code Replace",
                     infoText: "Enter a code that points out to a QR.",
@@ -74,42 +73,38 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
                 fontColor: black,
               ),
             ),
-            // Select QR code from Gallery Button
             SizedBox(
               width: 140.w,
               height: 36.h,
               child: CustomButton(
                 onPressed: () async {
-                  // Scan QR code from selected image in gallery
-                  var scannedData = await scanFromGallery();
+                  final scannedData = await scanFromGallery();
+
                   if (scannedData != null) {
+                    await controller?.stopCamera();
                     Get.back(result: scannedData.toString());
                   } else {
-                    // Show error message if no QR code is found
-                    controller!.stopCamera();  // Stop the camera after scanning
+                    await controller?.stopCamera();
+
+                    if (!mounted) return;
+
                     showDialog(
-                      // ignore: use_build_context_synchronously
                       context: context,
-                      barrierDismissible: true,
-                      builder: (context) => AlertDialog(
+                      builder: (_) => AlertDialog(
                         title: const Text('Error'),
                         content: const Text("Cannot Scan QR Code"),
                         actions: [
                           TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
+                            onPressed: () => Navigator.pop(context),
                             child: const Text('OK'),
                           ),
                         ],
                       ),
-                    ).then((_) {
-                      // Resume camera after the dialog is dismissed
-                      Future.delayed(const Duration(milliseconds: 300), () {
-                        controller!.resumeCamera();
-                      });
+                    ).then((_) async {
+                      await Future.delayed(const Duration(milliseconds: 300));
+                      await controller?.resumeCamera();
                     });
-                    }
+                  }
                 },
                 text: "Gallery",
                 bgColor: white,
@@ -121,7 +116,7 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
       ),
     );
   }
-  // QR Code scanner view
+
   Widget qrView() {
     return QRView(
       key: qrKey,
@@ -135,7 +130,6 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
     );
   }
 
-  // Instructions for the user to scan the QR code inside the frame
   Widget scannerText() {
     return const Padding(
       padding: EdgeInsets.only(bottom: 160.0),
@@ -145,10 +139,7 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
           width: 200,
           child: Text(
             'Place the QR code inside the above frame to scan.',
-            style: TextStyle(
-              fontSize: 13.0,
-              color: Colors.white,
-            ),
+            style: TextStyle(fontSize: 13.0, color: Colors.white),
             textAlign: TextAlign.center,
           ),
         ),
@@ -156,7 +147,6 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
     );
   }
 
-  // Flashlight toggle button
   Widget flash() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 50.0),
@@ -166,21 +156,18 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
           icon: FutureBuilder(
             future: controller?.getFlashStatus(),
             builder: (context, snapshot) {
-              if (snapshot.data != null) {
-                return Icon(
-                  snapshot.data!
-                      ? Icons.flashlight_on_rounded
-                      : Icons.flashlight_off_rounded,
-                  color: Colors.white.withValues(alpha:0.6),
-                  size: 30,
-                );
-              } else {
-                return const SizedBox();
-              }
+              final isOn = snapshot.data ?? false;
+
+              return Icon(
+                isOn
+                    ? Icons.flashlight_on_rounded
+                    : Icons.flashlight_off_rounded,
+                color: Colors.white.withValues(alpha: 0.6),
+                size: 30,
+              );
             },
           ),
           onPressed: () async {
-            // Toggle the flashlight on or off
             await controller?.toggleFlash();
             setState(() {});
           },
@@ -189,45 +176,50 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
     );
   }
 
-  // QR Code scanned callback
-  void onQRViewCreated(QRViewController controller) {
-    setState(() {
-      this.controller = controller;
-    });
-    // Listen to scanned data and show it in a dialog
-    controller.scannedDataStream.listen((scanData) {
-      controller.stopCamera();  // Stop the camera after scanning
-      String scannedData = scanData.code.toString();
-      log('Scanned Data: $scannedData');
-      Get.back(result: scannedData.toString());
+  void onQRViewCreated(QRViewController ctrl) {
+    controller = ctrl;
+
+    ctrl.scannedDataStream.listen((scanData) async {
+      if (_isScanned) return; // 🔒 BLOCK DUPLICATES
+      _isScanned = true;
+
+      final scannedData = scanData.code?.toString() ?? "";
+
+      log("Scanned Data: $scannedData");
+
+      await controller?.stopCamera();
+
+      await Future.delayed(const Duration(milliseconds: 200));
+
+      if (Get.isOverlaysOpen) {
+        Get.back(result: scannedData);
+      } else {
+        Get.back(result: scannedData);
+      }
     });
   }
 
-  // Back button to navigate to the previous screen
-  Widget backButton(BuildContext context) {
+  Widget backButton() {
     return Positioned(
       top: 45,
       left: 10,
       child: IconButton(
         icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
-        onPressed: () {
-          Navigator.pop(context);
+        onPressed: () async {
+          await controller?.stopCamera();
+          Get.back();
         },
       ),
     );
   }
 
-
-  // Scan image from gallery and crop it
   Future<String?> scanFromGallery() async {
-    // Pick an image from the gallery
-    final XFile? image = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-    );
+    final XFile? image =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
     if (image == null) return null;
 
-    // Crop the picked image
-    CroppedFile? croppedImage = await ImageCropper().cropImage(
+    final croppedImage = await ImageCropper().cropImage(
       sourcePath: image.path,
       uiSettings: [
         AndroidUiSettings(
@@ -235,110 +227,82 @@ class _ReplaceQRScannerPageState extends State<ReplaceQRScannerPage> {
           toolbarColor: primary,
           toolbarWidgetColor: Colors.white,
           initAspectRatio: CropAspectRatioPreset.square,
-          lockAspectRatio: false,
         ),
         IOSUiSettings(minimumAspectRatio: 1.0),
       ],
-      // aspectRatioPresets: [
-      //   CropAspectRatioPreset.square,
-      //   CropAspectRatioPreset.ratio3x2,
-      //   CropAspectRatioPreset.ratio4x3,
-      //   CropAspectRatioPreset.ratio16x9,
-      // ],
     );
 
-    // Check if the image was cropped successfully
     if (croppedImage == null) return null;
 
-    // Convert the CroppedFile to XFile
-    XFile croppedXFile = XFile(croppedImage.path);
-
-    // Decode the QR code from the cropped image
     try {
-      final qrCodeData = await QrCodeToolsPlugin.decodeFrom(croppedXFile.path);
-      return qrCodeData;
-    } catch (e) {
-      return null; // Return null if no QR code is detected
+      return await QrCodeToolsPlugin.decodeFrom(croppedImage.path);
+    } catch (_) {
+      return null;
     }
   }
 
-    void scannedCodeDialogue({code, isReadOnly, headingText, infoText}) {
+  void scannedCodeDialogue({
+    code,
+    isReadOnly,
+    headingText,
+    infoText,
+  }) {
     final TextEditingController codeCon = TextEditingController();
 
     Get.defaultDialog(
       backgroundColor: boxCol,
       title: '',
       barrierDismissible: false,
-      titlePadding: EdgeInsets.symmetric(horizontal: 20.0.w),
-      contentPadding: EdgeInsets.symmetric(horizontal: 20.0.w),
       content: StatefulBuilder(
         builder: (context, setState) {
-          if(isReadOnly == true){
+          if (isReadOnly == true) {
             codeCon.text = code.toString();
           }
+
           return SizedBox(
             height: 230.h,
             width: 342.w,
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Title
-                  Text(
-                    headingText ?? "",
-                    style: TextStyle(
-                      fontSize: 19.sp,
-                      fontWeight: FontWeight.bold,
-                      color: black,
-                    ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  headingText ?? "",
+                  style: TextStyle(
+                    fontSize: 19.sp,
+                    fontWeight: FontWeight.bold,
+                    color: black,
                   ),
-                  SizedBox(height: 4.h),
-                  // Instruction Text
-                  Text(
-                    infoText ?? "",
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      color: black,
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  // Manual Code Input Field
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.r),
-                    child: CustomTextFormField(
-                      controller: codeCon,
-                      readOnly: isReadOnly ?? false,
-                      headingText: "Ënter Code",
-                      inputFormatters: [
-                        ToUpperCaseTextFormatter(),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  // Submit Button
-                  CustomButton(
-                    onPressed: () {
-                      Get.back();
-                      Get.back(result: codeCon.text.toString());
-                    },
-                    text: "Replace",
-                    bgColor: black,
-                    fontColor: white,
-                  ),
-                  SizedBox(height: 10.h),
-                  // Cancel Button
-                  CustomButton(
-                    onPressed: () {
-                      // Handle manual code submission
-                      Get.back();
-                    },
-                    text: "Cancel",
-                    bgColor: Colors.transparent,
-                    fontColor: black,
-                  ),
-                ],
-              ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  infoText ?? "",
+                  style: TextStyle(fontSize: 13.sp, color: black),
+                ),
+                SizedBox(height: 10.h),
+                CustomTextFormField(
+                  controller: codeCon,
+                  readOnly: isReadOnly ?? false,
+                  headingText: "Enter Code",
+                  inputFormatters: [ToUpperCaseTextFormatter()],
+                ),
+                SizedBox(height: 10.h),
+                CustomButton(
+                  onPressed: () {
+                    Get.back();
+                    Get.back(result: codeCon.text);
+                  },
+                  text: "Replace",
+                  bgColor: black,
+                  fontColor: white,
+                ),
+                SizedBox(height: 10.h),
+                CustomButton(
+                  onPressed: () => Get.back(),
+                  text: "Cancel",
+                  bgColor: Colors.transparent,
+                  fontColor: black,
+                ),
+              ],
             ),
           );
         },
