@@ -59,7 +59,13 @@ class _ReplaceProductPageState extends State<ReplaceProductPage> {
                       headingText: "Scan Previous QR",
                       onTap: () async{
                         var data = await Get.to(()=> const ReplaceQRScannerPage());
-                        previousCodeCon.text = data;
+                        if(data != null && data != ''){
+                          previousCodeCon.text = data;
+                          if(data == currentCodeCon.text){
+                            Get.snackbar("Error", "Previous QR code cannot be the same as the current one.");
+                            return;
+                          }
+                        }
                         setState(() {});
                       },
                     ),
@@ -76,7 +82,14 @@ class _ReplaceProductPageState extends State<ReplaceProductPage> {
                       headingText: "Scan Current QR",
                       onTap: () async{
                         var data = await Get.to(()=> const ReplaceQRScannerPage());
-                        currentCodeCon.text = data;
+                        if(data != null && data != ''){
+                          currentCodeCon.text = data;
+                          if(data == previousCodeCon.text){
+                            Get.snackbar("Error", "Current QR code cannot be the same as the previous one.");
+                            return;
+                          }
+                        }
+                        
                         setState(() {});
                       },
                     ),
