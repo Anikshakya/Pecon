@@ -84,69 +84,115 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
     super.initState();
   }
 
-  initialise() async{
-    WidgetsBinding.instance.addPostFrameCallback((_) async{
-      await userCon.getDistrictData(isNepal: true);
-      if(userCon.user.value.data.role.toLowerCase() == "technician"){
-        userCon.addShopkeeperField();
-        await userCon.getShopkeeperList();
+  initialise() async {
+  WidgetsBinding.instance.addPostFrameCallback((_) async {
+
+    await userCon.getDistrictData(isNepal: true);
+
+    if (userCon.user.value.data.role.toLowerCase() == "technician") {
+      userCon.addShopkeeperField();
+      await userCon.getShopkeeperList();
+    }
+
+    final user = userCon.user.value.data;
+
+    setState(() {
+
+      // ===== FLAGS =====
+      if (user.number.toString().startsWith("977")) {
+        showBs = true;
       }
 
-      setState((){
-        if (userCon.user.value.data.number.toString().startsWith("977")) {
-          showBs = true;
-        }
-        districtId              = userCon.user.value.data.districtId;
-        cityId                  = userCon.user.value.data.cityId;
-        selectedDistrictIndex   = userCon.districtList.indexWhere((item) => item["name"] == userCon.user.value.data.district.toString());
-        selectedGender          = gender.indexWhere((item) => item.toLowerCase() == userCon.user.value.data.gender.toLowerCase().toString());
-        selectedCityIndex       = userCon.cityList.indexWhere((item) => item["name"] == userCon.user.value.data.city.toString());
-        changedProfileImage     = userCon.user.value.data.profileUrl;
-        // Profile Text Editing Controllers 
-        nameController.text     = userCon.user.value.data.name;
-        emailController.text    = userCon.user.value.data.email;
-        numController.text      = userCon.user.value.data.number;
-        districtController.text = userCon.user.value.data.district;
-        cityController.text     = userCon.user.value.data.city;
-        genderController.text   = userCon.user.value.data.gender == "" ? "" : userCon.user.value.data.gender[0].toUpperCase() + userCon.user.value.data.gender.substring(1);
-        addressController.text  = userCon.user.value.data.address;
-        dobController.text      = userCon.user.value.data.dob; 
-        // -------- DOB (AD → BS Prefill) --------
-        if (userCon.user.value.data.dob.isNotEmpty) {
-          final DateTime englishDate = DateTime.parse(userCon.user.value.data.dob);
+      districtId = user.districtId;
+      cityId = user.cityId;
 
-          selectedDate = englishDate;
+      // ===== DISTRICT INDEX =====
+      selectedDistrictIndex = userCon.districtList.indexWhere(
+        (item) =>
+            item["name"].toString().toLowerCase() ==
+            user.district.toString().toLowerCase(),
+      );
 
-          final NepaliDateTime nepaliDate = englishDate.toNepaliDateTime();
+      // ===== IMPORTANT FIX: LOAD CITY LIST =====
+      if (selectedDistrictIndex != -1) {
+        userCon.cityList = List.from(
+          userCon.districtList[selectedDistrictIndex]["cities"] ?? [],
+        );
+      } else {
+        userCon.cityList = [];
+      }
 
-          dobController.text =
-              "${englishDate.year.toString().padLeft(4, '0')}-"
-              "${englishDate.month.toString().padLeft(2, '0')}-"
-              "${englishDate.day.toString().padLeft(2, '0')}";
+      // ===== CITY INDEX (NOW VALID) =====
+      selectedCityIndex = userCon.cityList.indexWhere(
+        (item) =>
+            item["name"].toString().toLowerCase() ==
+            user.city.toString().toLowerCase(),
+      );
 
-          dobNepController.text =
-              "${nepaliDate.year.toString().padLeft(4, '0')}-"
-              "${nepaliDate.month.toString().padLeft(2, '0')}-"
-              "${nepaliDate.day.toString().padLeft(2, '0')}";
-        }
+      if (selectedCityIndex < 0) {
+        selectedCityIndex = 0;
+      }
 
+      // ===== GENDER =====
+      selectedGender = gender.indexWhere(
+        (item) =>
+            item.toLowerCase() ==
+            user.gender.toLowerCase(),
+      );
 
-        // Bank Text Editing Controllers 
-        accNameController.text  = userCon.user.value.data.bank.holderName;
-        bankController.text     = userCon.user.value.data.bank.name;
-        accNoController.text    = userCon.user.value.data.bank.accountNumber;
-        branchController.text   = userCon.user.value.data.bank.branch;
-        esewaController.text    = userCon.user.value.data.bank.esewa;
-        khaltiController.text   = userCon.user.value.data.bank.khalti;
+      if (selectedGender < 0) selectedGender = 0;
 
-        //Shopkeeper data
-        displayPrice            = userCon.user.value.data.vendor!.displayPrice;
-        shopNameCon.text        = userCon.user.value.data.vendor!.vendorName;
-        shopPanCon.text         = userCon.user.value.data.vendor!.vendorPan;
-        shopOwnerCon.text       = userCon.user.value.data.vendor!.vendorEmail;
-      });
+      // ===== PROFILE IMAGE =====
+      changedProfileImage = user.profileUrl;
+
+      // ===== CONTROLLERS =====
+      nameController.text = user.name;
+      emailController.text = user.email;
+      numController.text = user.number;
+      districtController.text = user.district;
+      cityController.text = user.city;
+      genderController.text = user.gender.isEmpty
+          ? ""
+          : user.gender[0].toUpperCase() + user.gender.substring(1);
+
+      addressController.text = user.address;
+      dobController.text = user.dob;
+
+      // ===== DOB =====
+      if (user.dob.isNotEmpty) {
+        final DateTime englishDate = DateTime.parse(user.dob);
+        selectedDate = englishDate;
+
+        final NepaliDateTime nepaliDate =
+            englishDate.toNepaliDateTime();
+
+        dobController.text =
+            "${englishDate.year.toString().padLeft(4, '0')}-"
+            "${englishDate.month.toString().padLeft(2, '0')}-"
+            "${englishDate.day.toString().padLeft(2, '0')}";
+
+        dobNepController.text =
+            "${nepaliDate.year.toString().padLeft(4, '0')}-"
+            "${nepaliDate.month.toString().padLeft(2, '0')}-"
+            "${nepaliDate.day.toString().padLeft(2, '0')}";
+      }
+
+      // ===== BANK =====
+      accNameController.text = user.bank.holderName;
+      bankController.text = user.bank.name;
+      accNoController.text = user.bank.accountNumber;
+      branchController.text = user.bank.branch;
+      esewaController.text = user.bank.esewa;
+      khaltiController.text = user.bank.khalti;
+
+      // ===== SHOP / VENDOR =====
+      displayPrice = user.vendor?.displayPrice;
+      shopNameCon.text = user.vendor?.vendorName ?? "";
+      shopPanCon.text = user.vendor?.vendorPan ?? "";
+      shopOwnerCon.text = user.vendor?.vendorEmail ?? "";
     });
-  }
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -950,7 +996,9 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                   backgroundColor: Colors.white,
                   itemExtent: 40.h,
                   scrollController: FixedExtentScrollController(
-                    initialItem: selectedCityIndex,
+                    initialItem: userCon.cityList.isEmpty
+                        ? 0
+                        : selectedCityIndex.clamp(0, userCon.cityList.length - 1) as int,
                   ),
                   onSelectedItemChanged: (index) {
                     setState(() {
