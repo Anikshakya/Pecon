@@ -432,4 +432,21 @@ class AppController extends GetxController {
       isBannerLoading(false);
     }
   }
+
+  // Send App Update to server
+  Future<void> sendAppUpdate() async {
+    try {
+
+      var data = {
+        "app_version": await getAppVersion(),
+      };
+
+      final response =  await ApiRepo.apiPost('api/profile/update_apps_version', data, 'UpdateAppVersionAPI');
+
+      if (response != null && response['code'] == 201) {
+      }
+    } catch (e) {
+      log("Ad Banner Error: $e");
+    }
+  }
 }

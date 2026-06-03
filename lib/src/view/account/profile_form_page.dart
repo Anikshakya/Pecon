@@ -90,7 +90,9 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
     await userCon.getDistrictData(isNepal: true);
 
     if (userCon.user.value.data.role.toLowerCase() == "technician") {
-      userCon.addShopkeeperField();
+      if(userCon.shopkeeperIdControllers.isEmpty){
+        userCon.addShopkeeperField();
+      }
       await userCon.getShopkeeperList();
     }
 

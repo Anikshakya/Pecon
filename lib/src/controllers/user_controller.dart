@@ -63,6 +63,10 @@ class UserController extends GetxController {
         if(refresh == true){
           user.value = UserModel.fromJson(response);
           write(AppConstants().userData, UserModel.fromJson(response));
+          shopkeeperIdControllers.clear(); // Clear previous List
+          // for (var data in user.value.data.vendor) {
+          //   shopkeeperIdControllers[data["id"]] = data["name"];
+          // }
           isProfileLoading(false);
           return;
         }

@@ -49,6 +49,7 @@ class _DashboardState extends State<Dashboard> {
         if(widget.initialIndex != 2){
           await getData();
         }
+        appCon.sendAppUpdate();
       });
     }
   }
