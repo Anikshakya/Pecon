@@ -264,8 +264,8 @@ class AuthController extends GetxController {
                   const SizedBox(height: 16),
                   
                   // English Text
-                  const Text(
-                    "QR scan only. Your account is not verified yet. After verification, you can access all app features.\nContact this number for account verification: +977-XXXXXXXXXX",
+                  Text(
+                    "QR scan only. Your account is not verified yet. After verification, you can access all app features.\nContact this number for account verification: ${appCon.phoneLink}",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.black87, 
@@ -282,8 +282,8 @@ class AuthController extends GetxController {
                   ),
                   
                   // Nepali Text
-                  const Text(
-                    "QR स्क्यान मात्र अनुमति छ। तपाईंको खाता अझै प्रमाणित भएको छैन। प्रमाणित भएपछि एपका सबै सुविधा प्रयोग गर्न सक्नुहुन्छ।\nप्रमाणिकरणका लागि यस नम्बरमा सम्पर्क गर्नुहोस्: +977-XXXXXXXXXX",
+                  Text(
+                    "QR स्क्यान मात्र अनुमति छ। तपाईंको खाता अझै प्रमाणित भएको छैन। प्रमाणित भएपछि एपका सबै सुविधा प्रयोग गर्न सक्नुहुन्छ।\nप्रमाणिकरणका लागि यस नम्बरमा सम्पर्क गर्नुहोस्: ${appCon.phoneLink}",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.black87, 
