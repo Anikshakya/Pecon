@@ -86,7 +86,7 @@ class UserController extends GetxController {
 
         for (var vendor in user.value.data.user.vendors) {
           shopkeeperIdControllers.add(
-            TextEditingController(text: vendor["id"].toString()),
+            TextEditingController(text: vendor["user_id"].toString()),
           );
 
           shopkeeperNames.add(vendor["name"].toString());
