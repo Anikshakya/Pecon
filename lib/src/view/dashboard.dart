@@ -196,7 +196,10 @@ class _DashboardState extends State<Dashboard> {
               : 0.0,
           ),
           child: FloatingActionButton(
-            backgroundColor: black,
+            backgroundColor: (userCon.user.value.data.user.role.toLowerCase() == "customer" && userCon.user.value.data.user.status == 0) 
+            ? maroon
+            : (userCon.user.value.data.user.role.toLowerCase() == "technician" && userCon.user.value.data.user.status == 0) 
+            ? maroon : black,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(100.0),
             ),
@@ -207,7 +210,11 @@ class _DashboardState extends State<Dashboard> {
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: (userCon.user.value.data.user.role.toLowerCase() == "customer" && userCon.user.value.data.user.status == 0) 
+        ? FloatingActionButtonLocation.endDocked
+          : (userCon.user.value.data.user.role.toLowerCase() == "technician" && userCon.user.value.data.user.status == 0)
+          ? FloatingActionButtonLocation.endDocked
+          : FloatingActionButtonLocation.centerDocked,
     );
   }
 }

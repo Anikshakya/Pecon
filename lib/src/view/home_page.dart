@@ -575,19 +575,11 @@ class _HomePageState extends State<HomePage> {
       }
 
       if (userCon.user.value.data.user.role.toLowerCase() == "customer" && userCon.user.value.data.user.status == 0) {
-        return  verificationWarningContainer(
-          onRefresh: (){
-            userCon.getUserData(true);
-          }
-        );
+        return const SizedBox();
       }
 
       if(userCon.user.value.data.user.role.toLowerCase() == "technician" && userCon.user.value.data.user.status == 0){
-        return verificationWarningContainer(
-          onRefresh: (){
-            userCon.getUserData(true);
-          }
-        );
+        return const SizedBox();
       }
 
       final sortedPerformers = List.of(homeCon.topPerformer)..sort((a, b) => b.totalRedeem.compareTo(a.totalRedeem));
