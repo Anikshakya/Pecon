@@ -54,6 +54,13 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
+  @override
+  dispose() {
+    super.dispose();
+    // Optional offline status
+    appCon.onlineApi(0);
+  }
+
   // Get Initial Data
   getData() async{
     appCon.showAdDialog();

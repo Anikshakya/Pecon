@@ -15,6 +15,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pecon_app/src/api_config/api_repo.dart';
 import 'package:pecon_app/src/app_config/constant.dart';
+import 'package:pecon_app/src/app_config/read_write.dart';
 import 'package:pecon_app/src/app_config/styles.dart';
 import 'package:pecon_app/src/widgets/custom_network_image.dart';
 import 'package:version/version.dart';
@@ -447,6 +448,21 @@ class AppController extends GetxController {
       }
     } catch (e) {
       log("Ad Banner Error: $e");
+    }
+  }
+
+  onlineApi(onlineValue) async{
+    try{
+      var data = {
+        "is_online" : onlineValue
+      };
+      if(read("token") != "" && read("token") != null){
+        var response = await ApiRepo.apiPost('api/is_online', data, 'ONLIN API');
+        if(response != null && response['code'] == 200) {
+        }
+      }
+    }catch (e){
+      log(e.toString());
     }
   }
 }
