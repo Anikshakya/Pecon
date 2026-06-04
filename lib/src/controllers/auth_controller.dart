@@ -1,12 +1,13 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:pecon_app/src/api_config/api_repo.dart';
 import 'package:pecon_app/src/app_config/read_write.dart';
 import 'package:pecon_app/src/controllers/app_controller.dart';
 import 'package:pecon_app/src/services/notification_service.dart';
 import 'package:pecon_app/src/view/dashboard.dart';
-import 'package:get/get.dart' hide FormData, MultipartFile;
-import 'package:dio/dio.dart';
 import 'package:pecon_app/src/view/login.dart';
 import 'package:pecon_app/src/view/otp_page.dart';
 import 'package:pecon_app/src/view/reset_password_page.dart';
@@ -57,7 +58,11 @@ class AuthController extends GetxController {
         write("user", response['data']['user']);
 
         isLoginLoading(false); // Stop Loading
-        Get.offAll(()=>const Dashboard());
+        if(response['data']['user']['role'].toLowerCase() == "shopkeeper" && response['data']['user']['status'] == 0){
+          invaliduserDialog();
+        } else {
+          Get.offAll(()=> const Dashboard());
+        }
       }
     }catch (e){
       log(e.toString());
@@ -211,5 +216,87 @@ class AuthController extends GetxController {
     } finally{
       isLogOutLoading(false);
     }
+  }
+
+// Invalid User Alert Dialog Box
+  invaliduserDialog() {
+    Get.dialog(
+      barrierDismissible: false, // Correct placement to prevent closing on outside tap
+      Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
+        ),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 20.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.0),
+            border: Border.all(color: Colors.red.shade100),
+          ),
+          child: Stack(
+            children: [
+              // Top Right Close Button
+              Positioned(
+                right: 0,
+                top: 0,
+                child: GestureDetector(
+                  onTap: () => Get.back(), // Closes the GetX dialog
+                  child: const Icon(
+                    Icons.close,
+                    color: Colors.grey,
+                    size: 24,
+                  ),
+                ),
+              ),
+              
+              // Dialog Content
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 16), // Spacer for the close icon row
+                  Icon(
+                    Icons.shield_outlined, 
+                    color: Colors.red.shade500, 
+                    size: 48
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  // English Text
+                  const Text(
+                    "QR scan only. Your account is not verified yet. After verification, you can access all app features.\nContact this number for account verification: +977-XXXXXXXXXX",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black87, 
+                      fontSize: 14, 
+                      height: 1.4,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  
+                  // Divider
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 14.0),
+                    child: Divider(color: Colors.black12, height: 1),
+                  ),
+                  
+                  // Nepali Text
+                  const Text(
+                    "QR स्क्यान मात्र अनुमति छ। तपाईंको खाता अझै प्रमाणित भएको छैन। प्रमाणित भएपछि एपका सबै सुविधा प्रयोग गर्न सक्नुहुन्छ।\nप्रमाणिकरणका लागि यस नम्बरमा सम्पर्क गर्नुहोस्: +977-XXXXXXXXXX",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black87, 
+                      fontSize: 14, 
+                      height: 1.4,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
