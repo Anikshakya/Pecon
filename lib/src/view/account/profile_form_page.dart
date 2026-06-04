@@ -86,6 +86,8 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
 
   initialise() async {
   WidgetsBinding.instance.addPostFrameCallback((_) async {
+    // Get Logged In User data
+    userCon.getUserData(true);
 
     await userCon.getDistrictData(isNepal: true);
 
@@ -469,108 +471,141 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
               ),
             ),
             //---------- Technician --------
-            Visibility(
-              visible: userCon.user.value.data.user.role.toLowerCase() == "technician",
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 20),
-                  // List of shopkeeper Id fields
-                  Obx(() => ListView.separated(
-                    physics: const NeverScrollableScrollPhysics(),
-                    separatorBuilder: (context, index) => SizedBox(height: 15.h),
-                    shrinkWrap: true,
-                    itemCount: userCon.shopkeeperIdControllers.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: CustomTextFormHeaderField(
-                                  headingText: "Shopkeeper Id ${index + 1}",
-                                  controller: userCon.shopkeeperIdControllers[index],
-                                  textInputAction: TextInputAction.done,
-                                  keyboardType: TextInputType.number,
-                                  filled: true,
-                                  filledColor: Colors.grey.withValues(alpha:0.2),
-                                  suffixIcon: userCon.isshopkeeperIdLoading.isTrue 
-                                    ? Container(
-                                        padding: const EdgeInsets.all(14),
-                                        child: const Center(
-                                          child: CircularProgressIndicator(
-                                            color: Colors.grey,
-                                            strokeWidth: 1.5,
-                                          ),
+            Obx(() {
+              if (userCon.isProfileLoading.isTrue) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+
+              return Visibility(
+                visible: userCon.user.value.data.user.role.toLowerCase() == "technician",
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+
+                    Obx(() => ListView.separated(
+                          physics: const NeverScrollableScrollPhysics(),
+                          separatorBuilder: (context, index) =>
+                              SizedBox(height: 15.h),
+                          shrinkWrap: true,
+                          itemCount: userCon.shopkeeperIdControllers.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: CustomTextFormHeaderField(
+                                        headingText:
+                                            "Shopkeeper Id ${index + 1}",
+                                        controller: userCon
+                                            .shopkeeperIdControllers[index],
+                                        textInputAction: TextInputAction.done,
+                                        keyboardType: TextInputType.number,
+                                        filled: true,
+                                        filledColor: Colors.grey
+                                            .withValues(alpha: 0.2),
+                                        suffixIcon:
+                                            userCon.isshopkeeperIdLoading.isTrue
+                                                ? Container(
+                                                    padding:
+                                                        const EdgeInsets.all(14),
+                                                    child: const Center(
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                        color: Colors.grey,
+                                                        strokeWidth: 1.5,
+                                                      ),
+                                                    ),
+                                                  )
+                                                : null,
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter
+                                              .digitsOnly
+                                        ],
+                                        onChanged: (value) {
+                                          userCon.filterShopkeepersById(
+                                              value, index);
+                                        },
+                                      ),
+                                    ),
+                                    if (index > 0)
+                                      IconButton(
+                                        icon: const Icon(Icons.remove_circle,
+                                            color: Colors.red),
+                                        onPressed: () => userCon
+                                            .removeShopkeeperField(index),
+                                      ),
+                                  ],
+                                ),
+
+                                Obx(() {
+                                  if (userCon.showNameDisplays.length <= index ||
+                                      !userCon.showNameDisplays[index]) {
+                                    return const SizedBox.shrink();
+                                  }
+
+                                  final name =
+                                      userCon.shopkeeperNames.length > index
+                                          ? userCon.shopkeeperNames[index]
+                                          : "";
+
+                                  if (name.isEmpty) {
+                                    return const Padding(
+                                      padding:
+                                          EdgeInsets.only(top: 8, left: 8),
+                                      child: Text(
+                                        "N/A",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey,
                                         ),
-                                      )
-                                    : null,
-                                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                                  onChanged: (value) {
-                                    userCon.filterShopkeepersById(value, index);
-                                  },
-                                ),
-                              ),
-                              if (index > 0) // Show remove button for all except first field
-                                IconButton(
-                                  icon: const Icon(Icons.remove_circle, color: Colors.red),
-                                  onPressed: () => userCon.removeShopkeeperField(index),
-                                ),
-                            ],
-                          ),
-                          Obx(() {
-                            if (!userCon.showNameDisplays[index]) {
-                              return const SizedBox.shrink();
-                            }
+                                      ),
+                                    );
+                                  }
 
-                            final name = userCon.shopkeeperNames.length > index
-                                ? userCon.shopkeeperNames[index]
-                                : "";
+                                  final isError =
+                                      name.startsWith('No shopkeeper');
 
-                            if (name.isEmpty) {
-                              return const Padding(
-                                padding: EdgeInsets.only(top: 8, left: 8),
-                                child: Text(
-                                  "N/A",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              );
-                            }
-
-                            final isError = name.startsWith('No shopkeeper');
-
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 8, left: 8),
-                              child: Text(
-                                name,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: isError ? Colors.red : Colors.green,
-                                ),
-                              ),
+                                  return Padding(
+                                    padding:
+                                        const EdgeInsets.only(top: 8, left: 8),
+                                    child: Text(
+                                      name,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: isError
+                                            ? Colors.red
+                                            : Colors.green,
+                                      ),
+                                    ),
+                                  );
+                                })
+                              ],
                             );
-                          })
-                        ],
-                      );
-                    },
-                  )),
-                  const SizedBox(height: 20),
-                  // Add Id button
-                  Center(
-                    child: CustomButton(
-                     text: "Add Shopkeeper",
-                      onPressed: () {
-                        userCon.addShopkeeperField();
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ),
+                          },
+                        )),
+
+                    const SizedBox(height: 20),
+
+                    Center(
+                      child: CustomButton(
+                        text: "Add Shopkeeper",
+                        onPressed: () {
+                          userCon.addShopkeeperField();
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              );
+            })
           ],
         ),
       ),
