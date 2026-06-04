@@ -193,7 +193,14 @@ class _DashboardState extends State<Dashboard> {
             ),
       ),
       floatingActionButton: Obx(() => userCon.isProfileLoading.isTrue
-        ? const SizedBox()
+        ? FloatingActionButton(
+            backgroundColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100.0),
+            ),
+            onPressed: null,
+            child: const Icon(Icons.qr_code_scanner, color: Colors.transparent,),
+          )
         : Padding(
           padding: EdgeInsets.only(
             bottom: (userCon.user.value.data.user.role.toLowerCase() == "customer" && userCon.user.value.data.user.status == 0)

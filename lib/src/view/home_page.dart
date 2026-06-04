@@ -92,18 +92,35 @@ class _HomePageState extends State<HomePage> {
   }
 
   topBanner() {
-    return Obx(() => homeCon.isAdBannerLoading.isTrue
-      ? Container(
+    return Obx((){
+      if (userCon.isProfileLoading.value) {
+        return const SizedBox();
+      }
+
+      if (userCon.user.value.data.user.role.toLowerCase() == "customer" && userCon.user.value.data.user.status == 0) {
+        return const SizedBox();
+      }
+
+      if(userCon.user.value.data.user.role.toLowerCase() == "technician" && userCon.user.value.data.user.status == 0){
+        return const SizedBox();
+      }
+
+      if(homeCon.isAdBannerLoading.isTrue){
+        return Container(
           height: 175.h,
           margin: const EdgeInsets.fromLTRB(20, 14, 20, 0),
           decoration: BoxDecoration(
             color: const Color.fromARGB(255, 236, 236, 236),
             borderRadius: BorderRadius.circular(8),
           ),
-        ) 
-      : homeCon.adSliderData == null ||homeCon.adSliderData.data.length == 0
-      ? const SizedBox()
-      : SizedBox(
+        );
+      } 
+
+      if(homeCon.adSliderData == null ||homeCon.adSliderData.data.length == 0){
+        return SizedBox();
+      }
+
+      return SizedBox(
         height: 220.h,
         child: Column(
           children: [
@@ -150,12 +167,13 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-      )
-    );
+      );
+    });
   }
 
   rewardsSection() {
-    if (userCon.isProfileLoading.value) {
+    return Obx((){ 
+      if (userCon.isProfileLoading.value) {
         return const SizedBox();
       }
 
@@ -174,17 +192,18 @@ class _HomePageState extends State<HomePage> {
           }
         );
       }
-    return Obx(()=> homeCon.isRedeemInfoLoading.isTrue
-      ? Container(
-        height: 300.h,
-        width: double.infinity,
-        margin: EdgeInsets.symmetric(horizontal: 20.sp),
-        decoration: BoxDecoration(
-          color: yellowL,
-          borderRadius: BorderRadius.circular(12),
-        ),
-      )
-      : Visibility(
+      if(homeCon.isRedeemInfoLoading.isTrue){
+        return Container(
+          height: 300.h,
+          width: double.infinity,
+          margin: EdgeInsets.symmetric(horizontal: 20.sp),
+          decoration: BoxDecoration(
+            color: yellowL,
+            borderRadius: BorderRadius.circular(12),
+          ),
+        );
+      }
+      return Visibility(
         visible: homeCon.redeemInfoData.isNotEmpty,
         child: Container(
           width: double.infinity,
@@ -448,8 +467,8 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   userInfo() {

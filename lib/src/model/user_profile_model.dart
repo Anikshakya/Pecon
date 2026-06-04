@@ -189,7 +189,7 @@ class Bank {
 }
 
 class Vendor {
-  int id;
+  dynamic id;
   String vendorName;
   String vendorPan;
   String vendorEmail;
@@ -206,7 +206,7 @@ class Vendor {
   });
 
   factory Vendor.fromJson(Map<String, dynamic> json) => Vendor(
-        id: json["id"] ?? 0,
+        id: json["id"] == "" ? 0 : json["id"] ?? 0,
         vendorName: json["name"] ?? "",
         vendorPan: json["email"] ?? "",
         vendorEmail: json["number"] ?? "",
