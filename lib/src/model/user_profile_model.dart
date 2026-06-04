@@ -10,123 +10,144 @@ class UserModel {
   bool status;
   int code;
   String message;
-  Data data;
+  UserData data;
 
   UserModel({
     this.status = false,
     this.code = 0,
-    this.message = "",
-    Data? data,
-  }) : data = data ?? Data();
+    this.message = '',
+    UserData? data,
+  }) : data = data ?? UserData();
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        status: json["status"] ?? false,
-        code: json["code"] ?? 0,
-        message: json["message"] ?? "",
-        data: json["data"] != null
-            ? Data.fromJson(json["data"])
-            : Data(),
-      );
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      status: json['status'] ?? false,
+      code: json['code'] ?? 0,
+      message: json['message'] ?? '',
+      data: UserData.fromJson(json['data'] ?? {}),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
-        "status": status,
-        "code": code,
-        "message": message,
-        "data": data.toJson(),
+        'status': status,
+        'code': code,
+        'message': message,
+        'data': data.toJson(),
       };
 }
 
-class Data {
+class UserData {
+  User user;
+
+  UserData({User? user}) : user = user ?? User();
+
+  factory UserData.fromJson(Map<String, dynamic> json) {
+    return UserData(
+      user: User.fromJson(json['user'] ?? {}),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'user': user.toJson(),
+      };
+}
+
+class User {
   int id;
   String name;
   String email;
+  int status;
   String number;
   String profileUrl;
   int redeemed;
   String gender;
   String dob;
   String city;
-  String role;
-  int? cityId;
-  int districtId;
   String district;
+  int cityId;
+  int districtId;
   String address;
+  String role;
   Bank bank;
-  Vendor? vendor;
-  List<AddedVendor> addedVendors;
+  Vendor vendor;
 
-  Data({
+  // ✅ FIXED: dynamic list
+  List<Map<String, dynamic>> vendors;
+
+  User({
     this.id = 0,
-    this.name = "",
-    this.email = "",
-    this.number = "",
-    this.profileUrl =
-        "https://images.squarespace-cdn.com/content/v1/56c346b607eaa09d9189a870/1551408857522-4ZFG11B2M7UPFYBFBRO0/FLAUNT-MAGAZINE-JOJI-2.jpg",
+    this.name = '',
+    this.email = '',
+    this.status = 0,
+    this.number = '',
+    this.profileUrl = '',
     this.redeemed = 0,
-    this.gender = "",
-    this.dob = "",
-    this.district = "",
+    this.gender = '',
+    this.dob = '',
+    this.city = '',
+    this.district = '',
+    this.cityId = 0,
     this.districtId = 0,
-    this.cityId,
-    this.city = "",
-    this.address = "",
-    this.role = "",
-    this.vendor,
-    List<AddedVendor>? addedVendors,
+    this.address = '',
+    this.role = '',
     Bank? bank,
+    Vendor? vendor,
+    List<Map<String, dynamic>>? vendors,
   })  : bank = bank ?? Bank(),
-        addedVendors = addedVendors ?? [];
+        vendor = vendor ?? Vendor(),
+        vendors = vendors ?? [];
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
-        id: json["id"] ?? 0,
-        name: json["name"] ?? "",
-        email: json["email"]?.toString() ?? "",
-        number: json["number"] ?? "",
-        profileUrl: json["profile_url"] ??
-            "https://images.squarespace-cdn.com/content/v1/56c346b607eaa09d9189a870/1551408857522-4ZFG11B2M7UPFYBFBRO0/FLAUNT-MAGAZINE-JOJI-2.jpg",
-        redeemed: json["reedemed"] ?? 0,
-        city: json["city"] ?? "",
-        district: json["district"] ?? "",
-        dob: json["dob"] ?? "",
-        gender: json["gender"] ?? "",
-        districtId: json["district_id"] ?? 0,
-        cityId: json["city_id"],
-        address: json["address"] ?? "",
-        bank: json["bank"] != null
-            ? Bank.fromJson(json["bank"])
-            : Bank(),
-        vendor: json["vendor"] == null
-            ? Vendor()
-            : Vendor.fromJson(json["vendor"]),
-        role: json["role"] ?? "",
-        addedVendors: json["added_vendors"] == null
-            ? []
-            : List<AddedVendor>.from(
-                json["added_vendors"]
-                    .map((x) => AddedVendor.fromJson(x)),
-              ),
-      );
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+      email: json['email']?.toString() ?? '',
+      status: json['status'] ?? 0,
+      number: json['number']?.toString() ?? '',
+      profileUrl: json['profile_url']?.toString() ?? '',
+      redeemed: json['reedemed'] ?? 0,
+      gender: json['gender']?.toString() ?? '',
+      dob: json['dob']?.toString() ?? '',
+      city: json['city']?.toString() ?? '',
+      district: json['district']?.toString() ?? '',
+      cityId: json['city_id'] ?? 0,
+      districtId: json['district_id'] ?? 0,
+      address: json['address']?.toString() ?? '',
+      role: json['role']?.toString() ?? '',
+      bank: Bank.fromJson(json['bank'] ?? {}),
+      vendor: Vendor.fromJson(json['vendor'] ?? {}),
 
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "email": email,
-        "number": number,
-        "profile_url": profileUrl,
-        "reedemed": redeemed,
-        "gender": gender,
-        "dob": dob,
-        "district": district,
-        "city": city,
-        "address": address,
-        "bank": bank.toJson(),
-        "city_id": cityId,
-        "district_id": districtId,
-        "role": role,
-        "vendor": vendor?.toJson(),
-        "added_vendors":
-            addedVendors.map((e) => e.toJson()).toList(),
-      };
+      // ✅ SAFE dynamic mapping
+      vendors: (json['vendors'] as List<dynamic>? ?? [])
+          .map((e) => Map<String, dynamic>.from(e))
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+      'status': status,
+      'number': number,
+      'profile_url': profileUrl,
+      'reedemed': redeemed,
+      'gender': gender,
+      'dob': dob,
+      'city': city,
+      'district': district,
+      'city_id': cityId,
+      'district_id': districtId,
+      'address': address,
+      'role': role,
+      'bank': bank.toJson(),
+      'vendor': vendor.toJson(),
+
+      // ✅ dynamic list output
+      'vendors': vendors,
+    };
+  }
 }
 
 class Bank {
@@ -138,30 +159,32 @@ class Bank {
   String khalti;
 
   Bank({
-    this.name = "",
-    this.accountNumber = "",
-    this.branch = "",
-    this.holderName = "",
-    this.esewa = "",
-    this.khalti = "",
+    this.name = '',
+    this.accountNumber = '',
+    this.branch = '',
+    this.holderName = '',
+    this.esewa = '',
+    this.khalti = '',
   });
 
-  factory Bank.fromJson(Map<String, dynamic> json) => Bank(
-        name: json["name"]?.toString() ?? "",
-        accountNumber: json["account_number"]?.toString() ?? "",
-        branch: json["branch"]?.toString() ?? "",
-        holderName: json["holder_name"]?.toString() ?? "",
-        esewa: json["esewa"]?.toString() ?? "",
-        khalti: json["khalti"]?.toString() ?? "",
-      );
+  factory Bank.fromJson(Map<String, dynamic> json) {
+    return Bank(
+      name: json['name']?.toString() ?? '',
+      accountNumber: json['account_number']?.toString() ?? '',
+      branch: json['branch']?.toString() ?? '',
+      holderName: json['holder_name']?.toString() ?? '',
+      esewa: json['esewa']?.toString() ?? '',
+      khalti: json['khalti']?.toString() ?? '',
+    );
+  }
 
   Map<String, dynamic> toJson() => {
-        "name": name,
-        "account_number": accountNumber,
-        "branch": branch,
-        "holder_name": holderName,
-        "esewa": esewa,
-        "khalti": khalti,
+        'name': name,
+        'account_number': accountNumber,
+        'branch': branch,
+        'holder_name': holderName,
+        'esewa': esewa,
+        'khalti': khalti,
       };
 }
 
@@ -198,55 +221,5 @@ class Vendor {
         "number": vendorEmail,
         "display_price": displayPrice,
         "is_verified_account": isVerifiedAccount,
-      };
-}
-
-class AddedVendor {
-  int id;
-  int userId;
-  String shopName;
-  String panNumber;
-  String ownerName;
-  int displayPrice;
-  int isVerifiedAccount;
-  String createdAt;
-  String updatedAt;
-
-  AddedVendor({
-    this.id = 0,
-    this.userId = 0,
-    this.shopName = "",
-    this.panNumber = "",
-    this.ownerName = "",
-    this.displayPrice = 0,
-    this.isVerifiedAccount = 0,
-    this.createdAt = "",
-    this.updatedAt = "",
-  });
-
-  factory AddedVendor.fromJson(Map<String, dynamic> json) =>
-      AddedVendor(
-        id: json["id"] ?? 0,
-        userId: json["user_id"] ?? 0,
-        shopName: json["shop_name"] ?? "",
-        panNumber: json["pan_number"] ?? "",
-        ownerName: json["owner_name"] ?? "",
-        displayPrice: json["display_price"] ?? 0,
-        isVerifiedAccount:
-            json["is_verified_account"] ?? 0,
-        createdAt: json["created_at"] ?? "",
-        updatedAt: json["updated_at"] ?? "",
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "user_id": userId,
-        "shop_name": shopName,
-        "pan_number": panNumber,
-        "owner_name": ownerName,
-        "display_price": displayPrice,
-        "is_verified_account": isVerifiedAccount,
-        "created_at": createdAt,
-        "updated_at": updatedAt,
       };
 }

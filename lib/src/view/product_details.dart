@@ -85,7 +85,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           // Price and Redeem
           Row(
             children: [
-              userCon.user.value.data.role.toLowerCase() == "shopkeeper" && userCon.user.value.data.vendor!.displayPrice == true 
+              userCon.user.value.data.user.role.toLowerCase() == "shopkeeper" && userCon.user.value.data.user.vendor!.displayPrice == true 
                 ? Visibility(
                   visible: productCon.productList[widget.index].price != "0",
                   child: Column(

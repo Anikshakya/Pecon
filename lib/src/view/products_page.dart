@@ -143,7 +143,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                     //products price and rewar points
                                     Row(
                                       children: [
-                                        userCon.user.value.data.role.toLowerCase() == "shopkeeper" && userCon.user.value.data.vendor!.displayPrice == true 
+                                        userCon.user.value.data.user.role.toLowerCase() == "shopkeeper" && userCon.user.value.data.user.vendor.displayPrice == true 
                                           ? Visibility(
                                             visible: productCon.productList[index].price != "0",
                                             child: Column(

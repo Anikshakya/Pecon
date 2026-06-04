@@ -89,14 +89,14 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
 
     await userCon.getDistrictData(isNepal: true);
 
-    if (userCon.user.value.data.role.toLowerCase() == "technician") {
+    if (userCon.user.value.data.user.role.toLowerCase() == "technician") {
       if(userCon.shopkeeperIdControllers.isEmpty){
         userCon.addShopkeeperField();
       }
       await userCon.getShopkeeperList();
     }
 
-    final user = userCon.user.value.data;
+    final user = userCon.user.value.data.user;
 
     setState(() {
 
@@ -188,10 +188,10 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
       khaltiController.text = user.bank.khalti;
 
       // ===== SHOP / VENDOR =====
-      displayPrice = user.vendor?.displayPrice;
-      shopNameCon.text = user.vendor?.vendorName ?? "";
-      shopPanCon.text = user.vendor?.vendorPan ?? "";
-      shopOwnerCon.text = user.vendor?.vendorEmail ?? "";
+      displayPrice = user.vendor.displayPrice;
+      shopNameCon.text = user.vendor.vendorName ?? "";
+      shopPanCon.text = user.vendor.vendorPan ?? "";
+      shopOwnerCon.text = user.vendor.vendorEmail ?? "";
     });
   });
 }
@@ -406,7 +406,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
               onTap: showCupertinoDatePicker,
               readOnly: true,
               controller: dobController,
-              textInputAction: userCon.user.value.data.role.toLowerCase() == "customer" ? TextInputAction.done : TextInputAction.next,
+              textInputAction: userCon.user.value.data.user.role.toLowerCase() == "customer" ? TextInputAction.done : TextInputAction.next,
               headingText: "Date of Birth (AD)",
               filledColor: gray.withValues(alpha:0.2),
               isDropdown: true,
@@ -427,7 +427,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
 
             // ---------- shopkeeper ----------
             Visibility(
-              visible: userCon.user.value.data.role.toLowerCase() == "shopkeeper",
+              visible: userCon.user.value.data.user.role.toLowerCase() == "shopkeeper",
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -470,7 +470,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             ),
             //---------- Technician --------
             Visibility(
-              visible: userCon.user.value.data.role.toLowerCase() == "technician",
+              visible: userCon.user.value.data.user.role.toLowerCase() == "technician",
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -519,21 +519,41 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                                 ),
                             ],
                           ),
-                          Obx(() => userCon.showNameDisplays[index]
-                            ? Padding(
-                                padding: const EdgeInsets.only(top: 8, left: 8),
+                          Obx(() {
+                            if (!userCon.showNameDisplays[index]) {
+                              return const SizedBox.shrink();
+                            }
+
+                            final name = userCon.shopkeeperNames.length > index
+                                ? userCon.shopkeeperNames[index]
+                                : "";
+
+                            if (name.isEmpty) {
+                              return const Padding(
+                                padding: EdgeInsets.only(top: 8, left: 8),
                                 child: Text(
-                                  userCon.shopkeeperNames[index] == "" ? "N/A" : userCon.shopkeeperNames[index],
+                                  "N/A",
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: userCon.shopkeeperNames[index].startsWith('No shopkeeper') 
-                                      ? Colors.red 
-                                      : Colors.green,
+                                    color: Colors.grey,
                                   ),
                                 ),
-                              )
-                            : const SizedBox.shrink()
-                          ),
+                              );
+                            }
+
+                            final isError = name.startsWith('No shopkeeper');
+
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 8, left: 8),
+                              child: Text(
+                                name,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: isError ? Colors.red : Colors.green,
+                                ),
+                              ),
+                            );
+                          })
                         ],
                       );
                     },
@@ -789,12 +809,12 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     ownerName: shopOwnerCon.text.toString().trim(),
                     displayPrice: displayPrice,
                     //--technician--
-                    shopkeeperId: userCon.user.value.data.role.toLowerCase() == "technician" 
+                    shopkeeperId: userCon.user.value.data.user.role.toLowerCase() == "technician" 
                       ? userCon.shopkeeperIdControllers.map((e) => e.text.toString().trim()).toList()
                       : [],
                   );
                   setState(() {
-                    changedProfileImage = userCon.user.value.data.profileUrl;
+                    changedProfileImage = userCon.user.value.data.user.profileUrl;
                   });
               }
               : () async {

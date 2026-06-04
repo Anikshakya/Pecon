@@ -123,7 +123,7 @@ class _AccountPageState extends State<AccountPage> {
                         ),
                         Obx(()=>
                           Visibility(
-                            visible :   userCon.user.value.data.role.toLowerCase() == "shopkeeper" && userCon.user.value.data.vendor!.isVerifiedAccount == 1,
+                            visible :   userCon.user.value.data.user.role.toLowerCase() == "shopkeeper" && userCon.user.value.data.user.vendor.isVerifiedAccount == 1,
                             child: Column(
                               children: [
                                 _buildListTile('Product Return', Icons.arrow_back,
@@ -289,7 +289,7 @@ class _AccountPageState extends State<AccountPage> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(30),
                           child: CustomNetworkImage(
-                            imageUrl: userCon.user.value.data.profileUrl.toString(),
+                            imageUrl: userCon.user.value.data.user.profileUrl.toString(),
                             width: 40.sp,
                             height: 40.sp,
                             fit: BoxFit.cover,
@@ -300,11 +300,11 @@ class _AccountPageState extends State<AccountPage> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(userCon.user.value.data.name.toString(), style: poppinsBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
+                            Text(userCon.user.value.data.user.name.toString(), style: poppinsBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
                             SizedBox(height: 2.h),
-                            Text("Membership ID: ${userCon.user.value.data.id}", style: poppinsSemiBold(size: 9.sp, color: black.withValues(alpha:0.7)), maxLines: 2,),
+                            Text("Membership ID: ${userCon.user.value.data.user.id}", style: poppinsSemiBold(size: 9.sp, color: black.withValues(alpha:0.7)), maxLines: 2,),
                             Text(
-                              userCon.user.value.data.number.toString(),
+                              userCon.user.value.data.user.number.toString(),
                               style: poppinsMedium(size: 11.sp, color: black.withValues(alpha:0.6))
                             ),
                           ],
@@ -339,7 +339,7 @@ class _AccountPageState extends State<AccountPage> {
                                           ),
                                         ),
                                         TextSpan(
-                                          text: formatter.format(int.parse("${userCon.user.value.data.redeemed}")),
+                                          text: formatter.format(int.parse("${userCon.user.value.data.user.redeemed}")),
                                           style: poppinsSemiBold(color: white, size: 10.sp ),
                                         ),
                                       ],

@@ -39,9 +39,8 @@ class UserController extends GetxController {
 
   //shopkeeper id
   // List of text controllers for ID fields
-  RxList<TextEditingController> shopkeeperIdControllers = <TextEditingController>[].obs;
-  
-  // List to store matched names
+  RxList<TextEditingController> shopkeeperIdControllers =  <TextEditingController>[].obs;
+
   RxList<String> shopkeeperNames = <String>[].obs;
   
   // List to control visibility of name displays
@@ -63,10 +62,6 @@ class UserController extends GetxController {
         if(refresh == true){
           user.value = UserModel.fromJson(response);
           write(AppConstants().userData, UserModel.fromJson(response));
-          shopkeeperIdControllers.clear(); // Clear previous List
-          for (var data in user.value.data.addedVendors) {
-            shopkeeperIdControllers[data.id] = TextEditingController(text: data.shopName);
-          }
           isProfileLoading(false);
           return;
         }
@@ -84,6 +79,24 @@ class UserController extends GetxController {
         if(cacheData != "" && jsonEncode(cacheData) == jsonEncode(response)){
           user.value = cacheData.runtimeType.toString() == "_Map<String, dynamic>" ? UserModel.fromJson(cacheData) : cacheData;
         }
+
+        shopkeeperIdControllers.clear();
+        shopkeeperNames.clear();
+        showNameDisplays.clear();
+
+        for (var vendor in user.value.data.user.vendors) {
+          shopkeeperIdControllers.add(
+            TextEditingController(text: vendor["id"].toString()),
+          );
+
+          shopkeeperNames.add(vendor["name"].toString());
+
+          showNameDisplays.add(true); // ✅ CRITICAL FIX
+        }
+
+        shopkeeperIdControllers.refresh();
+        shopkeeperNames.refresh();
+        showNameDisplays.refresh();
 
       } else {
         if(cacheData != ""){
@@ -145,7 +158,7 @@ class UserController extends GetxController {
       var response = await ApiRepo.apiPost('api/profile/update', data, 'Update Profile');
       if(response != null && response['code'] == 201) {
         //shopkeeper update
-        if(user.value.data.role.toLowerCase() == "shopkeeper"){
+        if(user.value.data.user.role.toLowerCase() == "shopkeeper"){
           var response = await ApiRepo.apiPost('api/profile/shopkeeper/update', shopkeeperData, 'Update shopkeeper');
           if(response != null && response['code'] == 201) {
             await getUserData(true);
@@ -156,7 +169,7 @@ class UserController extends GetxController {
           }
         }
         //technician update
-        else if(user.value.data.role == "technician"){
+        else if(user.value.data.user.role.toLowerCase() == "technician"){
           var response = await ApiRepo.apiPost('api/profile/technician/update', technicianData, 'Update technician');
           if(response != null && response['status'] == 200) {
             await getUserData(true);
