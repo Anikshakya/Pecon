@@ -12,6 +12,7 @@ import 'package:pecon_app/src/widgets/custom_appbar.dart';
 import 'package:pecon_app/src/widgets/custom_button.dart';
 import 'package:pecon_app/src/widgets/custom_network_image.dart';
 import 'package:pecon_app/src/widgets/custom_toast.dart';
+import 'package:pecon_app/src/widgets/invalid_user_widget.dart';
 import 'package:pecon_app/src/widgets/partner_logo.dart';
 
 class HomePage extends StatefulWidget {
@@ -154,6 +155,25 @@ class _HomePageState extends State<HomePage> {
   }
 
   rewardsSection() {
+    if (userCon.isProfileLoading.value) {
+        return const SizedBox();
+      }
+
+    if (userCon.user.value.data.user.role.toLowerCase() == "customer" && userCon.user.value.data.user.status == 0) {
+        return verificationWarningContainer(
+          onRefresh: (){
+            userCon.getUserData(true);
+          }
+        );
+      }
+
+    if(userCon.user.value.data.user.role.toLowerCase() == "technician" && userCon.user.value.data.user.status == 0){
+        return verificationWarningContainer(
+          onRefresh: (){
+            userCon.getUserData(true);
+          }
+        );
+      }
     return Obx(()=> homeCon.isRedeemInfoLoading.isTrue
       ? Container(
         height: 300.h,
@@ -218,7 +238,7 @@ class _HomePageState extends State<HomePage> {
                                   Align(
                                     alignment: Alignment.bottomCenter,
                                     child: GestureDetector(
-                                      onTap: userCon.user.value.data.redeemed < item.points
+                                      onTap: userCon.user.value.data.user.redeemed < item.points
                                         ? (){
                                           showToast(
                                             isSuccess: false,
@@ -257,7 +277,7 @@ class _HomePageState extends State<HomePage> {
                                                   padding: EdgeInsets.symmetric(
                                                       horizontal: 8.sp, vertical: 4.sp),
                                                   decoration: BoxDecoration(
-                                                    color: userCon.user.value.data.redeemed < item.points
+                                                    color: userCon.user.value.data.user.redeemed < item.points
                                                         ? gray.withValues(alpha:0.5)
                                                         : maroon.withValues(alpha:.95),
                                                     borderRadius: BorderRadius.circular(6.sp),
@@ -266,7 +286,7 @@ class _HomePageState extends State<HomePage> {
                                                     text: TextSpan(
                                                       style: poppinsSemiBold(
                                                           size: 10.sp,
-                                                          color: userCon.user.value.data.redeemed < item.points
+                                                          color: userCon.user.value.data.user.redeemed < item.points
                                                               ? white
                                                               : black),
                                                       children: [
@@ -333,7 +353,7 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 // Prize info
                                 GestureDetector(
-                                  onTap: userCon.user.value.data.redeemed < lastItem.points
+                                  onTap: userCon.user.value.data.user.redeemed < lastItem.points
                                     ? (){
                                       showToast(
                                         isSuccess: false,
@@ -371,7 +391,7 @@ class _HomePageState extends State<HomePage> {
                                           Container(
                                             padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp), // Larger padding
                                             decoration: BoxDecoration(
-                                              color: userCon.user.value.data.redeemed < lastItem.points
+                                              color: userCon.user.value.data.user.redeemed < lastItem.points
                                                   ? gray.withValues(alpha:0.5)
                                                   : maroon.withValues(alpha:.95),
                                               borderRadius: BorderRadius.circular(6.sp),
@@ -379,7 +399,7 @@ class _HomePageState extends State<HomePage> {
                                             child: RichText(
                                               text: TextSpan(
                                                 style: poppinsSemiBold(
-                                                    size: 12.sp, color: userCon.user.value.data.redeemed < lastItem.points ? white : black),
+                                                    size: 12.sp, color: userCon.user.value.data.user.redeemed < lastItem.points ? white : black),
                                                 children: [
                                                   WidgetSpan(
                                                     child: Padding(
@@ -465,7 +485,7 @@ class _HomePageState extends State<HomePage> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(30),
                             child: CustomNetworkImage(
-                              imageUrl: userCon.user.value.data.profileUrl.toString(),
+                              imageUrl: userCon.user.value.data.user.profileUrl.toString(),
                               width: 40.sp,
                               height: 40.sp,
                               fit: BoxFit.cover,
@@ -476,11 +496,11 @@ class _HomePageState extends State<HomePage> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(userCon.user.value.data.name.toString(), style: poppinsBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
+                              Text(userCon.user.value.data.user.name.toString(), style: poppinsBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
                               SizedBox(height: 2.h),
-                              Text("Membership ID: ${userCon.user.value.data.id}", style: poppinsSemiBold(size: 9.sp, color: black.withValues(alpha:0.7)), maxLines: 2,),
+                              Text("Membership ID: ${userCon.user.value.data.user.id}", style: poppinsSemiBold(size: 9.sp, color: black.withValues(alpha:0.7)), maxLines: 2,),
                               Text(
-                                userCon.user.value.data.number.toString(),
+                                userCon.user.value.data.user.number.toString(),
                                 style: poppinsMedium(size: 11.sp, color: black.withValues(alpha:0.6))
                               ),
                             ],
@@ -515,7 +535,7 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                           TextSpan(
-                                            text: formatter.format(int.parse("${userCon.user.value.data.redeemed}")),
+                                            text: formatter.format(int.parse("${userCon.user.value.data.user.redeemed}")),
                                             style: poppinsSemiBold(color: white, size: 10.sp ),
                                           ),
                                         ],
@@ -548,6 +568,26 @@ class _HomePageState extends State<HomePage> {
 
       if (homeCon.topPerformer.isEmpty) {
         return const SizedBox(); // Hide the entire section
+      }
+
+      if (userCon.isProfileLoading.value) {
+        return const SizedBox();
+      }
+
+      if (userCon.user.value.data.user.role.toLowerCase() == "customer" && userCon.user.value.data.user.status == 0) {
+        return  verificationWarningContainer(
+          onRefresh: (){
+            userCon.getUserData(true);
+          }
+        );
+      }
+
+      if(userCon.user.value.data.user.role.toLowerCase() == "technician" && userCon.user.value.data.user.status == 0){
+        return verificationWarningContainer(
+          onRefresh: (){
+            userCon.getUserData(true);
+          }
+        );
       }
 
       final sortedPerformers = List.of(homeCon.topPerformer)..sort((a, b) => b.totalRedeem.compareTo(a.totalRedeem));
@@ -747,7 +787,7 @@ class _HomePageState extends State<HomePage> {
   redeemPrzeDialogue(redeemId){
     List<Map<String, String>> redeemeList;
 
-    if(userCon.user.value.data.role.toLowerCase() == "shopkeeper"){
+    if(userCon.user.value.data.user.role.toLowerCase() == "shopkeeper"){
       redeemeList = [
         {
           "name" : "Cash"
