@@ -63,40 +63,78 @@ class HomeController extends GetxController{
   getRedeemInformation({number, password}) async {
     redeemInfoData = [];
     var cacheData = read(AppConstants().homePrize);
-    try{
-      if(cacheData == "") isRedeemInfoLoading(true); // Start Loading
+    
+    try {
+      final userCon = Get.find<UserController>();
+      final bool isNepali = userCon.isNepaliUser.value;
+      
+      if (cacheData == "") isRedeemInfoLoading(true); // Start Loading
+      
       var response = await ApiRepo.apiGet('api/redeem-information', "", 'RedeemInfo API');
-      if(response != null && response['code'] == 200) {
-        if(cacheData == ""){
-          var allData = RedeemInformationModel.fromJson(response);
-          headerImage = allData.data!.headerImage!;
-          redeemInfoData = allData.data!.reedemInformation!;
-          write(AppConstants().homePrize, RedeemInformationModel.fromJson(response));
-        } 
-        if(cacheData != "" && jsonEncode(cacheData) != jsonEncode(response)){
-          var allData = cacheData.runtimeType.toString() == "_Map<String, dynamic>" ? RedeemInformationModel.fromJson(cacheData) : cacheData;
-          headerImage = allData.data!.headerImage!;
-          redeemInfoData = allData.data!.reedemInformation!;
-          write(AppConstants().homePrize, RedeemInformationModel.fromJson(response));
-        }
+      
+      if (response != null && response['code'] == 200) {
+        // 1. Extract the raw list from the API response safely
+        var rawList = response['data']?['reedemInformation'] as List? ?? [];
+        
+        // 2. Filter the list based on your exact location rule
+        List filteredList = rawList.where((item) {
+          String country = item['country'].toString().toLowerCase();
+          if (isNepali) {
+            return country == "nepal";
+          } else {
+            return country != "nepal"; // Gets everything that is NOT Nepal (India, Dubai, etc.)
+          }
+        }).toList();
 
-        if(cacheData != "" && jsonEncode(cacheData) == jsonEncode(response)){
-          var allData = cacheData.runtimeType.toString() == "_Map<String, dynamic>" ? RedeemInformationModel.fromJson(cacheData) : cacheData;
+        // 3. Reconstruct a valid map matching what your Model expects
+        Map<String, dynamic> filteredResponse = {
+          "status": response['status'],
+          "code": response['code'],
+          "message": response['message'],
+          "data": {
+            "header_image": response['data']?['header_image'],
+            "reedemInformation": filteredList
+          }
+        };
+
+        // 4. Handle Cache Comparison and State Updates
+        if (cacheData == "") {
+          var allData = RedeemInformationModel.fromJson(filteredResponse);
+          headerImage = allData.data!.headerImage!;
+          redeemInfoData = allData.data!.reedemInformation!;
+          write(AppConstants().homePrize, filteredResponse); // Save the clean Map structure
+        } 
+        else if (jsonEncode(cacheData) != jsonEncode(filteredResponse)) {
+          var allData = cacheData.runtimeType.toString() == "_Map<String, dynamic>" 
+              ? RedeemInformationModel.fromJson(cacheData) 
+              : cacheData;
+          headerImage = allData.data!.headerImage!;
+          redeemInfoData = allData.data!.reedemInformation!;
+          write(AppConstants().homePrize, filteredResponse);
+        }
+        else {
+          // Cache matches perfectly
+          var allData = cacheData.runtimeType.toString() == "_Map<String, dynamic>" 
+              ? RedeemInformationModel.fromJson(cacheData) 
+              : cacheData;
           headerImage = allData.data!.headerImage!;
           redeemInfoData = allData.data!.reedemInformation!;
         }
 
       } else {
-        if(cacheData != ""){
-          var allData = cacheData.runtimeType.toString() == "_Map<String, dynamic>" ? RedeemInformationModel.fromJson(cacheData) : cacheData;
+        // API call failed, fallback to cache if available
+        if (cacheData != "") {
+          var allData = cacheData.runtimeType.toString() == "_Map<String, dynamic>" 
+              ? RedeemInformationModel.fromJson(cacheData) 
+              : cacheData;
           headerImage = allData.data!.headerImage!;
           redeemInfoData = allData.data!.reedemInformation!;
         }
       }
-    }catch (e){
-      log(e.toString());
-    } finally{
-      if(cacheData == "") isRedeemInfoLoading(false); // Stop Loading
+    } catch (e) {
+      log("Error fetching redeem info: ${e.toString()}");
+    } finally {
+      if (cacheData == "") isRedeemInfoLoading(false); // Stop Loading
     }
   }
 
