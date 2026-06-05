@@ -26,6 +26,7 @@ class UserController extends GetxController {
   final RxBool isWithdrawalLoading = false.obs;
   final RxBool isshopkeeperLoading  = false.obs;
   final RxBool isTechLoading    = false.obs;
+  final RxBool isNepaliUser    = false.obs;
 
   // Logged In User Data
   var user = UserModel().obs;
@@ -79,6 +80,8 @@ class UserController extends GetxController {
         if(cacheData != "" && jsonEncode(cacheData) == jsonEncode(response)){
           user.value = cacheData.runtimeType.toString() == "_Map<String, dynamic>" ? UserModel.fromJson(cacheData) : cacheData;
         }
+
+        isNepaliUser.value = user.value.data.user.number.toString().startsWith("977");
 
         shopkeeperIdControllers.clear();
         shopkeeperNames.clear();

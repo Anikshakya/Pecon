@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:pecon_app/src/api_config/api_repo.dart';
 import 'package:pecon_app/src/app_config/constant.dart';
 import 'package:pecon_app/src/app_config/read_write.dart';
+import 'package:pecon_app/src/controllers/user_controller.dart';
 import 'package:pecon_app/src/model/ad_slider_model.dart';
 import 'package:pecon_app/src/model/redeeme_item_model.dart';
 import 'package:pecon_app/src/model/top_performer_model.dart';
@@ -104,7 +105,9 @@ class HomeController extends GetxController{
     var cacheData = read(AppConstants().homeTopFivePerformers);
     try{
       if(cacheData == "") isTop5PerformerLoading(true); // Start Loading
-      var response = await ApiRepo.apiGet('api/performers/report', "", 'Get Top 5 Performers');
+      var userCon = Get.put(UserController());
+      var path = userCon.isNepaliUser.value == true ? 'api/performers/report' : 'api/indian_performers/report';
+      var response = await ApiRepo.apiGet(path, "", 'Get Top 5 Performers');
       if(response != null && response['code'] == 200) {
         if(response["data"] != null && response["data"] != []){
           if(cacheData == ""){
