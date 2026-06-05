@@ -1,13 +1,13 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:pecon_app/src/app_config/styles.dart';
 import 'package:pecon_app/src/controllers/product_controller.dart';
 import 'package:pecon_app/src/controllers/user_controller.dart';
 import 'package:pecon_app/src/view/product_details.dart';
 import 'package:pecon_app/src/widgets/custom_button.dart';
 import 'package:pecon_app/src/widgets/custom_network_image.dart';
-import 'package:intl/intl.dart';
-import 'package:pecon_app/src/app_config/styles.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pecon_app/src/widgets/custom_text_field.dart';
 import 'package:pecon_app/src/widgets/customer_service_dialog.dart';
 
@@ -166,7 +166,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                                       children: [
                                                         const TextSpan(text: "₹  "),
                                                         TextSpan(
-                                                          text: formatter.format(double.parse(productCon.productList[index].price ?? "0")),
+                                                          text: formatter.format(double.parse(userCon.isNepaliUser.value == true ? productCon.productList[index].price ?? "0" : productCon.productList[index].priceInr ?? "0")),
                                                           style: poppinsSemiBold(color: green, size: 13.sp ),
                                                         ),
                                                       ],

@@ -40,6 +40,7 @@ class Product {
   final String watt;
   final String color;
   final String price;
+  final String priceInr;
   final String redeem;
   final String specification;
   final List<String> images;
@@ -53,6 +54,7 @@ class Product {
     this.watt = "",
     this.color = "",
     this.price = "0",
+    this.priceInr = "0",
     this.redeem = "0",
     this.specification = "",
     this.images = const [],
@@ -73,6 +75,7 @@ class Product {
         categoryId: json["category_id"] ?? 0,
         category: json["category"] != null ? Category.fromJson(json["category"]) : Category(),
         coverPhoto: json["cover_photo"] ?? "",
+        priceInr: json["price_inr"] ?? "0",
       );
 
   Map<String, dynamic> toJson() => {
@@ -87,6 +90,7 @@ class Product {
         "category_id": categoryId,
         "category": category.toJson(),
         "cover_photo": coverPhoto,
+        "price_inr": priceInr,
       };
 }
 
