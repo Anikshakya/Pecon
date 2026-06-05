@@ -98,11 +98,19 @@ class _HomePageState extends State<HomePage> {
       }
 
       if (userCon.user.value.data.user.role.toLowerCase() == "customer" && userCon.user.value.data.user.status == 0) {
-        return const SizedBox();
+        return verificationWarningContainer(
+          onRefresh: (){
+            userCon.getUserData(true);
+          }
+        );
       }
 
-      if(userCon.user.value.data.user.role.toLowerCase() == "technician" && userCon.user.value.data.user.status == 0){
-        return const SizedBox();
+    if(userCon.user.value.data.user.role.toLowerCase() == "technician" && userCon.user.value.data.user.status == 0){
+        return verificationWarningContainer(
+          onRefresh: (){
+            userCon.getUserData(true);
+          }
+        );
       }
 
       if(homeCon.isAdBannerLoading.isTrue){
@@ -177,20 +185,12 @@ class _HomePageState extends State<HomePage> {
         return const SizedBox();
       }
 
-    if (userCon.user.value.data.user.role.toLowerCase() == "customer" && userCon.user.value.data.user.status == 0) {
-        return verificationWarningContainer(
-          onRefresh: (){
-            userCon.getUserData(true);
-          }
-        );
+    if (userCon.user.value.data.user.role.toLowerCase() == "customer") {
+        return SizedBox();
       }
 
     if(userCon.user.value.data.user.role.toLowerCase() == "technician" && userCon.user.value.data.user.status == 0){
-        return verificationWarningContainer(
-          onRefresh: (){
-            userCon.getUserData(true);
-          }
-        );
+        return SizedBox();
       }
       if(homeCon.isRedeemInfoLoading.isTrue){
         return Container(
