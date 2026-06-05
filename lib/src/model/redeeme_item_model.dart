@@ -59,6 +59,7 @@ class Data {
 class ReedemInformation {
     int? id;
     String? title;
+    String? country;
     int? points;
     String? image;
     int? position;
@@ -68,6 +69,7 @@ class ReedemInformation {
     ReedemInformation({
         this.id,
         this.title,
+        this.country,
         this.points,
         this.image,
         this.position,
@@ -78,6 +80,7 @@ class ReedemInformation {
     factory ReedemInformation.fromJson(Map<String, dynamic> json) => ReedemInformation(
         id: json["id"],
         title: json["title"] ?? "",
+        country: json["country"] ?? "",
         points: json["points"] ?? "",
         image: json["image"] ?? "",
         position: json["position"],
@@ -88,6 +91,7 @@ class ReedemInformation {
     Map<String, dynamic> toJson() => {
         "id": id,
         "title": title,
+        "country": country,
         "points": points,
         "image": image,
         "position": position,

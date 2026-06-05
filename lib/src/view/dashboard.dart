@@ -43,12 +43,10 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     if(mounted){
       WidgetsBinding.instance.addPostFrameCallback((_) async{
+        await getData();
         setState(() {
          _selectedIndex = widget.initialIndex ?? 0;
         });
-        if(widget.initialIndex != 2){
-          await getData();
-        }
         appCon.sendAppUpdate();
       });
     }

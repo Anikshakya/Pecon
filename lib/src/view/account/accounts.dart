@@ -53,6 +53,9 @@ class _AccountPageState extends State<AccountPage> {
 
   getData() async {
     try {
+      // Get Logged In User data
+      await userCon.getUserData();
+
       final newVersion = NewVersionPlus(
         iOSId: iOSPackageName,
         iOSAppStoreCountry: 'JP',
@@ -65,8 +68,7 @@ class _AccountPageState extends State<AccountPage> {
       version = null; // handle gracefully
     }
 
-    // Get Logged In User data
-    await userCon.getUserData();
+    
 
     setState(() {
       isLoadingVersion = false;

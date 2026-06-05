@@ -63,87 +63,47 @@ class HomeController extends GetxController{
   getRedeemInformation({number, password}) async {
     redeemInfoData = [];
     var cacheData = read(AppConstants().homePrize);
-    
-    // Helper function to update state variables from a parsed model
-    void updateUIState(dynamic dataOrigin) {
-      var allData = dataOrigin is Map<String, dynamic> 
-          ? RedeemInformationModel.fromJson(dataOrigin) 
-          : dataOrigin;
-          
-      if (allData.data != null) {
-        headerImage = allData.data!.headerImage ?? '';
-        redeemInfoData = allData.data!.reedemInformation ?? [];
-      }
-    }
-
-    try {
-      final userCon = Get.find<UserController>();
-      final bool isNepali = userCon.isNepaliUser.value;
-      
-      // --- STEP 1: CACHE-FIRST APPROACH ---
-      // If cache exists, decode it and show it instantly so the UI isn't empty
-      if (cacheData != null && cacheData != "") {
-        try {
-          updateUIState(cacheData);
-        } catch (cacheError) {
-          log("Error reading initial cache: $cacheError");
-        }
-      } else {
-        isRedeemInfoLoading(true); // Only show loader if there is no cache
-      }
-      
-      // --- STEP 2: FETCH FRESH DATA ---
+    try{
+      if(cacheData == "") isRedeemInfoLoading(true); // Start Loading
       var response = await ApiRepo.apiGet('api/redeem-information', "", 'RedeemInfo API');
-      
-      if (response != null && response['code'] == 200) {
-        var rawList = response['data']?['reedemInformation'] as List? ?? [];
-        
-        // --- STEP 3: CLEAN AND FILTER BY COUNTRY ---
-        List filteredList = rawList.where((item) {
-          String country = (item['country'] ?? "").toString().toLowerCase().trim();
-          if (isNepali) {
-            return country == "nepal";
-          } else {
-            return country != "nepal"; // India, Dubai, etc.
-          }
-        }).toList();
-
-        // --- STEP 4: RECONSTRUCT VALID MAP PAYLOAD ---
-        Map<String, dynamic> filteredResponse = {
-          "status": response['status'],
-          "code": response['code'],
-          "message": response['message'],
-          "data": {
-            "header_image": response['data']?['header_image'] ?? response['data']?['header_image'], 
-            "reedemInformation": filteredList
-          }
-        };
-
-        // --- STEP 5: EVALUATE & UPDATE CACHE/UI ---
-        String newCacheString = jsonEncode(filteredResponse);
-        String oldCacheString = cacheData != "" ? jsonEncode(cacheData) : "";
-
-        // If the cache is empty, or the data (or country selection) changed, update state and cache
-        if (cacheData == "" || oldCacheString != newCacheString) {
-          updateUIState(filteredResponse);
-          write(AppConstants().homePrize, filteredResponse);
+      if(response != null && response['code'] == 200) {
+        if(cacheData == ""){
+          var allData = RedeemInformationModel.fromJson(response);
+          headerImage = allData.data!.headerImage!;
+          redeemInfoData = allData.data!.reedemInformation!;
+          write(AppConstants().homePrize, RedeemInformationModel.fromJson(response));
+        } 
+        if(cacheData != "" && jsonEncode(cacheData) != jsonEncode(response)){
+          var allData = cacheData.runtimeType.toString() == "_Map<String, dynamic>" ? RedeemInformationModel.fromJson(cacheData) : cacheData;
+          headerImage = allData.data!.headerImage!;
+          redeemInfoData = allData.data!.reedemInformation!;
+          write(AppConstants().homePrize, RedeemInformationModel.fromJson(response));
         }
-        
+
+        if(cacheData != "" && jsonEncode(cacheData) == jsonEncode(response)){
+          var allData = cacheData.runtimeType.toString() == "_Map<String, dynamic>" ? RedeemInformationModel.fromJson(cacheData) : cacheData;
+          headerImage = allData.data!.headerImage!;
+          redeemInfoData = allData.data!.reedemInformation!;
+        }
+
       } else {
-        // API failed, fallback handled gracefully because Step 1 already loaded the cache
-        log("API response error or code not 200");
+        if(cacheData != ""){
+          var allData = cacheData.runtimeType.toString() == "_Map<String, dynamic>" ? RedeemInformationModel.fromJson(cacheData) : cacheData;
+          headerImage = allData.data!.headerImage!;
+          redeemInfoData = allData.data!.reedemInformation!;
+        }
       }
-    } catch (e) {
-      log("Error fetching redeem info: ${e.toString()}");
-    } finally {
-      isRedeemInfoLoading(false); // Always turn off loader at the end
+    }catch (e){
+      log(e.toString());
+    } finally{
+      if(cacheData == "") isRedeemInfoLoading(false); // Stop Loading
     }
   }
 
   // Get Top 5 Performers
   Future<void> getTop5Performers() async {
     try {
-      final userCon = Get.find<UserController>();
+      final userCon = Get.put(UserController());
       final bool isNepali = userCon.isNepaliUser.value;
 
       final String cacheKey = isNepali
