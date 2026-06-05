@@ -191,9 +191,9 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
 
       // ===== SHOP / VENDOR =====
       displayPrice = user.vendor.displayPrice;
-      shopNameCon.text = user.vendor.vendorName ?? "";
-      shopPanCon.text = user.vendor.vendorPan ?? "";
-      shopOwnerCon.text = user.vendor.vendorEmail ?? "";
+      shopNameCon.text = user.vendor.vendorName;
+      shopPanCon.text = user.vendor.vendorPan;
+      shopOwnerCon.text = user.vendor.vendorEmail;
     });
   });
 }
