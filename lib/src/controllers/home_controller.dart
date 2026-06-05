@@ -64,77 +64,79 @@ class HomeController extends GetxController{
     redeemInfoData = [];
     var cacheData = read(AppConstants().homePrize);
     
+    // Helper function to update state variables from a parsed model
+    void updateUIState(dynamic dataOrigin) {
+      var allData = dataOrigin is Map<String, dynamic> 
+          ? RedeemInformationModel.fromJson(dataOrigin) 
+          : dataOrigin;
+          
+      if (allData.data != null) {
+        headerImage = allData.data!.headerImage ?? '';
+        redeemInfoData = allData.data!.reedemInformation ?? [];
+      }
+    }
+
     try {
       final userCon = Get.find<UserController>();
       final bool isNepali = userCon.isNepaliUser.value;
       
-      if (cacheData == "") isRedeemInfoLoading(true); // Start Loading
+      // --- STEP 1: CACHE-FIRST APPROACH ---
+      // If cache exists, decode it and show it instantly so the UI isn't empty
+      if (cacheData != null && cacheData != "") {
+        try {
+          updateUIState(cacheData);
+        } catch (cacheError) {
+          log("Error reading initial cache: $cacheError");
+        }
+      } else {
+        isRedeemInfoLoading(true); // Only show loader if there is no cache
+      }
       
+      // --- STEP 2: FETCH FRESH DATA ---
       var response = await ApiRepo.apiGet('api/redeem-information', "", 'RedeemInfo API');
       
       if (response != null && response['code'] == 200) {
-        // 1. Extract the raw list from the API response safely
         var rawList = response['data']?['reedemInformation'] as List? ?? [];
         
-        // 2. Filter the list based on your exact location rule
+        // --- STEP 3: CLEAN AND FILTER BY COUNTRY ---
         List filteredList = rawList.where((item) {
-          String country = item['country'].toString().toLowerCase();
+          String country = (item['country'] ?? "").toString().toLowerCase().trim();
           if (isNepali) {
             return country == "nepal";
           } else {
-            return country != "nepal"; // Gets everything that is NOT Nepal (India, Dubai, etc.)
+            return country != "nepal"; // India, Dubai, etc.
           }
         }).toList();
 
-        // 3. Reconstruct a valid map matching what your Model expects
+        // --- STEP 4: RECONSTRUCT VALID MAP PAYLOAD ---
         Map<String, dynamic> filteredResponse = {
           "status": response['status'],
           "code": response['code'],
           "message": response['message'],
           "data": {
-            "header_image": response['data']?['header_image'],
+            "header_image": response['data']?['header_image'] ?? response['data']?['header_image'], 
             "reedemInformation": filteredList
           }
         };
 
-        // 4. Handle Cache Comparison and State Updates
-        if (cacheData == "") {
-          var allData = RedeemInformationModel.fromJson(filteredResponse);
-          headerImage = allData.data!.headerImage!;
-          redeemInfoData = allData.data!.reedemInformation!;
-          write(AppConstants().homePrize, filteredResponse); // Save the clean Map structure
-        } 
-        else if (jsonEncode(cacheData) != jsonEncode(filteredResponse)) {
-          var allData = cacheData.runtimeType.toString() == "_Map<String, dynamic>" 
-              ? RedeemInformationModel.fromJson(cacheData) 
-              : cacheData;
-          headerImage = allData.data!.headerImage!;
-          redeemInfoData = allData.data!.reedemInformation!;
+        // --- STEP 5: EVALUATE & UPDATE CACHE/UI ---
+        String newCacheString = jsonEncode(filteredResponse);
+        String oldCacheString = cacheData != "" ? jsonEncode(cacheData) : "";
+
+        // If the cache is empty, or the data (or country selection) changed, update state and cache
+        if (cacheData == "" || oldCacheString != newCacheString) {
+          updateUIState(filteredResponse);
           write(AppConstants().homePrize, filteredResponse);
         }
-        else {
-          // Cache matches perfectly
-          var allData = cacheData.runtimeType.toString() == "_Map<String, dynamic>" 
-              ? RedeemInformationModel.fromJson(cacheData) 
-              : cacheData;
-          headerImage = allData.data!.headerImage!;
-          redeemInfoData = allData.data!.reedemInformation!;
-        }
-
+        
       } else {
-        // API call failed, fallback to cache if available
-        if (cacheData != "") {
-          var allData = cacheData.runtimeType.toString() == "_Map<String, dynamic>" 
-              ? RedeemInformationModel.fromJson(cacheData) 
-              : cacheData;
-          headerImage = allData.data!.headerImage!;
-          redeemInfoData = allData.data!.reedemInformation!;
-        }
+        // API failed, fallback handled gracefully because Step 1 already loaded the cache
+        log("API response error or code not 200");
       }
     } catch (e) {
       log("Error fetching redeem info: ${e.toString()}");
     } finally {
-      if (cacheData == "") isRedeemInfoLoading(false); // Stop Loading
+      isRedeemInfoLoading(false); // Always turn off loader at the end
     }
   }
 
