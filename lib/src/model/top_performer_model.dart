@@ -49,8 +49,8 @@ class Performers {
 
   factory Performers.fromJson(Map<String, dynamic> json) => Performers(
         user: json["user"] ?? "",
-        totalRedeem: json["total_redeem"] ?? 0,
-        userId: json["user_id"] ?? 0,
+        totalRedeem: int.tryParse(json["total_redeem"].toString()) ?? 0,
+        userId: int.tryParse(json["user_id"].toString()) ?? 0,
         profilePicture: json["profile_picture"] ?? "",
       );
 
