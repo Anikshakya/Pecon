@@ -102,66 +102,60 @@ class HomeController extends GetxController{
 
   // Get Top 5 Performers
   Future<void> getTop5Performers() async {
-  try {
-    final userCon = Get.find<UserController>();
-    final bool isNepali = userCon.isNepaliUser.value;
+    try {
+      final userCon = Get.find<UserController>();
+      final bool isNepali = userCon.isNepaliUser.value;
 
-    final String cacheKey = isNepali
-        ? AppConstants().homeTopFivePerformers
-        : "${AppConstants().homeTopFivePerformers}_indian";
+      final String cacheKey = isNepali
+          ? AppConstants().homeTopFivePerformers
+          : "${AppConstants().homeTopFivePerformers}_indian";
 
-    final String path = isNepali
-        ? 'api/performers/report'
-        : 'api/indian_performers/report';
+      final String path = isNepali
+          ? 'api/performers/report'
+          : 'api/indian_performers/report';
 
-    final cacheData = read(cacheKey);
+      isTop5PerformerLoading(true);
 
-    isTop5PerformerLoading(true);
+      final cacheData = read(cacheKey);
 
-    final response =
-        await ApiRepo.apiGet(path, "", 'Get Top 5 Performers');
+      final response = await ApiRepo.apiGet(path, "", 'Get Top 5 Performers');
 
-    /// ----------------------------
-    /// ✅ CASE 1: API SUCCESS
-    /// ----------------------------
-    if (response != null &&
-        response['success'] == true &&
-        response['data'] != null &&
-        response['data'] is List) {
+      bool success = response != null && (response['status'] == true || response['success'] == true);
 
-      final TopPerformers apiData = TopPerformers.fromJson(response);
+      /// ----------------------------
+      /// CASE 1: API SUCCESS
+      /// ----------------------------
+      if (success) {
+        final TopPerformers apiData = TopPerformers.fromJson(response);
 
-      topPerformer.clear();
-      topPerformer.addAll(apiData.data);
-      // topPerformer.refresh();
+        topPerformer
+          ..clear()
+          ..addAll(apiData.data);
 
-      // overwrite cache ALWAYS
-      write(cacheKey, response); // store raw json only (safe)
+        write(cacheKey, response);
+        return;
+      }
 
-      return;
+      /// ----------------------------
+      /// CASE 2: API FAIL → CACHE
+      /// ----------------------------
+      if (cacheData != null) {
+        final Map<String, dynamic> json = Map<String, dynamic>.from(cacheData);
+
+        final TopPerformers cachedData = TopPerformers.fromJson(json);
+
+        topPerformer
+          ..clear()
+          ..addAll(cachedData.data);
+      } else {
+        topPerformer.clear();
+      }
+
+    } catch (e) {
+      log("getTop5Performers Error: $e");
+    } finally {
+      isTop5PerformerLoading(false);
     }
-
-    /// ----------------------------
-    /// ❌ CASE 2: API FAIL → USE CACHE
-    /// ----------------------------
-    if (cacheData != null && cacheData.toString().isNotEmpty) {
-      final Map<String, dynamic> json =
-          cacheData is Map<String, dynamic>
-              ? cacheData
-              : Map<String, dynamic>.from(cacheData);
-
-      final TopPerformers data = TopPerformers.fromJson(json);
-
-      topPerformer.clear();
-      topPerformer.addAll(data.data);
-      // topPerformer.refresh();
-    }
-
-  } catch (e) {
-    log("getTop5Performers Error: $e");
-  } finally {
-    isTop5PerformerLoading(false);
   }
-}
 
 }
