@@ -143,7 +143,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                     //products price and rewar points
                                     Row(
                                       children: [
-                                        userCon.user.value.data.user.role.toLowerCase() == "shopkeeper" && userCon.user.value.data.user.vendor.displayPrice == true 
+                                        userCon.user.value.data.user.role.toLowerCase() != "shopkeeper" && userCon.user.value.data.user.vendor.displayPrice != true 
                                           ? Visibility(
                                             visible: productCon.productList[index].price != "0",
                                             child: Column(
@@ -164,9 +164,9 @@ class _ProductsPageState extends State<ProductsPage> {
                                                     text: TextSpan(
                                                       style: poppinsSemiBold(size: 11.sp, color: black.withValues(alpha:0.5)),
                                                       children: [
-                                                        const TextSpan(text: "₹  "),
+                                                        TextSpan(text: userCon.isNepaliUser.value == true ? "रु  " : "₹  "),
                                                         TextSpan(
-                                                          text: formatter.format(double.parse(userCon.isNepaliUser.value == true ? productCon.productList[index].price ?? "0" : productCon.productList[index].priceInr ?? "0")),
+                                                          text: formatter.format(double.parse(userCon.isNepaliUser.value == true ? "${productCon.productList[index].price} (NPR)" : "${productCon.productList[index].priceInr} (INR) }")),
                                                           style: poppinsSemiBold(color: green, size: 13.sp ),
                                                         ),
                                                       ],

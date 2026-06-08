@@ -125,7 +125,7 @@ class _AccountPageState extends State<AccountPage> {
                         ),
                         Obx(()=>
                           Visibility(
-                            visible :   userCon.user.value.data.user.role.toLowerCase() == "shopkeeper" && userCon.user.value.data.user.vendor.isVerifiedAccount == 1,
+                            visible : userCon.user.value.data.user.role.toLowerCase() == "shopkeeper" && userCon.user.value.data.user.vendor.isVerifiedAccount == 1,
                             child: Column(
                               children: [
                                 _buildListTile('Product Return', Icons.arrow_back,
