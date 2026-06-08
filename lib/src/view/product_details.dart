@@ -87,34 +87,43 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             children: [
               userCon.user.value.data.user.role.toLowerCase() == "shopkeeper" && userCon.user.value.data.user.vendor.displayPrice == true 
                 ? Visibility(
-                  visible: productCon.productList[widget.index].price != "0",
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withValues(alpha:0.5)),),
-                      SizedBox(height: 4.h),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                        decoration: BoxDecoration(
-                          color: gray.withValues(alpha:0.2),
-                          borderRadius: BorderRadius.circular(6.sp),
-                        ),
-                        child: RichText(
-                          text: TextSpan(
-                            style: poppinsSemiBold(size: 11.sp, color: black.withValues(alpha:0.5)),
-                            children: [
+                    visible: productCon.productList[widget.index].price.toString() != "0" && productCon.productList[widget.index].priceInr.toString() != "0",
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withValues(alpha:0.5)),),
+                        SizedBox(height: 4.h),
+                        Container(
+                          constraints: BoxConstraints(
+                            maxWidth: 90.w,
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                          decoration: BoxDecoration(
+                            color: gray.withValues(alpha:0.2),
+                            borderRadius: BorderRadius.circular(6.sp),
+                          ),
+                          child: RichText(
+                            text: TextSpan(
+                              style: poppinsSemiBold(size: 11.sp, color: black.withValues(alpha:0.5)),
+                              children: [
                                 TextSpan(text: userCon.isNepaliUser.value == true ? "रु  " : "₹  "),
                                 TextSpan(
-                                  text: formatter.format(double.parse(userCon.isNepaliUser.value == true ? "${productCon.productList[widget.index].price} (NPR)" : "${productCon.productList[widget.index].priceInr} (INR) }")),
-                                style: poppinsSemiBold(color: green, size: 13.sp ),
-                              ),
-                            ],
-                          ),
+                                  text: "${formatter.format(
+                                    double.parse(
+                                      userCon.isNepaliUser.value
+                                          ? productCon.productList[widget.index].price.toString()
+                                          : productCon.productList[widget.index].priceInr.toString(),
+                                    ),
+                                  )} ${userCon.isNepaliUser.value ? '(NPR)' : '(INR)'}",
+                                  style: poppinsSemiBold(color: green, size: 13.sp ),
+                                ),
+                              ],
+                            ),  
+                          )
                         )
-                      )
-                    ],
-                  ),
-                )
+                      ],
+                    ),
+                  )
                 : Visibility(
                   visible: productCon.productList[widget.index].category.name != "",
                   child: Column(
