@@ -143,9 +143,9 @@ class _ProductsPageState extends State<ProductsPage> {
                                     //products price and rewar points
                                     Row(
                                       children: [
-                                        userCon.user.value.data.user.role.toLowerCase() != "shopkeeper" && userCon.user.value.data.user.vendor.displayPrice != true 
+                                        userCon.user.value.data.user.role.toLowerCase() == "shopkeeper" && userCon.user.value.data.user.vendor.displayPrice == true 
                                           ? Visibility(
-                                            visible: productCon.productList[index].price != "0",
+                                            visible: productCon.productList[index].price.toString() != "0" && productCon.productList[index].priceInr.toString() != "0",
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
@@ -166,7 +166,13 @@ class _ProductsPageState extends State<ProductsPage> {
                                                       children: [
                                                         TextSpan(text: userCon.isNepaliUser.value == true ? "रु  " : "₹  "),
                                                         TextSpan(
-                                                          text: formatter.format(double.parse(userCon.isNepaliUser.value == true ? "${productCon.productList[index].price} (NPR)" : "${productCon.productList[index].priceInr} (INR) }")),
+                                                          text: "${formatter.format(
+                                                            double.parse(
+                                                              userCon.isNepaliUser.value
+                                                                  ? productCon.productList[index].price.toString()
+                                                                  : productCon.productList[index].priceInr.toString(),
+                                                            ),
+                                                          )} ${userCon.isNepaliUser.value ? '(NPR)' : '(INR)'}",
                                                           style: poppinsSemiBold(color: green, size: 13.sp ),
                                                         ),
                                                       ],
