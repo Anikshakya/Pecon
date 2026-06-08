@@ -145,7 +145,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                       children: [
                                         userCon.user.value.data.user.role.toLowerCase() == "shopkeeper" && userCon.user.value.data.user.vendor.displayPrice == true 
                                           ? Visibility(
-                                            visible: productCon.productList[index].price.toString() != "0" && productCon.productList[index].priceInr.toString() != "0",
+                                            visible: productCon.productList[index].price.toString() != "0" || productCon.productList[index].priceInr.toString() != "0",
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
