@@ -59,15 +59,7 @@ class _EarningHistoryPageState extends State<EarningHistoryPage> {
                 ),
               ),
             )
-            : userCon.earningList.isEmpty
-            ? SizedBox(
-              height: 650.0.h,
-              child: const Center(
-                child: Text("Nothing to Show")
-              ),
-            )
-            : 
-            Column(
+            : Column(
               children: [
                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -104,7 +96,15 @@ class _EarningHistoryPageState extends State<EarningHistoryPage> {
                       ),
                     ],
                   ),
-                ListView.separated(
+
+                  userCon.earningList.isEmpty
+                  ? SizedBox(
+                    height: 650.0.h,
+                    child: const Center(
+                      child: Text("No Data")
+                    ),
+                  ) 
+                  : ListView.separated(
                   separatorBuilder: (context, index) => 
                     Divider(
                       color: gray.withValues(alpha:0.25),

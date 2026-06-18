@@ -149,7 +149,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Text("MRP", style: poppinsSemiBold(size: 10.sp, color: black.withValues(alpha:0.5)),),
+                                                Text("MRP${userCon.isNepaliUser.value ? '(NPR)' : '(INR)'}", style: poppinsSemiBold(size: 10.sp, color: black.withValues(alpha:0.5)),),
                                                 SizedBox(height: 4.h),
                                                 Container(
                                                   constraints: BoxConstraints(
@@ -172,7 +172,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                                                   ? productCon.productList[index].price.toString()
                                                                   : productCon.productList[index].priceInr.toString(),
                                                             ),
-                                                          )} ${userCon.isNepaliUser.value ? '(NPR)' : '(INR)'}",
+                                                          )} ",
                                                           style: poppinsSemiBold(color: green, size: 13.sp ),
                                                         ),
                                                       ],

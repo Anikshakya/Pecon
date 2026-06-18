@@ -207,18 +207,18 @@ class Vendor {
 
   factory Vendor.fromJson(Map<String, dynamic> json) => Vendor(
         id: json["id"] == "" ? 0 : json["id"] ?? 0,
-        vendorName: json["name"] ?? "",
-        vendorPan: json["email"] ?? "",
-        vendorEmail: json["number"] ?? "",
+        vendorName: json["shop_name"] ?? "",
+        vendorPan: json["pan_number"] ?? "",
+        vendorEmail: json["owner_name"] ?? "",
         displayPrice: json["display_price"] ?? false,
         isVerifiedAccount: json["is_verified_account"] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "name": vendorName,
-        "email": vendorPan,
-        "number": vendorEmail,
+        "shop_name": vendorName,
+        "pan_number": vendorPan,
+        "owner_name": vendorEmail,
         "display_price": displayPrice,
         "is_verified_account": isVerifiedAccount,
       };
