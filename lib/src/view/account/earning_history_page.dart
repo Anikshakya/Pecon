@@ -125,7 +125,7 @@ class _EarningHistoryPageState extends State<EarningHistoryPage> {
                           SizedBox(width: 24.w,),
                           //products name and desc
                           SizedBox(
-                            width: 292.w,
+                            width: 280.w,
                             child: Row(
                               children: [
                                 SizedBox(

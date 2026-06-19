@@ -116,150 +116,226 @@ class _WithdrawalRequestPageState extends State<WithdrawalRequestPage> {
                   itemCount: userCon.withdrawalList.length,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0.sp,vertical: 16.0.sp),
-                      color: white,
-                      child: Row(
-                        children: [
-                          //products image
-                          Container(
-                            decoration: BoxDecoration(
-                              color: gray.withValues(alpha:0.1),
-                              border: Border.all(
-                                color: gray.withValues(alpha:0.25), width: 0.8.sp
-                              ),
-                              borderRadius: BorderRadius.circular(6.sp),
+                 itemBuilder: (context, index) {
+                  final item = userCon.withdrawalList[index];
+                  final redeemInfo = item.redeeminformation;
+
+                  return Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.0.sp,
+                      vertical: 16.0.sp,
+                    ),
+                    color: white,
+                    child: Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: gray.withValues(alpha: 0.1),
+                            border: Border.all(
+                              color: gray.withValues(alpha: 0.25),
+                              width: 0.8.sp,
                             ),
-                            height: 80.sp,
-                            width: 80.sp,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(6.sp),
-                              child: CustomNetworkImage(
-                                imageUrl: userCon.withdrawalList[index].redeeminformation.image.toString(),
-                                height: 80.sp,
-                                width: 80.sp,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                            borderRadius: BorderRadius.circular(6.sp),
                           ),
-                          SizedBox(width: 12.0.w,),
-                          //products name and desc
-                          SizedBox(
-                            width: 176.w,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(height: 3.h),
-                                Text(userCon.withdrawalList[index].redeeminformation.title.toString(), style: poppinsSemiBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 2,),
-                                SizedBox(height: 8.h),
-                                Visibility(
-                                  visible: userCon.withdrawalList[index].status!= "",
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        "Status: ".toUpperCase(),
-                                        style: poppinsSemiBold(color: black.withValues(alpha:.5), size: 11.sp ),
-                                      ),
-                                      SizedBox(width: 4.w,),
-                                      Container(
-                                        constraints: BoxConstraints(
-                                          maxWidth: 190.w,
-                                        ),
-                                        padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                                        decoration: BoxDecoration(
-                                          color: userCon.withdrawalList[index].status.toString().toLowerCase() == "rejected" ? red.withValues(alpha:0.9) : userCon.withdrawalList[index].status.toString().toLowerCase() == "approved" ? green.withValues(alpha:0.9) : primary.withValues(alpha:0.9),
-                                          borderRadius: BorderRadius.circular(6.sp),
-                                        ),
-                                        child: Text(
-                                          userCon.withdrawalList[index].status.toString().toUpperCase(),
-                                          style: poppinsSemiBold(color: black.withValues(alpha:.9), size: 12.sp ),
-                                        )
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(height: 10.h),
-                                Visibility(
-                                  visible: userCon.withdrawalList[index].customerPaymentOption != "",
-                                  child: Container(
-                                    constraints: BoxConstraints(
-                                      maxWidth: 190.w,
-                                    ),
-                                    padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                                    decoration: BoxDecoration(
-                                      color: gray.withValues(alpha:0.2),
-                                      borderRadius: BorderRadius.circular(6.sp),
-                                    ),
-                                    child: Text(
-                                      "Gift Type: ${userCon.withdrawalList[index].customerPaymentOption.toString().toUpperCase()}",
-                                      style: poppinsSemiBold(color: black.withValues(alpha:.5), size: 11.sp ),
-                                    )
-                                  ),
-                                ),
-                                SizedBox(height: 6.h),
-                                Visibility(
-                                  visible: userCon.withdrawalList[index].remarks!= "",
-                                  child: Container(
-                                    constraints: BoxConstraints(
-                                      maxWidth: 190.w,
-                                    ),
-                                    padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                                    decoration: BoxDecoration(
-                                      color: gray.withValues(alpha:0.2),
-                                      borderRadius: BorderRadius.circular(6.sp),
-                                    ),
-                                    child: Text(
-                                      "Remarks: ${userCon.withdrawalList[index].remarks.toString()}",
-                                      style: poppinsSemiBold(color: black.withValues(alpha:.5), size: 11.sp ),
-                                    )
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const Spacer(),
-                          //products price and rewar points
-                          Row(
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text("Used Points", style: poppinsSemiBold(size: 11.sp, color: black.withValues(alpha:0.5)),),
-                                  SizedBox(height: 4.h),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                                    decoration: BoxDecoration(
-                                      color: maroon.withValues(alpha:0.95),
-                                      borderRadius: BorderRadius.circular(6.sp),
-                                    ),
-                                    child: RichText(
-                                      text: TextSpan(
-                                        style: poppinsSemiBold(size: 11.sp, color: black),
-                                        children: [
-                                          WidgetSpan(
-                                            child: Padding(
-                                              padding: EdgeInsets.only(right: 4.sp),
-                                              child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp)
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: formatter.format(double.parse(userCon.withdrawalList[index].redeemPointsUsed.toString())),
-                                            style: poppinsSemiBold(color: white, size: 12.sp ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
+                          height: 80.sp,
+                          width: 80.sp,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(6.sp),
+                            child: redeemInfo?.image.isNotEmpty == true
+                                ? CustomNetworkImage(
+                                    imageUrl: redeemInfo!.image,
+                                    height: 80.sp,
+                                    width: 80.sp,
+                                    fit: BoxFit.cover,
                                   )
-                                ],
+                                : Icon(
+                                    Icons.account_balance_wallet_outlined,
+                                    size: 30.sp,
+                                    color: grey1,
+                                  ),
+                          ),
+                        ),
+                        SizedBox(width: 12.w),
+
+                        SizedBox(
+                          width: 176.w,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                redeemInfo?.title ??
+                                    "${item.customerPaymentOption.toUpperCase()} Withdrawal",
+                                style: poppinsSemiBold(
+                                  size: 14.sp,
+                                  color: black,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
+
+                              SizedBox(height: 8.h),
+
+                              Visibility(
+                                visible: item.status.isNotEmpty,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "STATUS:",
+                                      style: poppinsSemiBold(
+                                        color: black.withValues(alpha: .5),
+                                        size: 11.sp,
+                                      ),
+                                    ),
+                                    SizedBox(width: 4.w),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 8.sp,
+                                        vertical: 4.sp,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: item.status.toLowerCase() == "rejected"
+                                            ? red.withValues(alpha: .9)
+                                            : item.status.toLowerCase() == "approved"
+                                                ? green.withValues(alpha: .9)
+                                                : primary.withValues(alpha: .9),
+                                        borderRadius:
+                                            BorderRadius.circular(6.sp),
+                                      ),
+                                      child: Text(
+                                        item.status.toUpperCase(),
+                                        style: poppinsSemiBold(
+                                          color: white,
+                                          size: 11.sp,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              SizedBox(height: 8.h),
+
+                              Visibility(
+                                visible:
+                                    item.customerPaymentOption.isNotEmpty,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8.sp,
+                                    vertical: 4.sp,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: gray.withValues(alpha: .2),
+                                    borderRadius:
+                                        BorderRadius.circular(6.sp),
+                                  ),
+                                  child: Text(
+                                    "Payment Type: ${item.customerPaymentOption.toUpperCase()}",
+                                    style: poppinsSemiBold(
+                                      color: black.withValues(alpha: .5),
+                                      size: 11.sp,
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              SizedBox(height: 6.h),
+
+                              Visibility(
+                                visible: item.remarks.isNotEmpty,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8.sp,
+                                    vertical: 4.sp,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: gray.withValues(alpha: .2),
+                                    borderRadius:
+                                        BorderRadius.circular(6.sp),
+                                  ),
+                                  child: Text(
+                                    "Remarks: ${item.remarks}",
+                                    style: poppinsSemiBold(
+                                      color: black.withValues(alpha: .5),
+                                      size: 11.sp,
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              if (item.createdAt != null)
+                                Padding(
+                                  padding: EdgeInsets.only(top: 6.h),
+                                  child: Text(
+                                    DateFormat("dd MMM yyyy")
+                                        .format(item.createdAt!),
+                                    style: poppinsRegular(
+                                      size: 11.sp,
+                                      color: grey1,
+                                    ),
+                                  ),
+                                ),
                             ],
-                          )
-                        ],
-                      ),
-                    );
-                  },
+                          ),
+                        ),
+
+                        const Spacer(),
+
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              "Used Points",
+                              style: poppinsSemiBold(
+                                size: 11.sp,
+                                color: black.withValues(alpha: 0.5),
+                              ),
+                            ),
+
+                            SizedBox(height: 4.h),
+
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8.sp,
+                                vertical: 4.sp,
+                              ),
+                              decoration: BoxDecoration(
+                                color: maroon.withValues(alpha: .95),
+                                borderRadius:
+                                    BorderRadius.circular(6.sp),
+                              ),
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    WidgetSpan(
+                                      child: Padding(
+                                        padding:
+                                            EdgeInsets.only(right: 4.sp),
+                                        child: Image.asset(
+                                          "assets/images/golden_star.png",
+                                          height: 14.sp,
+                                          width: 14.sp,
+                                        ),
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: formatter.format(
+                                        item.redeemPointsUsed.toDouble(),
+                                      ),
+                                      style: poppinsSemiBold(
+                                        color: white,
+                                        size: 12.sp,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
                 ),
                 Divider(
                   color: gray.withValues(alpha:0.25),
