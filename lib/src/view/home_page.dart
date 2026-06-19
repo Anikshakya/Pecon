@@ -242,7 +242,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           /// HEADER IMAGE
           CustomNetworkImage(
-            imageUrl: homeCon.headerImage.toString(),
+            imageUrl: userCon.isNepaliUser.value == true ? appCon.redeemImageNp : appCon.redeemImageIn,
             height: 120.h,
             width: 300.w,
             borderRadius: 8.r,

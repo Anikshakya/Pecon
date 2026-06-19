@@ -17,6 +17,7 @@ import 'package:pecon_app/src/api_config/api_repo.dart';
 import 'package:pecon_app/src/app_config/constant.dart';
 import 'package:pecon_app/src/app_config/read_write.dart';
 import 'package:pecon_app/src/app_config/styles.dart';
+import 'package:pecon_app/src/controllers/user_controller.dart';
 import 'package:pecon_app/src/widgets/custom_network_image.dart';
 import 'package:version/version.dart';
 
@@ -36,6 +37,7 @@ enum AppStartResult {
 }
 
 class AppController extends GetxController {
+  
   // ============================
   // UPDATE STATE
   // ============================
@@ -47,7 +49,8 @@ class AppController extends GetxController {
   RxString version = ''.obs;
 
   final RxBool isBannerLoading = false.obs;
-  var adBanner = "";
+  var adBannerNepal = "";
+  var adBannerIndia = "";
 
   // ============================
   // STORAGE
@@ -72,6 +75,8 @@ class AppController extends GetxController {
   String tiktok = "";
   String instagram = "";
   String youtube = "";
+  String redeemImageNp = "";
+  String redeemImageIn = "";
 
   // ============================
   // SPLASH MEDIA
@@ -175,6 +180,8 @@ class AppController extends GetxController {
         tiktok = response["data"]["tiktok_link"] ?? "";
         instagram = response["data"]["instagram_link"] ?? "";
         youtube = response["data"]["youtube_link"] ?? "";
+        redeemImageNp = response["data"]["redeem_information_image"] ?? "";
+        redeemImageIn = response["data"]["redeem_information_image_in"] ?? "";
 
         final launcher = response["data"]["lunch_screen_image"] ?? "";
         if (launcher.isEmpty) return false;
@@ -360,8 +367,9 @@ class AppController extends GetxController {
   // AD DIALOG
   // ============================
   Future<void>? showAdDialog() async {
+    final UserController userCon = Get.put(UserController());
     await getAdBanner();
-    if (adBanner.isEmpty) return;
+    if (adBannerNepal.isEmpty) return;
 
     return Get.dialog(
       Dialog(
@@ -387,7 +395,7 @@ class AppController extends GetxController {
                       : ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: CustomNetworkImage(
-                            imageUrl: adBanner,
+                            imageUrl: userCon.isNepaliUser.value == true ? adBannerNepal: adBannerIndia,
                             borderRadius: 10,
                             fit: BoxFit.cover,
                           ),
@@ -425,7 +433,21 @@ class AppController extends GetxController {
           await ApiRepo.apiGet('api/ads_banner', "", 'SettingApiAPI');
 
       if (response != null && response['code'] == 200) {
-        adBanner = response["data"]?["image"] ?? "";
+        final List<dynamic> banners = response['data'] ?? [];
+
+        adBannerNepal = banners
+            .firstWhere(
+              (e) => e['country'] == 'nepal',
+              orElse: () => {},
+            )['image'] ??
+            '';
+
+        adBannerIndia = banners
+            .firstWhere(
+              (e) => e['country'] == 'india',
+              orElse: () => {},
+            )['image'] ??
+            '';
       }
     } catch (e) {
       log("Ad Banner Error: $e");
