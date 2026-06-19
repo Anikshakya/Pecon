@@ -83,7 +83,7 @@ class _SplashScreenState extends State<SplashScreen> {
       _calledNext = false;
     });
 
-    await Future.delayed(const Duration(seconds: 4), () async{
+    await Future.delayed(const Duration(seconds: 3), () async{
       await _routeNext();
     });
 

@@ -128,7 +128,8 @@ class AppController extends GetxController {
 
           final updateAvailable = await _isUpdateAvailableCheck();
           if (updateAvailable) {
-            _showUpdateDialog();
+            _openStore();
+            // _showUpdateDialog();
             return AppStartResult.blockedByUpdate;
             // DO NOT return here → allow app to continue
           }
