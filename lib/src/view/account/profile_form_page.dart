@@ -316,9 +316,11 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
               keyboardType: TextInputType.number,
               headingText: "Mobile Number",
               filledColor: gray.withValues(alpha:0.2),
-              validator: (value) => value != "" && value!.length == 13
+              validator: (value) => value != "" && value!.length == (userCon.isNepaliUser.value == true ? 13 : 12)
                   ? null
-                  : "Enter a valid 13-digit mobile number",
+                  : userCon.isNepaliUser.value == true 
+                    ? "Enter a valid 13-digit mobile number"
+                    : "Enter a valid 12-digit mobile number",
             ),
             SizedBox(height: 20.h),
             //Email
@@ -458,11 +460,19 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                     controller: shopPanCon,
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.number,
-                    headingText: "Shop PAN no.",
+                    headingText: userCon.isNepaliUser.value == true ? "Shop PAN no." : "GST no.",
                     filledColor: gray.withValues(alpha:0.2),
-                    validator: (value) => value != ""
-                      ? null
-                      : "Required",
+                    validator: (value) {
+                      if(userCon.isNepaliUser.value == true){
+                        return value != "" 
+                          ? null
+                          : "Required";
+                      } else {
+                        return value != null && value.length == 15
+                          ? null
+                          : "Enter a valid 15-digit GST number";
+                      }
+                    } 
                   ),
                   SizedBox(height: 20.h),
                   // Owner Name
