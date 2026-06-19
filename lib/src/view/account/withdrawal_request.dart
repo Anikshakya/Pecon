@@ -117,13 +117,6 @@ class _WithdrawalRequestPageState extends State<WithdrawalRequestPage> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    if(userCon.withdrawalList[index].redeeminformation == null){
-                      return const SizedBox(
-                        child: Center(
-                          child: Text("No Data"),
-                        ),
-                      );
-                    }
                     return Container(
                       padding: EdgeInsets.symmetric(horizontal: 16.0.sp,vertical: 16.0.sp),
                       color: white,

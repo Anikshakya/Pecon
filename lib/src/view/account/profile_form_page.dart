@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:nepali_date_picker/nepali_date_picker.dart' as nepali;
+import 'package:nepali_utils/nepali_utils.dart';
 import 'package:pecon_app/src/app_config/styles.dart';
 import 'package:pecon_app/src/app_config/validator.dart';
 import 'package:pecon_app/src/controllers/user_controller.dart';
@@ -13,8 +15,6 @@ import 'package:pecon_app/src/widgets/custom_appbar.dart';
 import 'package:pecon_app/src/widgets/custom_button.dart';
 import 'package:pecon_app/src/widgets/custom_network_image.dart';
 import 'package:pecon_app/src/widgets/custom_textfieldheader.dart';
-import 'package:nepali_utils/nepali_utils.dart';
-import 'package:nepali_date_picker/nepali_date_picker.dart' as nepali;
 
 
 class ProfileFormPage extends StatefulWidget {
@@ -675,10 +675,10 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             controller: esewaController,
             textInputAction: TextInputAction.next,
             keyboardType: TextInputType.number,
-            headingText: "Esewa Number",
+            headingText: userCon.isNepaliUser.value != true ? "IFSC CODE" : "Esewa Number",
             filledColor: gray.withValues(alpha:0.2),
             inputFormatters: [
-              LengthLimitingTextInputFormatter(10),
+              LengthLimitingTextInputFormatter(userCon.isNepaliUser.value != true ? 11 : 10),
             ],
           ),
           SizedBox(height: 20.h),
@@ -687,7 +687,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             controller: khaltiController,
             textInputAction: TextInputAction.done,
             keyboardType: TextInputType.number,
-            headingText: "Khalti Number",
+            headingText: userCon.isNepaliUser.value != true ? "UPI no./id" : "Khalti Number",
             filledColor: gray.withValues(alpha:0.2),
             inputFormatters: [
               LengthLimitingTextInputFormatter(10),

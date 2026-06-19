@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
   // APP START FLOW
   // ============================
   Future<void> _initialize() async {
-  appCon.getAppVersion();
+    appCon.getAppVersion();
     final result = await appCon.startApp();
 
     switch (result) {

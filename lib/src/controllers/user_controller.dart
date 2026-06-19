@@ -406,7 +406,7 @@ class UserController extends GetxController {
       isDistrictLoading(true);
       districtList.clear();
 
-      final response = await ApiRepo.apiGet(
+      final response = await ApiRepo.apiGet( 
         isNepal ? 'api/nepal' : 'api/india',
         "",
         'Get Districts List',
