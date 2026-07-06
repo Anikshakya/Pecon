@@ -105,73 +105,210 @@ class _EarningHistoryPageState extends State<EarningHistoryPage> {
                     ),
                   ) 
                   : ListView.separated(
-                  separatorBuilder: (context, index) => 
-                    Divider(
-                      color: gray.withValues(alpha:0.25),
+                    separatorBuilder: (context, index) => Divider(
+                      color: gray.withValues(alpha: 0.25),
                       thickness: 0.8.sp,
                       height: 0,
                     ),
-                  itemCount: userCon.earningList.length,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0.sp,vertical: 16.0.sp),
-                      color: white,
-                      child: Row(
-                        children: [
-                          //products index
-                          Text("  ${index+1}.  ", style: poppinsSemiBold(size: 14.sp, color: black),),
-                          SizedBox(width: 24.w,),
-                          //products name and desc
-                          SizedBox(
-                            width: 280.w,
-                            child: Row(
+                    itemCount: userCon.earningList.length,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final item = userCon.earningList[index];
+
+                      return Container(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0.sp, vertical: 16.0.sp),
+                        decoration: BoxDecoration(
+                          // Added a subtle, beautiful gradient that preserves your "white" base theme
+                          gradient: LinearGradient(
+                            colors: [
+                              white,
+                              white.withValues(alpha: 0.96), 
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(12.sp), // Slightly softened card corners
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min, // Fixes layout size constraints
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                SizedBox(
-                                  width: 200.w,
-                                  child: Text(userCon.earningList[index].product.title.toString(), style: poppinsSemiBold(size: 14.sp, color: black),overflow: TextOverflow.ellipsis, maxLines: 5,)),
-                                //products price and rewar points
-                                const Spacer(),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text("Points", style: poppinsSemiBold(size: 11.sp, color: black.withValues(alpha:0.5)),),
-                                    SizedBox(height: 4.h),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
-                                      decoration: BoxDecoration(
-                                        color: green.withValues(alpha:0.95),
-                                        borderRadius: BorderRadius.circular(6.sp),
-                                      ),
-                                      child: RichText(
-                                        text: TextSpan(
-                                          style: poppinsSemiBold(size: 11.sp, color: black),
-                                          children: [
-                                            WidgetSpan(
-                                              child: Padding(
-                                                padding: EdgeInsets.only(right: 4.sp),
-                                                child: Image.asset("assets/images/golden_star.png", height: 14.sp, width: 14.sp)
-                                              ),
-                                            ),
-                                            TextSpan(
-                                              text: formatter.format(double.parse(userCon.earningList[index].redeemPoint.toString())),
-                                              style: poppinsSemiBold(color: white, size: 12.sp ),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    )
-                                  ],
-                                )
+                                // Index Number
+                                Text(
+                                  "${index + 1}.",
+                                  style: poppinsSemiBold(size: 14.sp, color: black),
+                                ),
+                                SizedBox(width: 10.w),
+                                
+                                // Product Title
+                                Expanded(
+                                  child: Text(
+                                    item.product.title.toString(),
+                                    style: poppinsSemiBold(size: 16.sp, color: black),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2, 
+                                  ),
+                                ),
                               ],
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
+                            
+                            SizedBox(height: 4.h),
+                            
+                            Padding(
+                              padding: EdgeInsets.only(left: 24.w), 
+                              child: Text(
+                                "CODE : ${item.code.toString()}", 
+                                style: poppinsSemiBold(size: 14.sp, color: black.withValues(alpha: 0.6)),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1, 
+                              ),
+                            ),
+                            
+                            SizedBox(height: 14.h),
+                            
+                            // Cash & Points Badges Row
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.0.w),
+                              child: Row(
+                                children: [
+                                  /// GREEN CARD (Total Cash)
+                                  Expanded(
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(horizontal: 16.sp, vertical: 12.sp),
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            green.withValues(alpha: 0.95),
+                                            green.withValues(alpha: 0.8),
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                        borderRadius: BorderRadius.circular(14.sp),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: green.withValues(alpha: 0.25),
+                                            blurRadius: 12,
+                                            offset: const Offset(0, 5),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            "Cash",
+                                            style: poppinsSemiBold(
+                                              size: 13.sp,
+                                              color: white.withValues(alpha: 0.8),
+                                            ),
+                                          ),
+                                          SizedBox(height: 6.h),
+                                          FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: RichText(
+                                              text: TextSpan(
+                                                children: [
+                                                  TextSpan(
+                                                    text: "Rs. ",
+                                                    style: poppinsBold(
+                                                      size: 13.sp,
+                                                      color: white,
+                                                    ),
+                                                  ),
+                                                  TextSpan(
+                                                    text: formatter.format(double.parse(item.cash.toString())),
+                                                    style: poppinsBold(
+                                                      size: 16.sp,
+                                                      color: white,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                              
+                                  SizedBox(width: 12.w),
+                              
+                                  /// RED CARD (Total Points)
+                                  Expanded(
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(horizontal: 16.sp, vertical: 12.sp),
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            red.withValues(alpha: 0.95),
+                                            red.withValues(alpha: 0.8),
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                        borderRadius: BorderRadius.circular(14.sp),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: red.withValues(alpha: 0.25),
+                                            blurRadius: 12,
+                                            offset: const Offset(0, 5),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            "Points",
+                                            style: poppinsSemiBold(
+                                              size: 13.sp,
+                                              color: white.withValues(alpha: 0.8),
+                                            ),
+                                          ),
+                                          SizedBox(height: 6.h),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Image.asset(
+                                                "assets/images/golden_star.png",
+                                                height: 14.sp,
+                                                width: 14.sp,
+                                              ),
+                                              SizedBox(width: 6.w),
+                                              Expanded(
+                                                child: FittedBox(
+                                                  alignment: Alignment.centerLeft,
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Text(
+                                                    formatter.format(double.parse(item.redeemPoint.toString())),
+                                                    style: poppinsBold(
+                                                      size: 16.sp,
+                                                      color: white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 Divider(
                   color: gray.withValues(alpha:0.25),
                   thickness: 0.8.sp,

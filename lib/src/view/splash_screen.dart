@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -15,7 +14,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    with WidgetsBindingObserver {
   final AppController appCon = Get.put(AppController());
   final AuthController authCon = Get.put(AuthController());
 
@@ -26,40 +26,94 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
+
     _initialize();
   }
 
-  // ============================
-  // APP START FLOW
-  // ============================
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (_videoController == null) return;
+
+    switch (state) {
+      case AppLifecycleState.paused:
+      case AppLifecycleState.inactive:
+        if (_videoController!.value.isInitialized) {
+          _videoController!.pause();
+        }
+        break;
+
+      case AppLifecycleState.resumed:
+        if (_videoController!.value.isInitialized &&
+            !_videoController!.value.isPlaying &&
+            !_calledNext) {
+          _videoController!.play();
+        }
+        break;
+
+      default:
+        break;
+    }
+  }
+
   Future<void> _initialize() async {
+    debugPrint("Splash -> initialize");
+
     appCon.getAppVersion();
-    final result = await appCon.startApp();
+
+    debugPrint("Splash -> startApp initiated with 5s timeout safeguard");
+
+    AppStartResult result;
+    try {
+      // SAFEGUARD: If appCon.startApp() hangs indefinitely (e.g., stuck API call), 
+      // this timeout forces it to break out after 5 seconds and route the user.
+      result = await appCon.startApp().timeout(
+        const Duration(seconds: 6),
+        onTimeout: () {
+          debugPrint("Splash -> startApp TIMEOUT hit inside controller call!");
+          return AppStartResult.routeImmediately; 
+        },
+      );
+    } catch (e) {
+      debugPrint("Splash -> startApp encountered an unexpected error: $e");
+      result = AppStartResult.routeImmediately;
+    }
+
+    debugPrint("Splash -> result : $result");
 
     switch (result) {
+      // 1. UPDATE GUARDRAIL: If blocked by update, return immediately. 
+      // No navigation or fallback timeout will ever be triggered.
       case AppStartResult.blockedByUpdate:
-        // Update dialog already shown
-        // await _routeNext();
         return;
 
       case AppStartResult.playSplash:
       case AppStartResult.playCachedSplash:
         await _playSplashFromCacheOrRoute();
-        return;
+        break;
 
       case AppStartResult.routeImmediately:
         await _routeNext();
-        return;
+        break;
     }
   }
 
-  // ============================
-  // SPLASH DECISION
-  // ============================
   Future<void> _playSplashFromCacheOrRoute() async {
+    debugPrint("Splash -> media type : ${appCon.splashMediaType}");
+
+    // 2. MEDIA TIMEOUT FALLBACK: If the media hangs or takes longer than 6 seconds,
+    // force-route the user to the next screen.
+    Future.delayed(const Duration(seconds: 6), () {
+      if (mounted && !_calledNext) {
+        debugPrint("Splash -> Media load timed out after 6 seconds. Routing fallback...");
+        _routeNext();
+      }
+    });
+
     if (appCon.splashMediaType == SplashMediaType.image &&
         appCon.cachedSplashImagePath.isNotEmpty) {
-      _showImageAndNavigate();
+      await _showImageAndNavigate();
       return;
     }
 
@@ -69,53 +123,62 @@ class _SplashScreenState extends State<SplashScreen> {
       return;
     }
 
+    await _routeNext();
+  }
+
+  Future<void> _showImageAndNavigate() async {
+    if (_calledNext) return;
+
+    // Image displays safely for 4 seconds (well within our 6-second total window)
+    await Future.delayed(const Duration(seconds: 4));
+
+    if (!mounted) return;
 
     await _routeNext();
-    
   }
 
-  // ============================
-  // IMAGE FLOW
-  // ============================
-  void _showImageAndNavigate() async{
-    if (_calledNext) return;
-    setState((){
-      _calledNext = false;
-    });
-
-    await Future.delayed(const Duration(seconds: 3), () async{
-      await _routeNext();
-    });
-
-    setState(() {});
-  }
-
-  // ============================
-  // VIDEO FLOW
-  // ============================
   Future<void> _playCachedVideo() async {
     if (_calledNext) return;
 
     final file = File(appCon.cachedSplashVideoPath);
+
+    debugPrint("Video Path : ${file.path}");
+    debugPrint("Video Exists : ${file.existsSync()}");
+
     if (!file.existsSync()) {
+      debugPrint("Video not found");
       await _routeNext();
       return;
     }
 
+    debugPrint("Video Size : ${await file.length()}");
+
     try {
-      _videoController?.dispose();
+      await _videoController?.dispose();
+
       _videoController = VideoPlayerController.file(file);
 
+      debugPrint("Initializing video...");
+
       await _videoController!.initialize();
+
+      debugPrint(
+          "Video initialized : ${_videoController!.value.isInitialized}");
+
       if (!mounted) return;
 
       setState(() {});
 
       _videoController!
-        ..setVolume(1.0)
+        ..setVolume(1)
         ..play()
         ..addListener(_videoListener);
-    } catch (_) {
+
+      debugPrint("Video playing");
+    } catch (e, s) {
+      debugPrint("Video error : $e");
+      debugPrint("$s");
+
       await _routeNext();
     }
   }
@@ -124,64 +187,59 @@ class _SplashScreenState extends State<SplashScreen> {
     if (_calledNext || _videoController == null) return;
 
     final value = _videoController!.value;
-    if (value.isInitialized && value.position >= value.duration) {
-      setState((){
-        _calledNext = false;
-      });
+
+    if (!value.isPlaying &&
+        value.isInitialized &&
+        value.duration != Duration.zero &&
+        value.position >= value.duration) {
       await _routeNext();
     }
   }
 
-  // ============================
-  // ROUTING
-  // ============================
   Future<void> _routeNext() async {
     if (_calledNext) return;
-    setState((){
-      _calledNext = true;
-    });
+
+    _calledNext = true;
+
+    debugPrint("Routing next");
+
+    if (!mounted) return;
+
     await authCon.checkUserAuthStatus();
   }
 
-  // ============================
-  // CLEANUP
-  // ============================
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+
     _videoController?.removeListener(_videoListener);
     _videoController?.dispose();
+
     super.dispose();
   }
 
-  // ============================
-  // UI
-  // ============================
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: black,
       body: SafeArea(
         bottom: false,
-        child: _buildContent()
+        child: _buildContent(),
       ),
     );
   }
 
   Widget _buildContent() {
-    // IMAGE SPLASH
     if (appCon.splashMediaType == SplashMediaType.image &&
         appCon.cachedSplashImagePath.isNotEmpty) {
-      return Center(
-        child: Image.file(
-          File(appCon.cachedSplashImagePath),
-          width: double.infinity,
-          height: double.infinity,
-          fit: BoxFit.cover,
-        ),
+      return Image.file(
+        File(appCon.cachedSplashImagePath),
+        width: double.infinity,
+        height: double.infinity,
+        fit: BoxFit.cover,
       );
     }
 
-    // VIDEO SPLASH
     if (_videoController != null && _videoController!.value.isInitialized) {
       return Center(
         child: AspectRatio(
@@ -191,7 +249,8 @@ class _SplashScreenState extends State<SplashScreen> {
       );
     }
 
-    // FALLBACK
-    return const SizedBox();
+    return const Center(
+      child: SizedBox(),
+    );
   }
 }
