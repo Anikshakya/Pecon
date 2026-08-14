@@ -119,9 +119,7 @@ class UserController extends GetxController {
     if(image == null){
       finaldata = {
         "name": name,
-        "phone": number,
         "number": number,
-        "alternate_number": number,
         "email": email,
         "district_id" : district,
         "address" : address,
@@ -134,8 +132,7 @@ class UserController extends GetxController {
     else{
       finaldata = {
         "name": name,
-        "phone": number,
-        "alternate_number": number,
+        "number": number,
         "email": email,
         "district_id" : district,
         "address" : address,
