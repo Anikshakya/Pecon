@@ -321,7 +321,7 @@ class AppController extends GetxController {
       PopScope(
         canPop: false,
         child: CupertinoAlertDialog(
-          title: Text('There is a Latest Version Avialable for the App'.tr),
+          title: Text('There is a Latest Version Avialable for the App'.tr),  
           content: Text('Please Install The Latest Version To Procees'.tr),
           actions: [
             CupertinoDialogAction(

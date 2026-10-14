@@ -105,8 +105,17 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             children: [
                                 TextSpan(text: userCon.isNepaliUser.value == true ? "रु  " : "₹  "),
                                 TextSpan(
-                                  text: formatter.format(double.parse(userCon.isNepaliUser.value == true ? "${productCon.productList[widget.index].price} (NPR)" : "${productCon.productList[widget.index].priceInr} (INR) }")),
-                                style: poppinsSemiBold(color: green, size: 13.sp ),
+                                text: '${formatter.format(
+                                  double.tryParse(
+                                    userCon.isNepaliUser.value
+                                        ? productCon.productList[widget.index].price.toString()
+                                        : productCon.productList[widget.index].priceInr.toString(),
+                                  ) ?? 0.0,
+                                )} (${userCon.isNepaliUser.value ? 'NPR' : 'INR'})',
+                                style: poppinsSemiBold(
+                                  color: green,
+                                  size: 13.sp,
+                                ),
                               ),
                             ],
                           ),
