@@ -26,7 +26,14 @@ class _QRScannerPageState extends State<QRScannerPage> {
    
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
+  bool _isScanned = false;
 
+  @override
+  void dispose() {
+    // ignore: deprecated_member_use
+    controller?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +92,10 @@ class _QRScannerPageState extends State<QRScannerPage> {
               child: CustomButton(
                 onPressed: () async {
                   // Scan QR code from selected image in gallery
+                  await controller?.stopCamera();
+                  if (!mounted) return;
                   var scannedData = await scanFromGallery();
+                  if (!mounted) return;
                   if (scannedData != null) {
                     // Show scanned data in a popup
                     Get.back();
@@ -95,12 +105,8 @@ class _QRScannerPageState extends State<QRScannerPage> {
                       headingText: "Redeeme Points",
                       infoText: "You can redeeme points by submitting.",
                     );
-                    Future.delayed(const Duration(milliseconds: 300), () {
-                      controller!.resumeCamera();
-                    });
                   } else {
                     // Show error message if no QR code is found
-                    controller!.stopCamera();  // Stop the camera after scanning
                     showDialog(
                       // ignore: use_build_context_synchronously
                       context: context,
@@ -117,11 +123,11 @@ class _QRScannerPageState extends State<QRScannerPage> {
                           ),
                         ],
                       ),
-                    ).then((_) {
+                    ).then((_) async {
                       // Resume camera after the dialog is dismissed
-                      Future.delayed(const Duration(milliseconds: 300), () {
-                        controller!.resumeCamera();
-                      });
+                      if (mounted) {
+                        await controller?.resumeCamera();
+                      }
                     });
                     }
                 },
@@ -206,13 +212,23 @@ class _QRScannerPageState extends State<QRScannerPage> {
 
   // QR Code scanned callback
   void onQRViewCreated(QRViewController controller) {
+    if (!mounted) {
+      // ignore: deprecated_member_use
+      controller.dispose();
+      return;
+    }
     setState(() {
       this.controller = controller;
     });
     // Listen to scanned data and show it in a dialog
-    controller.scannedDataStream.listen((scanData) {
-      controller.stopCamera();  // Stop the camera after scanning
-      String scannedData = scanData.code.toString();
+    controller.scannedDataStream.listen((scanData) async {
+      final scannedData = scanData.code?.trim();
+      if (_isScanned || scannedData == null || scannedData.isEmpty) return;
+      _isScanned = true;
+
+      await controller.stopCamera();
+      if (!mounted) return;
+
       log('Scanned Data: $scannedData');
       // Show scanned data in a popup
       Get.back();
@@ -222,9 +238,6 @@ class _QRScannerPageState extends State<QRScannerPage> {
         headingText: "Redeeme Points",
         infoText: "You can redeeme points by submitting."
       );
-      Future.delayed(const Duration(milliseconds: 300), () {
-        controller.resumeCamera();
-      });
     });
   }
 

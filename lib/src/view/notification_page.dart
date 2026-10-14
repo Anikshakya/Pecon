@@ -15,171 +15,195 @@ class NotificationPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationPage> {
-  //GetController
-  final NotificationController notificationCon = Get.put(NotificationController());
-
+  final NotificationController notificationCon =
+      Get.put(NotificationController());
 
   @override
   void initState() {
-    initialise();
     super.initState();
+    initialise();
   }
 
-  initialise()async{
+  Future<void> initialise() async {
     await notificationCon.getNotificationList();
+  }
+
+  Future<void> _refreshNotifications() async {
+    await notificationCon.getNotificationList();
+  }
+
+  void _openNotificationLink(String description) {
+    final String url = description.trim();
+
+    if (url.contains('http')) {
+      AppUtils().openLinkWithUrl(url);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: white,
-      appBar: appbar(title:'Notifications', showArrow: false),
+      appBar: appbar(
+        title: 'Notifications',
+        showArrow: false,
+      ),
       body: RefreshIndicator(
         color: black,
-        onRefresh: (){
-          return Future.delayed(const Duration(seconds: 1),()async{
-            initialise();
-          });
-        },
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Obx(() => notificationCon.isLoading.isTrue
-            ? SizedBox(
-              height: 650.0.h,
-              child: Center(
-                child: SizedBox(
-                  height: 30.sp,
-                  width: 30.sp,
-                  child: CircularProgressIndicator(
-                    color: black,
-                    strokeWidth: 1.5.sp,
+        onRefresh: _refreshNotifications,
+        child: Obx(() {
+          if (notificationCon.isLoading.isTrue) {
+            return ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                SizedBox(
+                  height: 650.h,
+                  child: Center(
+                    child: SizedBox(
+                      height: 30.sp,
+                      width: 30.sp,
+                      child: CircularProgressIndicator(
+                        color: black,
+                        strokeWidth: 1.5.sp,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            )
-            : notificationCon.notificationList.isEmpty
-            ? SizedBox(
-              height: 650.0.h,
-              child: const Center(
-                child: Text("Nothing to Show")
-              ),
-            )
-            : 
-            Column(
+              ],
+            );
+          }
+
+          if (notificationCon.notificationList.isEmpty) {
+            return ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
               children: [
-                ListView.separated(
-                  separatorBuilder: (context, index) => Divider(
-                    color: gray.withValues(alpha:0.25),
-                    thickness: 0.8.sp,
-                    height: 0,
-                  ),
-                  itemCount: notificationCon.notificationList.length,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Theme(
-                        data: Theme.of(context).copyWith(
-                        dividerColor: Colors.transparent
+                SizedBox(
+                  height: 650.h,
+                  child: Center(
+                    child: Text(
+                      'Nothing to Show',
+                      style: poppinsRegular(
+                        size: 14.sp,
+                        color: black.withValues(alpha: 0.6),
                       ),
-                      child: InkWell(
-                        onTap: notificationCon.notificationList[index]["description"] == "" || notificationCon.notificationList[index]["description"] == null
-                          ? (){}
-                          : (){
-                            if(notificationCon.notificationList[index]["description"].contains("http")){
-                              AppUtils().openLinkWithUrl(notificationCon.notificationList[index]["description"] ?? "");
-                            }
-                          },
-                        child: ExpansionTile(
-                          tilePadding: EdgeInsets.symmetric(horizontal: 16.0.sp, vertical: 8.0.sp),
-                          backgroundColor: white,
-                          collapsedBackgroundColor: white,
-                          childrenPadding: EdgeInsets.only(left: 16.0.sp, right: 16.0.sp, bottom: 12.0.sp),
-                          
-                          title: Row(
-                            children: [
-                              Container(
-                                height: 70.0.sp,
-                                width: 70.0.sp,
-                                decoration: BoxDecoration(
-                                  color: gray.withValues(alpha:0.1),
-                                  border: Border.all(
-                                    color: gray.withValues(alpha:0.25),
-                                    width: 0.8.sp,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.sp),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0.r),
-                                  child: CustomNetworkImage(
-                                      imageUrl: notificationCon.notificationList[index]["image"] ?? '',
-                                      height: 70.0.sp,
-                                      width: 70.0.sp,
-                                      isFrom: 'notification'
-                                    )
-                                ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+
+          return ListView.separated(
+            physics: const AlwaysScrollableScrollPhysics(
+              parent: BouncingScrollPhysics(),
+            ),
+            padding: EdgeInsets.only(
+              top: 8.h,
+              bottom: 50.h,
+            ),
+            itemCount: notificationCon.notificationList.length,
+            separatorBuilder: (context, index) {
+              return Divider(
+                color: gray.withValues(alpha: 0.25),
+                thickness: 0.8.sp,
+                height: 1,
+              );
+            },
+            itemBuilder: (context, index) {
+              final notification =
+                  notificationCon.notificationList[index];
+
+              final String title = notification['title'] ?? '';
+              final String description =
+                  notification['description'] ?? '';
+              final String image = notification['image'] ?? '';
+              final String createdAt =
+                  notification['created_at'] ?? '';
+
+              return InkWell(
+                onTap: () {
+                  _openNotificationLink(description);
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 16.h,
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Notification image
+                      Container(
+                        height: 70.sp,
+                        width: 70.sp,
+                        decoration: BoxDecoration(
+                          color: gray.withValues(alpha: 0.1),
+                          border: Border.all(
+                            color: gray.withValues(alpha: 0.25),
+                            width: 0.8.sp,
+                          ),
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.r),
+                          child: CustomNetworkImage(
+                            imageUrl: image,
+                            height: 70.sp,
+                            width: 70.sp,
+                            isFrom: 'notification',
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(width: 14.w),
+
+                      // Notification details
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Title
+                            Text(
+                              title,
+                              style: poppinsSemiBold(
+                                size: 15.sp,
+                                color: black,
                               ),
-                              const Spacer(),
-                              InkWell(
-                                onTap: notificationCon.notificationList[index]["description"] == "" || notificationCon.notificationList[index]["description"] == null
-                                ? (){}
-                                : (){
-                                  if(notificationCon.notificationList[index]["description"].contains("http")){
-                                    AppUtils().openLinkWithUrl(notificationCon.notificationList[index]["description"] ?? "");
-                                  }
-                                },
-                                child: SizedBox(
-                                  width: 220.0.w,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      // notification title
-                                      Text(
-                                        notificationCon.notificationList[index]["title"] ?? "",
-                                        style: poppinsSemiBold(size: 16.sp, color: black),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                      ),
-                                      SizedBox(height: 4.0.h),
-                                      // hide desc here (move to expanded content)
-                                      SizedBox(height: 10.0.h),
-                                      Text(
-                                        notificationCon.notificationList[index]["created_at"] ?? "",
-                                        style: poppinsRegular(size: 10.sp, color: black.withValues(alpha:0.7)),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                      ),
-                                    ],
-                                  ),
+                            ),
+
+                            // Full description
+                            if (description.trim().isNotEmpty) ...[
+                              SizedBox(height: 8.h),
+                              Text(
+                                description,
+                                style: poppinsRegular(
+                                  size: 13.sp,
+                                  color: black.withValues(alpha: 0.75),
                                 ),
                               ),
                             ],
-                          ),
-                        
-                          // Expanded description (only visible when expanded)
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                notificationCon.notificationList[index]["description"] ?? "",
-                                style: poppinsRegular(size: 14.sp, color: black.withValues(alpha:0.7)),
+
+                            // Creation date
+                            if (createdAt.trim().isNotEmpty) ...[
+                              SizedBox(height: 10.h),
+                              Text(
+                                createdAt,
+                                style: poppinsRegular(
+                                  size: 10.sp,
+                                  color: black.withValues(alpha: 0.55),
+                                ),
                               ),
-                            ),
+                            ],
                           ],
                         ),
                       ),
-                    );
-                  },
+                    ],
+                  ),
                 ),
-                Divider(
-                  color: gray.withValues(alpha:0.25),
-                  thickness: 0.8.sp,
-                  height: 0,
-                ),
-                SizedBox(height: 50.h,),
-              ],
-            ),
-          ),
-        ),
+              );
+            },
+          );
+        }),
       ),
     );
   }
